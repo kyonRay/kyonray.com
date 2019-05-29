@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="blockchain,Python,">
 
 
 
@@ -79,17 +79,23 @@
 
 
 
-<meta name="description" content="博学之，慎思之，明辨之，笃行之。">
-<meta name="keywords" content="test">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Kyon&#39;s">
-<meta property="og:url" content="https://kyonray.com/index.html">
+<meta name="description" content="这是一个使用 Python3 + flask 写的简单平台，主要目的是体验区块链的场景。 项目库：https://github.com/dvf/blockchain 一、实验目标 熟悉区块数据结构，了解哈希算法； 简单了解哈希碰撞(挖矿)的流程，并对发起新交易流程有所了解； 熟悉区块链的不可篡改性、顺序性，以及区块链分叉时的场景。  二、实验基础本实验涉及到以下必要知识点：  掌握Python语言">
+<meta name="keywords" content="blockchain,Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="区块链实验课简易教程">
+<meta property="og:url" content="https://kyonray.com/2019/05/29/blockchain-easy-test/index.html">
 <meta property="og:site_name" content="Kyon&#39;s">
-<meta property="og:description" content="博学之，慎思之，明辨之，笃行之。">
+<meta property="og:description" content="这是一个使用 Python3 + flask 写的简单平台，主要目的是体验区块链的场景。 项目库：https://github.com/dvf/blockchain 一、实验目标 熟悉区块数据结构，了解哈希算法； 简单了解哈希碰撞(挖矿)的流程，并对发起新交易流程有所了解； 熟悉区块链的不可篡改性、顺序性，以及区块链分叉时的场景。  二、实验基础本实验涉及到以下必要知识点：  掌握Python语言">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://kyonray.com/2019/05/29/blockchain-easy-test/shotcut1.png">
+<meta property="og:image" content="https://kyonray.com/2019/05/29/blockchain-easy-test/shotcut2.png">
+<meta property="og:image" content="https://kyonray.com/2019/05/29/blockchain-easy-test/shotcut3.png">
+<meta property="og:image" content="https://kyonray.com/2019/05/29/blockchain-easy-test/shocut4.png">
+<meta property="og:updated_time" content="2019-05-29T13:14:00.764Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Kyon&#39;s">
-<meta name="twitter:description" content="博学之，慎思之，明辨之，笃行之。">
+<meta name="twitter:title" content="区块链实验课简易教程">
+<meta name="twitter:description" content="这是一个使用 Python3 + flask 写的简单平台，主要目的是体验区块链的场景。 项目库：https://github.com/dvf/blockchain 一、实验目标 熟悉区块数据结构，了解哈希算法； 简单了解哈希碰撞(挖矿)的流程，并对发起新交易流程有所了解； 熟悉区块链的不可篡改性、顺序性，以及区块链分叉时的场景。  二、实验基础本实验涉及到以下必要知识点：  掌握Python语言">
+<meta name="twitter:image" content="https://kyonray.com/2019/05/29/blockchain-easy-test/shotcut1.png">
 
 
 
@@ -119,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="https://kyonray.com/">
+  <link rel="canonical" href="https://kyonray.com/2019/05/29/blockchain-easy-test/">
 
 
 
 
 
-  <title>Kyon's</title>
+  <title>区块链实验课简易教程 | Kyon's</title>
   
 
 
@@ -144,8 +150,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -280,9 +285,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -312,9 +317,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/29/blockchain-easy-test/" itemprop="url">区块链实验课简易教程</a></h1>
+          <h1 class="post-title" itemprop="name headline">区块链实验课简易教程</h1>
         
 
         <div class="post-meta">
@@ -438,9 +441,7 @@
       
 
       
-        
-          
-            <p>这是一个使用 Python3 + flask 写的简单平台，主要目的是体验区块链的场景。</p>
+        <p>这是一个使用 Python3 + flask 写的简单平台，主要目的是体验区块链的场景。</p>
 <p>项目库：<a href="https://github.com/dvf/blockchain" target="_blank" rel="noopener">https://github.com/dvf/blockchain</a></p>
 <h2 id="一、实验目标"><a href="#一、实验目标" class="headerlink" title="一、实验目标"></a>一、实验目标</h2><ol>
 <li>熟悉区块数据结构，了解哈希算法；</li>
@@ -526,8 +527,6 @@
 <p>在<code>blockchain.py</code>文件 178行：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">valid_proof</span><span class="params">(last_proof, proof, last_hash)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        Validates the Proof</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        :param last_proof: &lt;int&gt; Previous Proof</span></span><br><span class="line"><span class="string">        :param proof: &lt;int&gt; Current Proof</span></span><br><span class="line"><span class="string">        :param last_hash: &lt;str&gt; The hash of the Previous Block</span></span><br><span class="line"><span class="string">        :return: &lt;bool&gt; True if correct, False if not.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line"></span><br><span class="line">        guess = <span class="string">f'<span class="subst">&#123;last_proof&#125;</span><span class="subst">&#123;proof&#125;</span><span class="subst">&#123;last_hash&#125;</span>'</span>.encode()</span><br><span class="line">        guess_hash = hashlib.sha256(guess).hexdigest()</span><br><span class="line">        <span class="comment"># 在这里修改，0的个数要与数字一致</span></span><br><span class="line">        <span class="comment"># 数字越大，0越多，哈希碰撞难度越大</span></span><br><span class="line">        <span class="keyword">return</span> guess_hash[:<span class="number">4</span>] == <span class="string">"0000"</span></span><br></pre></td></tr></table></figure>
 
-          
-        
       
     </div>
     
@@ -537,444 +536,105 @@
     
 
     
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Buy me a cup of coffee☕️.</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
 
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/index/wechatpay.jpg" alt="Kyon Kwok 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/index/alipay.jpg" alt="Kyon Kwok 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Kyon Kwok
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://kyonray.com/2019/05/29/blockchain-easy-test/" title="区块链实验课简易教程">https://kyonray.com/2019/05/29/blockchain-easy-test/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
     
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://kyonray.com/2019/05/20/how-i-build-this-website/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Kyon Kwok">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="http://img.inmywordz.com/uploads/20170527171017_34.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kyon's">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/20/how-i-build-this-website/" itemprop="url">Hexo+GoDaddy+GitHub Pages 构建一个属于自己的博客平台</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-20T11:30:26+08:00">
-                2019-05-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/博客搭建/" itemprop="url" rel="index">
-                    <span itemprop="name">博客搭建</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/博客搭建/工具使用/" itemprop="url" rel="index">
-                    <span itemprop="name">工具使用</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/blockchain/" rel="tag"># blockchain</a>
           
-
+            <a href="/tags/Python/" rel="tag"># Python</a>
           
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/05/20/how-i-build-this-website/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2019/05/20/how-i-build-this-website/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2019/05/20/how-i-build-this-website/" class="leancloud_visitors" data-flag-title="Hexo+GoDaddy+GitHub Pages 构建一个属于自己的博客平台">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1.2k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  4
-                </span>
-              
-            </div>
-          
-
-          
-
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="关于博客"><a href="#关于博客" class="headerlink" title="关于博客"></a>关于博客</h2><p>学习技术总是无底洞，越往深处挖掘，越有挑战也越有乐趣。之前就很想要有个属于自己域名，自己的博客，可以在自己的博客里分享自己学到的、感受的，这也是在这世上孤独的自己的一种乐趣。如今将想法做成现实，希望能多多commit :)</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/05/20/how-i-build-this-website/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
       
 
       
       
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://kyonray.com/2019/05/16/A-lightweight-attribute-based-encryption-scheme-for-the-Internet-of-Things/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Kyon Kwok">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="http://img.inmywordz.com/uploads/20170527171017_34.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kyon's">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/16/A-lightweight-attribute-based-encryption-scheme-for-the-Internet-of-Things/" itemprop="url">A lightweight attribute-based encryption scheme for the Internet of Things</a></h1>
+        <div class="post-widgets">
         
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-16T17:13:56+08:00">
-                2019-05-16
-              </time>
-            
+        
 
-            
-
-            
-          </span>
-
+        
           
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/论文研究/" itemprop="url" rel="index">
-                    <span itemprop="name">论文研究</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/论文研究/密码学/" itemprop="url" rel="index">
-                    <span itemprop="name">密码学</span>
-                  </a>
-                </span>
-
-                
-                
-              
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
             </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/05/16/A-lightweight-attribute-based-encryption-scheme-for-the-Internet-of-Things/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2019/05/16/A-lightweight-attribute-based-encryption-scheme-for-the-Internet-of-Things/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2019/05/16/A-lightweight-attribute-based-encryption-scheme-for-the-Internet-of-Things/" class="leancloud_visitors" data-flag-title="A lightweight attribute-based encryption scheme for the Internet of Things">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  4.4k
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  18
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="论文阅读：A-lightweight-attribute-based-encryption-scheme-for-the-Internet-of-Things"><a href="#论文阅读：A-lightweight-attribute-based-encryption-scheme-for-the-Internet-of-Things" class="headerlink" title="论文阅读：A lightweight attribute-based encryption scheme for the Internet of Things"></a>论文阅读：A lightweight attribute-based encryption scheme for the Internet of Things</h2><p>文如其名, 比较lightweight, 才9页(笑.<br>由北京科技大学的博士与中科院博士联手出品.</p>
-<h3 id="ABSTRACT"><a href="#ABSTRACT" class="headerlink" title="ABSTRACT"></a>ABSTRACT</h3><blockquote>
-<p>In this paper, a lightweight no-pairing ABE scheme based on elliptic curve cryptography (ECC) is proposed to address the security and privacy issues in IoT. The security of the proposed scheme is based on the ECDH assumption instead of bilinear Diffie–Hellman assumption, and is proved in the attribute based selective-set model. By uniformly determining the criteria and defining the metrics for measuring the communication overhead and computational overhead, the cMomparison analyses with the existing ABE schemes are made in detail. The results show that the proposed scheme has improved execution efficiency and low communication costs. In addition, the limitations and the improving directions of it are also discussed in detail.</p>
-<p>We propose a no-pairing ECC-Based ABE scheme to deal with the data security and privacy issues in IoT. Since it replaces the expensive bilinear pairing operation with <strong>point scalar multiplication on elliptic curve</strong>, it can meet the lightweight requirement and is suitable for IoT.</p>
-</blockquote>
-<p>本文提出了个适用于IoT的ABE解决方案, 因为双线性配对型的ABE很复杂,代价很高,所以采用基于ECC的方法.<br>同时, 在安全方面采用基于ECDH假设来取代二线Diffie-Hellman假设.</p>
-<p>用在椭圆曲线上的点标量乘法代替代价高的双线性配对,可以减少计算开销和通信开销,更适用于IoT设备.</p>
-<p>ps:Diffie-Hellman密钥交换(<a href="https://blog.csdn.net/lee244868149/article/details/51790397" target="_blank" rel="noopener">csdn</a>和<a href="https://www.zhihu.com/question/29383090" target="_blank" rel="noopener">知乎</a>)</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/05/16/A-lightweight-attribute-based-encryption-scheme-for-the-Internet-of-Things/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
           </div>
-          <!--/noindex-->
         
+        </div>
       
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
       
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/20/how-i-build-this-website/" rel="next" title="Hexo+GoDaddy+GitHub Pages 构建一个属于自己的博客平台">
+                <i class="fa fa-chevron-left"></i> Hexo+GoDaddy+GitHub Pages 构建一个属于自己的博客平台
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
 
       
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -984,10 +644,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -995,6 +656,13 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
 
         </div>
         
@@ -1015,8 +683,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -1112,6 +789,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、实验目标"><span class="nav-number">1.</span> <span class="nav-text">一、实验目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、实验基础"><span class="nav-number">2.</span> <span class="nav-text">二、实验基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、实验步骤"><span class="nav-number">3.</span> <span class="nav-text">三、实验步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-实验环境依赖"><span class="nav-number">3.1.</span> <span class="nav-text">1. 实验环境依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-实验环境搭建"><span class="nav-number">3.2.</span> <span class="nav-text">2. 实验环境搭建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-与区块链进行交互"><span class="nav-number">3.3.</span> <span class="nav-text">3. 与区块链进行交互</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-chain-方法测试"><span class="nav-number">3.3.1.</span> <span class="nav-text">1). /chain 方法测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-mine-方法测试"><span class="nav-number">3.3.2.</span> <span class="nav-text">2). /mine 方法测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-transactions-new方法测试"><span class="nav-number">3.3.3.</span> <span class="nav-text">3). /transactions/new方法测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-nodes-register方法测试"><span class="nav-number">3.3.4.</span> <span class="nav-text">4). /nodes/register方法测试</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#使用pipenv配置的环境"><span class="nav-number">3.3.4.1.</span> <span class="nav-text">使用pipenv配置的环境</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用Docker配置的环境"><span class="nav-number">3.3.4.2.</span> <span class="nav-text">使用Docker配置的环境</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-nodes-resolve方法测试"><span class="nav-number">3.3.5.</span> <span class="nav-text">5). /nodes/resolve方法测试</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-处理区块链分叉"><span class="nav-number">3.4.</span> <span class="nav-text">4. 处理区块链分叉</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-修改哈希碰撞难度"><span class="nav-number">3.5.</span> <span class="nav-text">5. 修改哈希碰撞难度</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1263,6 +956,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -1791,26 +1488,6 @@
   
 
   
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
   
 
 
