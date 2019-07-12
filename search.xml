@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Sovrin White Paper Reading]]></title>
+    <url>%2F2019%2F07%2F12%2FSovrin-White-Paper-Reading%2F</url>
+    <content type="text"><![CDATA[问题描述在物质世界，我们使用物理凭证来证明我们的身份（identity）我们可以有驾照来证明我们的驾驶许可、可以有学位证书来证明我们的学历、可以有技能证书来证明我们的能力；但是在互联网上，却没有等同的解决方案来向互联网端的验证者证明自己的能力、资质、拥有权。 这些问题的本质是因为，在整个互联网中没有凭证以及凭证发行验证的标准。The World Wide Web Consortium(W3C)在2017年4月对凭证进行了标准化。但如何对凭证发行方的电子签名的验证进行标准化，还存在着疑问。现有解决方案是采用PKI证书密钥体系，但是这种方案需要多次证书交互，每次进行验证都需要与证书颁发中心进行交互验证证书，且存在中心作恶的风险。 Sovrin给出的解决方案在区块链上部署decentralized PKI(DPKI)体系结构，每个实体可以进行ID标识，生成Decentralized Identifier(DID)，这样每个实体都以同一标准生成一个身份标识，所有人都可以发行电子签名的凭证，所有人都可以验证这些凭证。 Sovrin愿景全球化的分布式身份识别与可验证凭证方案。这种方案可以用在所有类型的区块链，并且广泛使用程度能超过DNS。 Sovrin隐私保护方案 Pseudonymity by default 成对且唯一的DID和公钥； Private agents by default 任何隐私数据都不会上链； Selective disclosure by default 使用零知识证明的方法，对有选择地披露声明信息，保证隐私安全。 参考文献 Sovrin-Protocol-and-Token-White-Paper1 Decentralized Public Key Infrastructure: A White Paper from Rebooting the Web of Trust W3C: Decentralized Identifiers (DIDs) v0.13]]></content>
+      <categories>
+        <category>区块链项目</category>
+      </categories>
+      <tags>
+        <tag>blockchain</tag>
+        <tag>Identity</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Facebook Libra区块链白皮书研读]]></title>
     <url>%2F2019%2F06%2F24%2FLibra-whitepaper-study%2F</url>
     <content type="text"><![CDATA[简述Facebook这次发起的新区块链虚拟货币在技术层面上并未看到有大的革新，与现有的虚拟货币区别不大。从现在的白皮书以及技术文档上所指，最大的特点是币的价值和真实资产储备相挂钩，相对于比特币，波动性较小，价值更平稳，这更像是一种有政府背书的数字货币。 Libra使用了新的编程语言来编写智能合约，设计了基于拜占庭容错的共识算法LibraBFT，如何能承受住全球这么打的用户量，如何，这些问题在技术论文上也没有披露太多信息。 应用背景 现有区块链缺乏可扩展性，加密货币具有波动性，到目前为止，这些因素导致现有的加密货币在保值和交换媒介方面均表现欠佳，因而阻碍了它们在市场上的广泛使用。 一些项目还试图破坏现有体系并绕过监管，而不是在合规和监管方面进行创新，以提高反洗钱举措的效力。 携手金融部门(包括各个行业的监管机构和专家)进行合作和创新，是确保为这一新体系建立可持续、安全和可信的支撑框架的唯一途径。 应用愿景 Libra 的使命是建立一套简单的、无国界的货币和为数十亿人服务的金融基础设施。 Libra 完全由真实资产储备提供支持。对于每个新创建的Libra 加密货币，在 Libra 储备中都有相对应价值的银行存款和短期政府债券，以此建立人们对其内在价值的信任，并以此维持加密货币的价值稳定。 Libra协会成员包括分布在不同地理区域的各种企业、非营利组织、多边组织和学术机构。包含PayPal、Visa等支付业巨头，eBay、Uber、Booking等交易平台。 任何消费者、开发者或公司都可以使用 Libra 网络、在这个网络上构建产品，并通过他们的服务实现增值作用。 技术特色 目标是扩展到数十亿账户，要求具有极高的交易吞吐量和低延迟； 设计和使用全新的Move编程语言，用于智能合约编程； 采用拜占庭容错共识机制，设计使用LibraBFT； 参考链接[1]. Libra中文白皮书[2]. Libra技术论文[3]. Libra开发文档]]></content>
