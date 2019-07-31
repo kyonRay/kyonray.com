@@ -294,6 +294,673 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kyonray.com/2019/07/31/IoT-research-report/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kyon Kwok">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://img.inmywordz.com/uploads/20170527171017_34.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kyon's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/07/31/IoT-research-report/" itemprop="url">IoT调研报告</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-31T11:25:57+08:00">
+                2019-07-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/物联网/" itemprop="url" rel="index">
+                    <span itemprop="name">物联网</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/物联网/Research/" itemprop="url" rel="index">
+                    <span itemprop="name">Research</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/07/31/IoT-research-report/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/07/31/IoT-research-report/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/07/31/IoT-research-report/" class="leancloud_visitors" data-flag-title="IoT调研报告">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  12.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  47
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="一简述">一、简述</h2>
+<p>本文从物联网（IoT）技术的基础知识开始，主要介绍了物联网的基本定义、主要通信协议，并对现在物联网技术所面临的挑战进行了详细分析。在第三章，研究区块链与物联网结合的契合点，分析区块链是如何解决物联网现在面临的挑战，并提供一些物联网部署在区块链的方法。在第四章，从区块链在物联网中身份标识治理的角度切入，通过对比现有中心化身份管理方法，研究基于区块链的实体身份标识可以如何解决物联网相关的痛点，并给出现有案例（学术上、工业上）。</p>
+<h2 id="二认识iot">二、认识IoT</h2>
+<p>物联网是一个计算设备、电子器械、物体、动物或人相互关联的系统，具有唯一标识符（UID）和通过网络传输数据、交互的能力，而无需人与人或人与计算机的互动，终极梦想是万物互联的世界。</p>
+<p>如下图所示是一个物联网系统的样例，物联网生态系统由支持Web的智能设备组成，这些设备使用嵌入式处理器，传感器和通信硬件来收集、发送和处理从环境中获取的数据。 物联网设备通过连接到物联网网关或其他边缘设备来共享它们收集的传感器数据，其中数据被发送到云以进行本地分析或分析。 尽管人们可以与设备进行交互，但设备可以完成大部分工作而无需人工干预。</p>
+<figure>
+<img src="./example_of_iot.png" alt="img"><figcaption>img</figcaption>
+</figure>
+<h3 id="三个维度认识iot">1. “三个维度”认识IoT</h3>
+<h4 id="横向维度---物联网产业图谱">1.1 横向维度 - 物联网产业图谱</h4>
+<p>如下图所示，可以看到，身份管理以及安全控制贯穿整个生态架构。</p>
+<p><img src="./iot_horrizon.png"></p>
+<h4 id="纵向维度---物联网生态架构">1.2 纵向维度 - 物联网生态架构</h4>
+<p>可以简单把IoT核心架构分为4层模型：</p>
+<ul>
+<li>应用程序层：对大量的数据进行处理、持久性存储、数据分析、数值预测；</li>
+<li>平台服务层：主要包括数据管理、设备管理、应用集成、消息发布/订阅/传递、安全管理；</li>
+<li>通信层：主要是支持数据的可靠传输，内置了感应层向管理控制层的通信机制，如Wifi、3G、LTE、 Ethernet等；</li>
+<li>物理感应层：主要是设备、网关等硬件传感器和相应的传感网络；</li>
+</ul>
+<figure>
+<img src="./iot_arch.png" alt="image-20190730193458199"><figcaption>image-20190730193458199</figcaption>
+</figure>
+<h4 id="时间维度---物联网的前世今生与来世">1.3 时间维度 - 物联网的前世、今生与来世</h4>
+<p>在过去的几年中，前物联网从封闭的集中式大型机架构逐渐向以开放接入云为中心的物联网的替代方案发展；下一步物联网将在部署在多节点的分布式云上，实现真正的万物互联，区块链技术在这里充当重要的角色。</p>
+<figure>
+<img src="./image-20190712105542191.png" alt="image-20190712105542191"><figcaption>image-20190712105542191</figcaption>
+</figure>
+<p>在这里作者由于知识储备原因（<strong>学术不精</strong>），主要简单介绍通信层的内容，在本章后面的内容展开介绍物联网技术现有的挑战，并在后面的章节介绍平台服务层的相关内容。</p>
+<h3 id="现有iot通信协议">2. 现有IoT通信协议</h3>
+<figure>
+<img src="./protocol_for_iot.png" alt="Figure 2: IoT Elements"><figcaption>Figure 2: IoT Elements</figcaption>
+</figure>
+<p>如上图所示，</p>
+<p>现有物联网中<strong>应用数据层的通信协议</strong>主要有以下几种：</p>
+<ul>
+<li><strong>HTTP</strong>：因为其广泛的应用，兼容稳定性都很好，开发也简单，但在物联网大规模使用的情况下，实时性和消息一致性都不如MQTT协议来的表现出色，而且耗电量更大；</li>
+<li><strong>Message Queuing Telemetry Transport(MQTT)</strong>：MQTT协议开销较小（带宽和能耗），支持永久性连接，减少重连带来的开销，在物联网中大规模的并发连接场景具有优势；</li>
+<li><strong>Constrained Application Protocol(CoAP)</strong>：CoAP是一种可用于资源受限的设备上的数据应用协议，支持多播和低开销在物联网小型设备使用场景较实用；</li>
+<li><strong>Extensible Messaging and Presence Protocol (XMPP)</strong>：XMPP支持实时通讯、即时消息；</li>
+</ul>
+<p>在<strong>网络层的路由协议</strong>主要有 <code>6LoWPAN</code>与<code>RPL</code>，这两种协议都意在资源受限的设备上能轻松访问网络，但也将带来被攻击的可能，详情可见论文[8].</p>
+<p>在 <strong>数据链路层的协议</strong> 一般就以频率、能耗、可用范围区分，以下图做对比总结：</p>
+<figure>
+<img src="./IoT_Data_Layer_Protocol.png" alt="IoT Standards and Protocols"><figcaption>IoT Standards and Protocols</figcaption>
+</figure>
+<h3 id="现有iot方案存在的挑战">3. 现有IoT方案存在的挑战</h3>
+<p>在过去的几年间，物联网垂直领域相关企业数量处于快速增长期，经过了幻想破灭期的洗礼，投资逐渐理性，技术逐渐成熟。虽然人们对于物联网可以推动许多商业机会、变革现有中心化体系有清楚的认识，但物联网还存在一系列的技术挑战，直接导致了全球物联网应用布局缓慢的局面。以下是对这些挑战的简述：</p>
+<h4 id="网络安全问题">3.1 网络安全问题</h4>
+<p>物联网中的网络安全问题是最关键也是最致命的应用落地门槛。对于传统的Web安全而言，物联网设备往往条件更加严苛：设备条件通常是隔离的硬件，根据其部署条件，所有者往往无法有效监测到设备数据篡改；设备往往是和其他设备进行互联，管理这些M2M的交互、保证两端数据一致性与传统的C/S交互相比更加复杂；此外，物联网设备往往处于资源受限的状态（硬件性能、网络连接、电量低等），使得更加复杂的场景不能得以应用。因此，这种系统更加容易被网络攻击，在以下列出了几种物联网攻击方法与其相应的防御手段。</p>
+<h5 id="现存的iot攻击方法与防御手段">现存的IoT攻击方法与防御手段</h5>
+<p>物联网涵盖了从小型嵌入式处理芯片到大型高端服务器各种设备，因此遇到的安全问题都可能在不同层次不同级别。下图给出了从OSI网络模型自下往上地分析了物联网安全威胁的分类。各个攻击方式的具体防御手段可借鉴论文[2]，在这里不赘述。</p>
+<figure>
+<img src="./IoT%20Security%20Issues.png" alt="IoT Security Issues.png"><figcaption>IoT Security Issues.png</figcaption>
+</figure>
+<h4 id="访问控制与隐私保护">3.2 访问控制与隐私保护</h4>
+<p>物联网设备每日生成大量的数据，可提供设备所有者或者用户所在的环境详细信息以及个人习惯、隐私数据。这些数据可以在没有任何明确的用户授权下收集，并有可能在某个支持IoT共享平台上暴露给第三方。更糟的情况制造商挂羊头卖狗肉，IoT设备主动收集与所提供服务无关的数据。</p>
+<p>用户除了必须信任集中式服务提供商不会侵犯他们的隐私之外，还必须相信数据的传输具有保密性和完整性。任何不安全的数据传输都会使得恶人在未经授权的情况下窃听和收集数据。</p>
+<h4 id="设备管理">3.3 设备管理</h4>
+<p>“普通物联网设备管理包括设备的配置、管理、监控、对故障的诊断以及纠正措施。关键物联网设备管理主要包括设备的注册、配置、关联、软件更新、固件升级以及整体控制管理。”（<a href="https://www.i-scoop.eu/internet-of-things-guide/iot-device-management/" target="_blank" rel="noopener">链接</a>）</p>
+<p>随着物联网的加速发展，服务提供商在满足管理要求方面遇到了一些挑战，主要包括以下两个方面：</p>
+<ul>
+<li>集中式设备管理的挑战：随着设备规模扩大到一定范围，当前的集中式网络管理会出现明显瓶颈，设备监控、固件升级等的维护成本大幅增加；</li>
+<li><strong>事物身份(Identity of Things, IDoT)治理</strong>：
+<ul>
+<li>物联网设备的所有权和身份关系：设备的所有权在设备的生命周期内，从制造商、供应商、零售商和消费者处发生变化；如果设备被转售、退役或销毁，需要更改或撤销消费者的IoT设备所有权；</li>
+<li>物联网设备的属性与关系：设备的属性包括制造商、品牌、序列号等；设备关系还包括设备-人、设备-设备、设备-服务等；如何处理这些复杂的关系也是一种挑战；</li>
+</ul></li>
+<li>设备的访问控制：现有物联网设备访问控制都还是基于PKI体系，依赖于中心化PKI容易受到MITM（Man-In-The-Middle）攻击，CA单点故障也会带来系统加密体系全面崩盘的风险；</li>
+<li>异构物联网设备的连通性：物联网范式需要数十亿异构设备的广泛连接，这种异构的连通性对于不同供应商开发的协议和解决方案的交互都是业界难题。</li>
+</ul>
+<p>论文[12]对于现有的物联网设备管理平台进行了Benchmark评估测试，并展望未来的物联网设备管理平台。</p>
+<h4 id="规范化与协同操作">3.4 规范化与协同操作</h4>
+<p>物联网标准由多个独立多国治理机构、联盟或组织提供支持（例如 IEEE、ETSI、IETF、W3C、OMG、OneM2M等）。这些标准涵盖了物联网产品与服务从通信技术到架构的多个方面，其中一些遵循中立的跨域方法，二其他一些仅适用于特定的垂直领域。各个标准组织还未形成统一的国际标准，各种设备编码之间相互孤立，有的甚至重复交叉。</p>
+<p>要实现信息的互联互通和系统的有效协同，必须建立统一的物联网标识系统。建立统一的物联网标识还需兼容现有设备的异构编码标准。不同供应商设备的异构协同操作问题在2.3节已经提到。</p>
+<h4 id="数据治理">3.5 数据治理</h4>
+<p>物联网设备产生的巨大数据量，难以在通信/传输、存储方面进行精细的管理。可扩展的基础架构对于处理大量不断增长的数据是有必要的。</p>
+<p>数据管理涉及在线数据的聚合，同时提供事件日志、审计和存储，从而进行查询处理和数据分析。且在数据聚合前都应该从应用中抽象出复杂的语义，未经处理的数据面临着非均匀性（non-uniformity）和弱语义。此外许多物联网应用领域对时间要求很高，因此在考虑物联网设备的受限资源能力的同时，及时处理物联网数据也非常重要。</p>
+<p>现有的集中式方法确实效率较高，但这些方法不能同时为数据完整性提供保证，并且在处理异构数据方面存在数据孤岛等的信任问题。</p>
+<h2 id="三iot-meets-blockchain">三、IoT Meets Blockchain</h2>
+<p><strong>缘起</strong></p>
+<p>物联网的目标是尽可能简化概念，使智能对象通过互联网进行通信，以收集全面的数据并提供个性化的自动化服务，几乎不需要人工干预。为此，目前的物联网平台已经建在集中式模型上，中央服务器或代理提供数据处理，设备协调和授权等服务。 这种方法需要高端服务器，并且这种方法不适用于物与物自主交换数据的场景。 在集中式模型中，集中式服务器授权对象相互通信，因此当越来越多的设备通过Internet相互通信，极大提高了服务器的门槛要求。</p>
+<p>在认识到区块链提供的机会及其潜在影响之后，研究人员和开发人员已经开始为物联网设计分布式的解决方案。 区块链的固有特性使其天然地成为开发物联网和分布式云计算的安全分布式结构的首选。</p>
+<h3 id="blockchain可以解决iot什么问题如何解决">1. Blockchain可以解决IoT什么问题？如何解决？</h3>
+<h4 id="支持异构协同操作">1.1 支持异构协同操作</h4>
+<p>目前，物联网设备和协议的异构性限制了它们的协同操作性，并且由于区块链是与语义无关的分布式数据库，因此使用区块链作为物联网的网络控制机制将为其增加更大程度的适应性。 事实证明，区块链可以在异构硬件平台上运行，基于区块链的物联网框架有望适应不同的环境和用例，以满足物联网用户不断增长的需求和需求。</p>
+<p>此外，在区块链中可以使用智能合约、跨链等方法将不同厂商、不同协议的设备连接起来，对设备产生的事务交易等消息进行订阅/发布，并结果记录在区块链上[9]。</p>
+<h4 id="安全与隐私保护">1.2 安全与隐私保护</h4>
+<p>在物联网上确保隐私保密下和数据保护，大多数区块链网络都可以使用地址假名简单地保护用户隐私，且其链状结构按时间顺序连续地记录了数据，数据分布地在多个设备上记录，增加了篡改数据的成本，有效抵御DDoS等网络攻击方式。在未来的发展中，基于区块链的去中心化物联网网络消除了用户因为“互相不信任”而通过集中式的实体来处理的需要，从而防止恶意第三方实体收集用户的私人数据。</p>
+<p><strong>如何隐私保护？</strong></p>
+<p>通过区块链进行的所有交互都是公开可用且可验证的，因此存储在链上和链下的物联网数据通常保持加密，并且在区块链上强制执行授权访问的策略。但是由于区块链网络的可审计性需要通过公开数据访问，这也不符合隐私保护原则。所以，为了保持隐私，区块链技术本身并不充分，需要在可审计和隐私之间寻找有效的平衡。</p>
+<p>现有在基于区块链的物联网框架中实现隐私保护的研究，包括利用智能合约执行访问策略的方案[15-16]、分层区块链架构[17]、通过假名地址更新在事务级别上提高区块链的隐私[18-19]；以及在密码学上做的改进，例如：将传感器数据通过属性加密保护隐私[20]，零知识证明[21]。</p>
+<p><strong>如何保证安全？</strong></p>
+<p>凭借decentralized public-key infrastructure（DPKI）、可容错设计、可审计以及内在的不受DDoS攻击等多个特性，区块链也可以保证交易网络传输安全的能力。相对于物联网现有的中心化的安全管理方法，区块链带来的技术革新会替代当前的安全方法，并为物联网提供改进的安全解决方案。</p>
+<p>现有研究已经有一些方案，用于在不依赖第三方服务的情况下在物联网实施访问控制策略。</p>
+<ul>
+<li>针对PKI改进：论文[22]提出了一种基于区块链的PKI方案，相对于中心化的PKI更具有容错性；</li>
+<li>针对架构改进：论文[23]提出了一种多层区块链框架，数据存储和数据访问在单独的层中执行：(i).分布式数据存储层，特定地址的用户可以存储物联网数据；(ii).消息层，供存储层和访问控制层进行协商访问；(iii).访问控制层，具有权限的参与者才可以解密密文；</li>
+<li>使用Token方法：论文[24]在区块链链中存储加密数据，并使用Token和智能合约策略来允许和撤销对数据的访问。</li>
+<li>链下存储方法：论文[25]将数据存储在链下，使用分布式哈希表进行索引，在链上存储不同角色的访问控制权限，从而达到实现访问控制的目的。</li>
+</ul>
+<h4 id="identity-of-things的管理">1.3 Identity of Things的管理</h4>
+<p>区块链已被广泛用于身份授权、身份注册、所有权跟踪以及产品、商品和资产的监控。 像<a href="http://dx.doi.org/10.1016/j.future.2017.08.048" target="_blank" rel="noopener">TrustChain</a>这样的方法使用区块链来实现可信交易，同时保持分布式环境中的事务的完整性。 物联网设备也不例外。 区块链可用于物联网设备注册并提供身份，具有一组属性和复杂关系，可以上传并存储在区块链分布式分类账中。区块链还在物联网设备的供应链和生命周期的每个环节提供分布式管理、治理和追踪。</p>
+<p>具体方案将会在第四章详细说明。</p>
+<h4 id="提高可用性">1.4 提高可用性</h4>
+<p>物联网代表了高可用的收集数据和提供自动功能智能设备。 物联网的网络控制机制需要高可用性，在涉及集中式服务器的体系结构中可能并非总是如此。 区块链的分布式架构，天然地容许部分节点/设备出错或掉线，也可以通过一些分布式共识协议识别故障。</p>
+<h4 id="降低维护成本">1.5 降低维护成本</h4>
+<p>实现物联网全球普及的一个重要步骤是找到有效且经济的方法来处理整个物联网中传感器产生的大量数据。集中式云服务因为其计算和存储的价格更低，所以替代了原有集中式服务器的模式。但是数据表明，使用基于区块链的数据存储平台（例如<a href="https://sia.tech/technology" target="_blank" rel="noopener">Sia</a>）证明了使用区块链存储数据的成本更低。Amazon S3服务器每个月存储1TB是25美元，Sia每月每TB是2美元。</p>
+<h4 id="保证数据完整">1.6保证数据完整</h4>
+<p>物联网应用程序要求传输和分析数据的完整性，因此物联网框架需要对数据泄漏和破坏具有弹性。 区块链网络在节点上存储冗余的副本，这有助于维护数据完整性。</p>
+<p>在论文[5]中有张图，可以很全面的展示Blockchain-based IoT的应用。</p>
+<figure>
+<img src="./BIoT.png" alt="BIoT"><figcaption>BIoT</figcaption>
+</figure>
+<h3 id="iot如何部署在blockchain上">2. IoT如何部署在Blockchain上？</h3>
+<p>集中式的云服务在物联网的发展中作出了重要贡献，但在数据透明性方面，集中式云服务就像黑匣子一样，物联网用户无法控制和完全信任他们共享的数据。 物联网可以从区块链提供的分布式网络范例中受益，同时消除对集中式服务的信任需求。 然而，区块链仍处于研究和开发的早期阶段，集成物联网和区块链仍存在多项研究挑战。</p>
+<p>物联网中涉及的各种各样的设备，这些设备都是资源限制的，无法托管区块链的整个副本或参与验证区块链的新块，使用区块链在物联网中实现绝对分布式是欠考虑的。 因此，重要的是决定物联网边缘中不同实体（设备，网关等）将扮演什么角色。</p>
+<p>物联网边缘设备或网关作为简单的交易发起者（transaction-issuers）并具有可验证的区块链标识，而无需托管整个区块链副本，选取部分设备作为全节点参与共识和区块验证。以下是现研究关于如何集成区块链和物联网的一些方案：</p>
+<ul>
+<li><p>物联网网关设备作为区块链端点：</p>
+<p>在这种方案中，所有通信都通过区块链，而IoT网关则作为区块链网络的端点。在这种情况下，IoT设备将注册到网关设备，并且网关向区块链发出交易。这种方法可以跟踪涉及特定物联网网关和物联网服务的所有通信。此集成方案还可用于验证连接到不同网关的设备之间的通信。在这种方法中，并非所有传输的数据都需要存储在区块链中。区块链本身可以用作控制机制，智能合约充当可编程逻辑，而数据传输可以通过P2P技术进行。</p></li>
+</ul>
+<figure>
+<img src="./scheme_a.png" alt="scheme_a"><figcaption>scheme_a</figcaption>
+</figure>
+<ul>
+<li><p>设备作为区块链的交易发起者：</p>
+<p>这种集成方案出自论文[26]，在上述的分析中，我们假设物联网设备实际上没有携带区块链的副本，而只是简单地向区块链发布交易。 与之前的方法类似，因安全考虑，所有IoT交互事件都会记录到区块链中。 在这种方法中，需要为IoT设备提供加密功能。 这种方法物联网设备和应用程序具有更高自治程度，而物联网硬件的计算复杂性增加。</p></li>
+</ul>
+<figure>
+<img src="./scheme_b.png" alt="scheme_b"><figcaption>scheme_b</figcaption>
+</figure>
+<ul>
+<li><p>互联的边缘设备作为区块链的端点：</p>
+<p>在这种方法中，物联网网关和设备向区块链发布交易，并且可以与另外的链外通信。 这种方法可确保物联网设备之间的低延迟以及在区块链上记录特定交互。 这种集成方案更适合于交互频繁且需要高吞吐量、低延迟、可靠的物联网数据的场景。</p></li>
+</ul>
+<figure>
+<img src="./scheme_c.png" alt="scheme_c"><figcaption>scheme_c</figcaption>
+</figure>
+<ul>
+<li><p>基于云的区块链与物联网边缘混合：</p>
+<p>这种方法是对先前集成方案的扩展，其中物联网用户可以选择将区块链用于记录某些物联网交互事件，其余事件直接发生在物联网设备之间。 这种方法利用区块链的分散记录保护以及实时物联网通信的优势。该方法的主要问题是如何优化实时发生的交互与通过区块链的交互之间的反应时差。</p></li>
+</ul>
+<figure>
+<img src="./scheme_d.png" alt="scheme_d"><figcaption>scheme_d</figcaption>
+</figure>
+<h2 id="四iot与blockchain-based-id-management">四、IoT与Blockchain-based ID Management</h2>
+<p>在物联网中，IDM主要可以包括以下几个部分：</p>
+<ul>
+<li>身份验证（authentication）；</li>
+<li>身份授权（authorization）；</li>
+<li>访问控制管理；</li>
+<li>设备所有权管理；</li>
+<li>设备与人、设备与设备的关系管理；</li>
+</ul>
+<p>此外，在传统的IDM通信方法里，还是使用基于中心化PKI的方案，如下图所示，用户之间进行通信需要多次轮训，且对中心CA机构极为依赖。</p>
+<p>但这种方法由于一些物联网的特性（如可扩展性、协同操作性和移动性）而无法直接移植到物联网环境。这些特性要求对于物联网身份管理系统设计来说很重要。</p>
+<figure>
+<img src="./PKI体系.png" alt="PKI"><figcaption>PKI</figcaption>
+</figure>
+<h3 id="物联网身份管理系统应该有的特性">1. 物联网身份管理系统应该有的特性</h3>
+<ul>
+<li><p>可扩展性（Scalability）</p>
+<p>物联网技术的愿景是万物互联，当网络物理世界的个数达到一定数量，使用传统的集中式IDM方案，所有物联网标识由一个通用第三方维护以构建高度可扩展的IDM解决方案变得极不现实。现有的联邦式身份管理解决方案（例如，<a href="https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=security" target="_blank" rel="noopener">SAML</a>）还是无法绕过信任问题，不能解决在无信任网络中如何建立信任的问题。因此IDM应该在分布式无信任网络中可扩展可信，而无需对任何安全机构进行集中控制。</p></li>
+<li><p>协同操作性（Interoperability）</p>
+<p>根据物体的通信范围、信息处理能力的不同，使用的通信协议也往往不同，如本文第二章所述，通信协议分为很多种，多样性和异构性导致设备之间的协同操作存在问题。设备的身份标识根据不同的标准也全然不同，现在仍然没有一种综合的方案。</p></li>
+<li><p>可移动性（Mobility）</p>
+<p>一些物联网设备有强大的移动能力，可移动性确保用户即使在移动时也能连续地连接服务。无论设备在何处都需要进行身份验证，获得相应的设备服务的授权和访问控制权限。</p></li>
+<li><p>安全与隐私性（Security &amp; Privacy）</p>
+<p>安全与隐私是身份管理系统应该有的最基本特性，具体表现为数据安全、通信安全、隐私保护等。</p></li>
+</ul>
+<h3 id="iot传统身份管理方案">2. IoT传统身份管理方案</h3>
+<h4 id="传统idm模型">2.1 传统IDM模型</h4>
+<p>数字身份管理系统负责管理用户的身份信息，由标识符（UserID、电子邮件、URL等），凭证（证书、令牌、生物识别等）和属性（角色、职位、特权等）。下图描绘了传统IDM的示例实例系统，包括三个主要利益相关者：主体（也称为用户），依赖方（也是称为服务提供商）和身份提供商（IdP）。</p>
+<figure>
+<img src="./traditional_IDMS.png" alt="traditional_IDMS"><figcaption>traditional_IDMS</figcaption>
+</figure>
+<p>由此可见，在传统的IDM模型中，身份提供者IdP作为依赖方发挥了核心的作用。这种强依赖关系直接导致了信任问题（在中国不会出现这种情况）。而且，随着提供在线身份服务的服务商增加，用户需要记忆的自己的身份标识变得更多了。</p>
+<h4 id="联邦idm模型">2.2 联邦IDM模型</h4>
+<p>联邦IDM模型是一种较新的IDM模型，这种模型尝试在各大IdP之间建立信任关系，一个安全域中的用户可以从另一个域访问服务。例如，<a href="https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=security" target="_blank" rel="noopener">SAML</a>、OpenID[28]和Shibboleth，允许用户仅使用一个身份登录到多个安全域并授予对属于同一联盟的各种系统的访问权限，即无论在一个域中对哪个身份进行身份验证，同一联盟中的另一个域提供的服务都可以根据其域提供的凭据进行访问。</p>
+<p>论文[29]给出了现有传统身份管理方案的比较，如下表所示（节选）：</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">方案</th>
+<th style="text-align: center;">可扩展性</th>
+<th style="text-align: center;">协同操作性</th>
+<th style="text-align: center;">可移动性</th>
+<th style="text-align: center;">安全与隐私性</th>
+<th style="text-align: center;">以用户为中心</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">FIDIS</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">√</td>
+<td style="text-align: center;">√</td>
+<td style="text-align: center;">√</td>
+<td style="text-align: center;">√</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">SAML<a href="https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=security" target="_blank" rel="noopener">27</a></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">√</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">OpenID[28]</td>
+<td style="text-align: center;">√</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">√</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Shibboleth</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">√</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">STORK</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">√</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">√</td>
+<td style="text-align: center;">√</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><a href="http://www.picosproject.eu" target="_blank" rel="noopener">PICOS</a></td>
+<td style="text-align: center;">√</td>
+<td style="text-align: center;">√</td>
+<td style="text-align: center;">√</td>
+<td style="text-align: center;">√</td>
+<td style="text-align: center;">√</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Cardspace</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">√</td>
+<td style="text-align: center;">√</td>
+<td style="text-align: center;">√</td>
+<td style="text-align: center;">√</td>
+</tr>
+</tbody>
+</table>
+<p>用户必须考虑来自物联网的所有实体，并协调不同安全域的应用加入IDMS，在异构环境中构建可协同操作性系统。但从上表可以看到，大多数的身份管理方案都无法处理可扩展性。虽然OpenID和PICOS等方法可以某种程度上具有可扩展性，但IoT需要更强大的分布式可扩展的底层对上层所有物联网实体的管理支撑。此外，现有的安全与隐私都建立在“用户都信任他们的IdP”的假设上，IdP的安全事故将会导致大批量用户数据泄露（Facebook账号泄露事件），并不能真正消除隐私问题。</p>
+<p><strong>总而言之</strong>，互联网上的当前身份管理系统已经从孤立模型演变为去中心化的、联邦制的和以用户为中心的身份管理解决方案。通常，一些大型在线服务提供商的IdMS成为其联合域中的通用身份提供商，例如：微信登录、Facebook登录、Google登录等登录方式。不可否认，以用户为中心的联邦式IDMS确实减轻了用户管理身份标识的复杂性。然而，安全性和隐私性尚未得到完美解决，因为用户必须完全信任他们身处中间的身份提供者，这些身份提供者看到每个用户与其在线服务提供商之间的所有活动，“Facebook用户账号泄露事件”就给我们敲响了警钟。因此，消除不必要的第三方并在无信任网络中构建可信身份提供商对于物联网环境至关重要。</p>
+<h3 id="现有方案举例">3. 现有方案举例</h3>
+<p>本节先从学术界和工业界对Blockchain-based IDM与物联网的现状进行简单阐述，并提出个人观点；再进行实际举例，举出实际应用结合点，并附上现有方案。</p>
+<h4 id="相关综述">3.1 相关综述</h4>
+<h5 id="学术界综述">3.1.1 学术界综述</h5>
+<p>从学术研究的角度来看，基于区块链的IDM系统正在引起很多的关注，为数字身份提出新的解决方案：</p>
+<ul>
+<li>Hardjono[33]在准入式区块链环境中使用零知识证明引入了一种基于区块链的隐私保护身份解决方案，称为ChainAnchor。在ChainAnchor中，验证节点具有编写或处理事务的权限，而其他节点只能读取和验证事务。所有经过验证的节点都建立在防篡改硬件上，形成隐私保护层，为用户提供隐私保护服务；</li>
+<li>Lee[34]为物联网设备提出了基于区块链的身份和认证管理系统。 他们提出的解决方案将身份标识的生成和维护放在区块链上，作为一种即时服务，而不考虑通过设备使用区块链的交互或通信。 在这种情况下，基于区块链的身份标识仅用于去中心的身份验证目的；</li>
+<li>Kravitz[6]提出基于准入式区块链网络的解决方案，由于准入式的区块链网络里的用户可知，参与者之间物联网的接入更可信。此外，该方法利用设备组成员（DGM）机制，将多个设备和用户绑定，并且在执行事务时，在区块链中可以体现出所属成员。</li>
+</ul>
+<h5 id="工业界综述">3.1.2 工业界综述</h5>
+<p>在工业界有很多新兴的创业公司以及企业联盟，意图在区块链与物联网结合的大生态市场上分一杯羹：</p>
+<ul>
+<li><a href="https://www.trusted-iot.org/" target="_blank" rel="noopener">Trusted IoT Alliance</a>：一个物联网开源软件基金会，其使命是利用区块链技术解决物联网去中心、异构等技术难点。其中不泛有IOTA等的区块链公司，纽约梅隆银行、西门子、思科等合作企业，以及几个物联网企业（区块链公司成员比物联网的还多）；</li>
+<li><a href="https://www.iota.org/" target="_blank" rel="noopener">IOTA</a>：以Tangle闻名，将基于DAG区块链做大做强的方案。使用独特的方法来验证交易，使其成为物联网所需的大量数据交换的理想选择；</li>
+<li><a href="https://slock.it/" target="_blank" rel="noopener">slock.it</a></li>
+<li><a href="https://www.blockpass.org/" target="_blank" rel="noopener">blockpass</a></li>
+</ul>
+<p><strong>综上所述</strong>，实际上基于区块链的身份标识产品已经很多，相关学术论文也不少，但是实际上用在物联网领域的还真不多，个人认为主要原因有以下几点：</p>
+<ul>
+<li><p>离不开PKI体系：不使用公钥体系，建起来的城堡就如同沙雕。PKI在物联网中并不能很好适配的主要原因就是其过度中心化的设计，常常容易带来性能瓶颈、单节点故障等问题。现有解决方案DPKI可以有效解决过度中心化的缺点，但其落地为时尚早， 真正的去中心化不切实际；</p></li>
+<li><p>加密成本太高：物联网设备根据设备不同的职能有不一样的硬件情况，但普遍是资源限制的，运算能力弱，存储能力差，蓄电量低，这样就对安全通信、安全存储带来了一系列的挑战；同时，由于成本的关系，不可能给设备都配备上性能高的硬件条件，所以如何平衡安全和成本是一个主要问题：</p>
+<figure>
+<img src="./security_balance.jpg" alt="security is a balance"><figcaption>security is a balance</figcaption>
+</figure>
+<p>再上图可以看到，在通信层使用TLS或轻量级DTLS可以抵抗中间人攻击等通信攻击方式；在针对软件或硬件攻击其密钥，可以使用ARM基于TEE(Trusted Execution Enviroment)/PSA(Platform Security Architecture)进行硬件隔离，存储密钥相关的数据；更深层次的硬件攻击可以使用SE(Secure Element)芯片级的安全保护，但是成本也会大大增加；</p></li>
+<li><p>不能完全实现去中心化：如今DPKI等对中心化体系替换的方案还未成熟，完全去中心化不切实际，所以现在多是从单中心化转变为多中心化，在企业业务层面进行合作；</p></li>
+</ul>
+<h4 id="物联网身份管理与属性管理">3.2 物联网身份管理与属性管理</h4>
+<p>分布式身份管理与属性管理是分布式经济的基础。在物联网中，设备与人与其他设备的关系，以及其所有权的变更，在不同时间不同地点的访问控制权限，都与分布式身份管理息息相关。如下图所示，是一个基于区块链的分布式身份标识系统的样例。</p>
+<figure>
+<img src="./overview_of_bid.png" alt="image-20190724175706761"><figcaption>image-20190724175706761</figcaption>
+</figure>
+<h5 id="securing-user-identity-and-transactions-symbiotically-iot-meets-blockchain6">3.2.1 Securing User Identity and Transactions Symbiotically: IoT Meets Blockchain[6]</h5>
+<p>论文[6]基于传统PKI与联邦式IDM，提出了一种使用联盟链保护和管理多个物联网设备的分布式身份管理解决方案。该解决方案通过对非对称密钥的重发(rorating key)增加安全性并防止攻击，并提供设备成员DGM机制，可以保证成员内的设备发出Transaction时，区块链内可以认定是从属于哪个DGM发出的Transaction。并且可以调节设备存储量，对存储空间很小的物联网设备很友好。</p>
+<p><strong>1). 定义声明</strong></p>
+<ul>
+<li>Enrollment Cert：长期存储固有属性，用于证明身份；</li>
+<li>Transaction Cert（TCert）：记录动态的属性，用于区块链交易；</li>
+<li>Transaction Cert Authority（TCA）：颁发TCert；</li>
+<li>Attribute CA（ACA）</li>
+<li>Kown Your Machine（KYM）</li>
+</ul>
+<p><strong>2). 授权密钥管理</strong></p>
+<figure>
+<img src="./auth_key_manage.png" alt="image-20190728160226157"><figcaption>image-20190728160226157</figcaption>
+</figure>
+<ul>
+<li><p>生成TCA CA RootKey与Primary TCA的ID；</p></li>
+<li><p>生成Primary TCA RootKey： <span class="math inline">\(TCA\_RootKey_{384bit}=HMAC(TCA\_CARootKey,TCA\_ID)\)</span> ；</p></li>
+<li><p>Primary TCA分发Template TCert给从属TCA，从属TCA负责颁发相应TCert： <span class="math inline">\(TCertsRoot_{384bit}=HMAC(TCA\_RootKey,&#39;&#39;1&#39;&#39;||KeyVersion)\)</span> ；</p></li>
+<li><p>从属TCA实例化TCert，对某个设备/人进行注册，生成Enrollment Cert与TCert，生成TCertOwnerRootKey：<span class="math inline">\(TCertOwnerRootKey_{384bit}=HMAC(TCertsRoot,EnrollmentPublicKey)\)</span> ；</p></li>
+<li><p>从属TCA派生出拓展密钥TCertOwnerExpansionKey与加密密钥TCertOwnerEncryptionKey：</p>
+<p><span class="math inline">\(TCertOwnerEncryptionKey\_{256bit}=HMAC(TCertOwnerRootKey,&#39;&#39;1&#39;&#39;)\ (256bit truncation)\)</span></p>
+<p><span class="math inline">\(TCertOwnerExpansionKey_{384bit}=HMAC(TCertOwnerRootKey,&#39;&#39;2&#39;&#39;)\)</span></p></li>
+<li><p>生成TCertIndex，ConstantPad代表着在审计中的所属DGM设备： <span class="math inline">\(EncryptedTCertIndex=AES\_CBC\_Encrypt(TCertOwnerEncryptionKey,TCertIndex||ConstantPad)\)</span></p></li>
+<li><p>生成TCert-specific拓展值： <span class="math display">\[
+\begin{align}
+TCertSpecificExpansionValu_{384bit}\\
+&amp; = \{HMAC(TCertOwnerExpansionKey,TCertIndex)\\
+&amp;||HMAC(TCertOwnerExpansionKey,TCertIndex+1)\}
+\end{align}
+\]</span></p></li>
+</ul>
+<p><strong>3). 密钥拓展</strong></p>
+<p>TCA可以将TCert的公钥和私钥进行派生，以符合一个群组多个设备的设计（和ID Mixer有区别），而且派生的过程中是与当前属性无关的，这个和面向对象的基类继承派生很相似，可以在继承属性的基础上添加资质证明等属性值，更有利于审计与分析。 <span class="math display">\[
+\begin{align}
+TCertPublicKey\\
+&amp;=EnrollmentPublicKey+TCertSpecificExpansionValue*G \\
+TCertPrivateKey\\
+&amp;=(EnrollmentPrivateKey+TCertSpecificExpansionValue)\ (mod\ n)
+\end{align}
+\]</span> <span class="math inline">\(G\)</span> 是ECDSA中的系数。</p>
+<p><strong>4). 属性管理</strong></p>
+<figure>
+<img src="./TCA_key_manage.png" alt="image-20190728205246742"><figcaption>image-20190728205246742</figcaption>
+</figure>
+<ul>
+<li><p>生成TCA CA RootKey与Primary TCA的ID；</p></li>
+<li><p>生成Primary TCA RootKey： <span class="math inline">\(TCA\_RootKey_{384bit}=HMAC(TCA\_CARootKey,TCA\_ID)\)</span> ；</p></li>
+<li><p>生成审计/从属TCA树根节点密钥：<span class="math inline">\(PreK\_Root=HMAC(TCA\_RootKey,&#39;&#39;2&#39;&#39;||KeyVersion)\)</span> ；</p></li>
+<li><p><span class="math inline">\(K\_TCert=HMAC(PreK\_xyz,TCertID),\ where\ PreK\_xyz=HMAC(PreK\_Root,&#39;&#39;xyzx&#39;&#39;)\)</span> ；</p></li>
+<li><p>属性的加密密钥 <span class="math inline">\(Attribute\_EncryptionKey[i]\)</span> 是由 <span class="math inline">\(K\_TCert\)</span> 派生而成的，即 : <span class="math display">\[
+\begin{align}
+Attribute\_EncryptionKey[i]
+&amp;=HMAC(K\_TCert,i)\\
+Encrypted_Attribute[i]
+&amp;=AES\_CBC\_Encrypt(Attribute\_EncryptionKey[i],Attribur[i])
+\end{align}
+\]</span></p></li>
+<li><p>被认证的属性为 <span class="math inline">\(Authenticated\_Attribute\)</span> ： <span class="math display">\[
+\begin{align}
+Attribute\_HMACKey[i]&amp;=HMAC(Attribute\_EncryptionKey[i],i)\\
+Authenticated\_Attribute[i]&amp;=HMAC(Attribute\_HMACKey[i],Attribute[i])
+\end{align}
+\]</span></p></li>
+</ul>
+<h4 id="物联网密钥管理">3.3 物联网密钥管理</h4>
+<p>在物联网场景中，设备与设备之间通信，更多的是通过多播/广播进行的群组通信可以与整个群组进行直接通信，这种方式更加高效。在物联网中的所有安全问题中，群组密钥管理是保护群组通信的基础之一。群组密钥本质上是由群组的所有成员共享的密钥，以便在使用该组密钥传输之前对所有组通信包进行加密。未授权用户可能由于网络错误或故意拦截而接收群组通信包，但是，如果没有正确的群组密钥，则非法用户无法解密所接收的包。</p>
+<p>因为物联网设备资源的限制，现有的IP网络中的群组密钥管理方案不能直接用于物联网中。这意味着每个节点都无法存储大型密钥数据库或进行繁重的加密计算。</p>
+<p>在3.3.1节介绍一种基于PUF的物联网密钥管理方法，虽然<strong>不是基于区块链的解决方案</strong>，但是或许可以从中寻找更加深入的结合点。</p>
+<h5 id="efﬁcient-and-secure-group-key-management-in-iot-using-multistage-interconnected-puf31">3.3.1 Efﬁcient and Secure Group Key Management in IoT using Multistage Interconnected PUF[31]</h5>
+<p>论文[31]提出了一种基于物理上不可克隆方程(Physically Unclonable Function, PUF)设计的组密钥管理方案：多级互联PUF（Multistage Interconnected PUF, MIPUF），该方法可以在能量资源受限的环境中保护设备进行组通信。这种设计能够安全、高效地执行密钥管理任务：密钥分发、密钥存储和密钥更新。在最后的实验表明，与现有的基于ECC的密钥管理方案相比，可以节省47.33%的电源。</p>
+<p>暂且跳过MIPUF的部分，假设作者提出的MIPUF嵌入芯片在计算效果上是正确的、有效的、节能的、安全的。我们主要看它的密钥管理部分。</p>
+<ul>
+<li><p>密钥分发</p>
+<p>密钥分发遵循着群组密钥分发协议，请看下图，不再赘述：</p>
+<figure>
+<img src="./group_key_protocol.png" alt="image-20190729013530951"><figcaption>image-20190729013530951</figcaption>
+</figure></li>
+<li><p>密钥存储</p>
+<p>在密钥分发之后，当提供正确的配置参数时，可以从MIPUF中提取群组密钥。 与其他基于加密的密钥管理系统不同，这个方法不直接将群组密钥存储在内存中， 而是从密钥提示(hint) <span class="math inline">\(p_i\)</span> 中提取群组密钥。因为只有当攻击者可以同时访问存储（包含 <span class="math inline">\(p_i,f_i,c_i^{\gamma_i}\)</span> ）和MIPUF（<span class="math inline">\(\Bbb{F}^{\gamma_i}\)</span>），才能获得真实的群组密钥。 只篡改其中一个不损害整个设计的安全性。此外，群组密钥仅用于接收或发送组消息，因此使用低功率MIPUF存储真实密钥也是高能效的。</p></li>
+<li><p>密钥更新</p>
+<p>只要群组成员进行动态更改，就需要重新生成，重新分发或更新群组密钥。当一个成员离开该组时，它应该无法解密未来的群组通信（forward security）; 当一个新成员加入时，它不应该能够解密过去的群组通信（backward security）。 出于安全考虑，在检测到潜在泄漏时，还应完全重新组密钥组密钥。 这里讨论所有三种可能的情况：</p>
+<ul>
+<li><p>新成员加入</p>
+<p>假设新的IoT节点<span class="math inline">\(N_{\alpha}\)</span>意图加入组<span class="math inline">\(G\)</span>，<span class="math inline">\(N_{\alpha} \notin G\)</span>。在这种情况下，将新密钥重新分配给所有组成员是昂贵且低效的。 因此，控制单元向所有设备 <span class="math inline">\(\forall N_i \in G\)</span> 发出消息 <span class="math inline">\(msg^{join}={E_{key_g}(key&#39;_g)}\)</span> 。现有的组成员计算并存储新的密钥提示 <span class="math inline">\(p&#39;_i=r_i^{\gamma_i}\otimes key&#39;_g\)</span> 并在接收和解密<span class="math inline">\(msg^{join}\)</span>时删除 <span class="math inline">\(key&#39;_g\)</span>。 新成员必须完成整个密钥分发过程。 使用此方法可以保留向后安全性，因为新成员没有关于旧组密钥的信息。</p></li>
+<li><p>成员退出</p>
+<p>从组中删除现有成员比添加新成员更复杂。假设将<span class="math inline">\(G\)</span>群组分成m个子群 <span class="math inline">\(g_j\subset G =\{g_1,…,g_m\},1\leq j\leq m\)</span> 。同一子群中的所有节点共享相同的配置参数<span class="math inline">\(\gamma_{g_j}\)</span>。</p>
+<p>假设IoT节点 <span class="math inline">\(N_{\beta}\in g_j \subset G\)</span> 意图离开子群，其中子群中的所有成员使用相同的MIPUF配置参数<span class="math inline">\(\gamma_j\)</span>。控制节点首先多播/广播m-1包含新密钥的消息<span class="math inline">\(msg_j^{leave}=\{E_{\gamma_i}(key&#39;_g||H(\gamma_i))\}\)</span> 发送给所有使用配置参数<span class="math inline">\(\gamma_i,i\neq j,1\leq i\leq m\)</span>加密的子群。收到消息后，每个节点首先使用自己的配置参数 <span class="math inline">\(\gamma_i\)</span> 对消息进行解密，并检查 <span class="math inline">\(H(\gamma_i)\)</span> 是否与解密的消息中匹配。如果为正确，那么解密的新群密钥 <span class="math inline">\(key&#39;_g\)</span> 有效，否则，丢弃该消息。包括离开节点在内的<span class="math inline">\(g_j\)</span>成员都不知道其他子组的配置参数，因此无法正确解密消息。控制单元应该通过以下方式对<span class="math inline">\(g_j\)</span>的所有成员进行单播通信。分配新的群组密钥<span class="math inline">\(key&#39;_g\)</span>和新的配置<span class="math inline">\(\gamma&#39;_j\)</span>以替换<span class="math inline">\(\gamma_j\)</span> 。</p></li>
+<li><p>所有密钥更新</p>
+<p>但是，可以通过完全重新映射输入 - 输出映射来重新调整MIPUF以解决建模攻击（modeling attacks）。 一旦生成的CRP总数超过计算的样本复杂度下限，我们建议执行完全更新。该下限等于打破MIPUF的训练集大小。 下面的等式描述了根据IPN模型参数的下限的样本大小，其中<span class="math inline">\(m\)</span>是MIPUF中的节点的数量，并且<span class="math inline">\(n\)</span>是MIPUF节点中的PUF的最大数量。 <span class="math inline">\(k=VC(\Bbb F)\)</span>其中<span class="math inline">\(VC\)</span>是Vapnik-Chervonenkis维度，<span class="math inline">\(\Bbb F\)</span>是MIPUF中最大的单个PUF。 <span class="math inline">\(\delta\)</span>是失败概率，<span class="math inline">\(\epsilon\)</span> 是学习的错误。 <span class="math display">\[
+Sample\ complexity = \frac{(m\cdot k+m)\cdot n+lb(\frac{1}{\delta})}{\epsilon}
+\]</span></p></li>
+</ul></li>
+</ul>
+<h4 id="物联网权限管理">3.4 物联网权限管理</h4>
+<p>物联网场景比传统的C/S场景更加动态，设备状态、管理权、所有权变化更加频繁。当访问控制查询和更新变得更加频繁时，单个集中式访问控制服务器会存在明显的性能瓶颈。基于区块链技术的分布身份识别，具有可追溯、不可抵赖等特点更加适合物联网的场景。<strong>然而现有的方法还处在验证阶段，离不开中心化的PKI是不能从根本上改变现状的。</strong></p>
+<h5 id="blockchain-meets-iot-an-architecture-for-scalable-access-management-in-iot32">3.4.1 Blockchain Meets IoT: an Architecture for Scalable Access Management in IoT[32]</h5>
+<p>论文[31]提出了一种可用于仲裁物联网中的角色和权限的体系结构。该体系结构是基于区块链技术的物联网分布式访问控制系统，这种架构由概念验证实验支持，并在实际的物联网场景中进行了评估。</p>
+<figure>
+<img src="./access_control.png" alt="image-20190724192501861"><figcaption>image-20190724192501861</figcaption>
+</figure>
+<p>所提出的方法定义一个Management Hub代表物联网设备从区块链请求访问控制信息，其余所有设备都在区块链网络中具有唯一标识。设备在注册时，必须在管理员的控制下注册，并且一定要注册在一个Management Hub下，注册之后管理员便可以对该设备的访问控制权限进行设定。</p>
+<p>在区块链中部署智能合约用于定义访问控制系统中所有的操作。管理者可以和智能合约交互，便于定义系统的访问控制策略。</p>
+<figure>
+<img src="./BIoT_IDM_workflow.png" alt="image-20190728215828943"><figcaption>image-20190728215828943</figcaption>
+</figure>
+<p>上图显示了各个部件的交互情况。</p>
+<h4 id="设备生命周期的安全管理">3.5 设备生命周期的安全管理</h4>
+<p>区块链还可以在物联网设备的供应链和生命周期的每个环节提供可信赖的分布式管理，如下图所示，可以记录设备的所有权（ownership）。</p>
+<figure>
+<img src="./IoT%20security%20management.png" alt="image-20190711100854573"><figcaption>image-20190711100854573</figcaption>
+</figure>
+<ol type="1">
+<li>在开发商处建立设备的Identity；</li>
+<li>在交付时建立所有权(Ownership)，分发密钥对；</li>
+<li>在部署时对设备参数化，建立访问控制以及配置设备 ；</li>
+<li>在维护时，定期重新分发密钥，恢复、升级、重配置；</li>
+<li>若存在更改所有权，需要在新的持有者重新分配密钥对、重新部署；</li>
+<li>设备报废/退休，需要删除所有权。</li>
+</ol>
+<h3 id="idm-for-iot的挑战">4. IDM for IoT的挑战</h3>
+<h4 id="访问控制">4.1 访问控制</h4>
+<p>身份标识和访问控制始终是紧密相连的。在物联网中建立身份系统的目标是实现通信并规范设备和资源的授权过程。尽管基于区块链的访问控制在物联网领域是重要结合点，然而现存的方案中没有很好地解决物联网的访问控制。</p>
+<p>传统的访问控制模型访问控制列表（ACLs）和基于角色的访问控制（RAC）模型由于其中心化的设计和扩展性差，早已落入历史洪流；传统方案的共同缺点都是其中心化管理（Admin，IdP等），中心化管理者为设备设定其访问权、角色与属性。因此，这些解决方案不适用于去中心化的可扩展的物联网系统。因此，物联网访问控制的主要挑战可以归结为两点（可扩展性和去中心化）：</p>
+<ul>
+<li><strong>可扩展性</strong>：如何设计有效的访问控制机制，以便于对多种多样的物联网实体（人、物、服务等）的访问权限进行管理，而无需担心用户、角色以及访问策略的快速增长；</li>
+<li><strong>去中心化</strong>：如果使用区块链技术去除“可信”第三方的IdP，如何在无信任的物联网环境构建访问控制机制？</li>
+</ul>
+<h4 id="隐私保护">4.2 隐私保护</h4>
+<p>基于身份标识的隐私保护也需要从重考虑。如本章第2节中所述，在传统的身份认证中，验证者从服务商或IdP中取得被验证者的信息，在这一步用户的信息往往被多次披露，并且中心化的IdP可以看到服务访问者和提供者之间的交互，存在个人隐私泄露的风险。从用户的角度来看，隐私保护包括两个方面：</p>
+<ul>
+<li>来自IdP的身份信息保护；</li>
+<li>来自服务提供商的敏感应用数据保护；</li>
+</ul>
+<p>在基于区块链的分布式身份标识中，更改了以往的身份验证范式，由用户决定向谁现实敏感信息，而不是托管给IdP。当然，单纯依靠区块链技术还远远不够，还需要额外的隐私保护方案，例如将多方计算（MPC）和零知识证明（ZKP）引入区块链，可实现敏感信息的选择性披露，可实现真正的隐私。但是现今的学术界和工业界都由于方案的复杂性、性能瓶颈等问题，真正落地的不多。</p>
+<h4 id="性能成本">4.3 性能/成本</h4>
+<p>性能其实与底层区块链的性能有关，能够承受数量众多的物联网设备进行信息交互的底层区块链平台的开发也具有一定的挑战性。其次，成本、安全、性能这三者如何平衡，仍然是产品能不能落地的重要因素，值得研究。</p>
+<h2 id="参考文献链接">参考文献/链接</h2>
+<ol type="1">
+<li><a href="https://internetofthingsagenda.techtarget.com/definition/Internet-of-Things-IoT" target="_blank" rel="noopener">What is internet of things (IoT)? - Definition from WhatIs.com</a></li>
+<li>Khan M A, Salah K. IoT security: Review, blockchain solutions, and open challenges[J]. Future Generation Computer Systems, 2018, 82: 395-411.</li>
+<li>M. Conoscenti, A. Vetro, J.C.D. Martin, Blockchain for the Internet of Things: A systematic literature Review, in: The 3rd International Symposium on Internet of Things: Systems, Management, and Security, IOTSMS-2016, 2016.</li>
+<li>Lo S K, Liu Y, Chia S Y, et al. Analysis of Blockchain Solutions for IoT: A Systematic Literature Review[J]. IEEE Access, 2019, 7: 58822-58835.</li>
+<li>Fernández-Caramés T M, Fraga-Lamas P. A Review on the Use of Blockchain for the Internet of Things[J]. IEEE Access, 2018, 6: 32979-33001.</li>
+<li>Kravitz D W, Cooper J. Securing user identity and transactions symbiotically: IoT meets blockchain[C]//2017 Global Internet of Things Summit (GIoTS). IEEE, 2017: 1-6.</li>
+<li><a href="https://www.cse.wustl.edu/~jain/cse570-15/ftp/iot_prot/#chal4" target="_blank" rel="noopener">Internet of Things Protocols and Standards</a></li>
+<li>Pongle P, Chavan G. A survey: Attacks on RPL and 6LoWPAN in IoT[C]//2015 International conference on pervasive computing (ICPC). IEEE, 2015: 1-6.</li>
+<li>Ali M S, Vecchio M, Pincheira M, et al. Applications of blockchains in the Internet of Things: A comprehensive survey[J]. IEEE Communications Surveys &amp; Tutorials, 2018, 21(2): 1676-1717.</li>
+<li>Gu H, Potkonjak M. Efficient and Secure Group Key Management in IoT using Multistage Interconnected PUF[C]//Proceedings of the International Symposium on Low Power Electronics and Design. ACM, 2018: 8.</li>
+<li><a href="https://www.i-scoop.eu/internet-of-things-guide/iot-device-management/" target="_blank" rel="noopener">IoT device management: challenges, solutions, platforms, choices, market and future</a></li>
+<li>Biliyaminu U, Hamdan H, Lengyel L, Farkas K. Evaluation of IoT Device Management Tools, in: ACCSE 2018: The Third International Conference on Advances in Computation, Communications and Services, 2018.07.22-26, Barcelona, Spain.</li>
+<li><a href="https://sia.tech/technology" target="_blank" rel="noopener">Sia combines a peer-to-peer network with blockchain technology to create the world's first decentralized storage platform.</a></li>
+<li>P. Otte, M. de Vos, J. Pouwelse, TrustChain: A Sybil-resistant scalable blockchain, Future Gener. Comput. Syst. (2017). http://dx.doi.org/10.1016/j.future.2017.08.048.</li>
+<li>A. Ouaddah, A. A. Elkalam, and A. A. Ouahman, “Towards a novel privacy-preserving access control model based on blockchain technology in iot,” in Europe and MENA Cooperation Advances in Information and Communication Technologies, 2017, pp. 523–533.</li>
+<li>A. Kosba, A. Miller, E. Shi, Z. Wen, and C. Papamanthou, “Hawk: The blockchain model of cryptography and privacy-preserving smart contracts,” in IEEE Symposium on Security and Privacy, 2016, pp. 839–858.</li>
+<li>M. S. Ali, K. Dolui, and F. Antonelli, “Iot data privacy via blockchains and ipfs,” in 7 th International Conference for the Internet of Things, 2017.</li>
+<li>J. Kang, R. Yu, X. Huang, M. Wu, S. Maharjan, S. Xie, and Y. Zhang, “Blockchain for secure and efﬁcient data sharing in vehicular edge computing and networks,” IEEE Internet of Things Journal, pp. 1–1, 2018.</li>
+<li>Z. Li, J. Kang, R. Yu, D. Ye, Q. Deng, and Y. Zhang, “Consortium blockchain for secure energy trading in industrial internet of things,” IEEE Transactions on Industrial Informatics, vol. 14, no. 8, pp. 36903700, Aug 2018.</li>
+<li>Y. Rahulamathavan, R. C.-W. Phan, S. Misra, and M. Rajarajan, “Privacy-preserving blockchain based iot ecosystem using attributebased encryption,” 2017.</li>
+<li>A. Alcaide, E. Palomar, J. Montero-Castillo, and A. Ribagorda, “Anonymous authentication for privacy-preserving iot target-driven applications,” computers &amp; security, vol. 37, pp. 111–123, 2013.</li>
+<li>L. Axon and M. Goldsmith, “Pb-pki: a privacy-aware blockchain-based pki,” 2016.</li>
+<li>S. H. Hashemi, F. Faghri, P. Rausch, and R. H. Campbell, “World of empowered iot users,” in Internet-of-Things Design and Implementation (IoTDI), 2016 IEEE First International Conference on. IEEE, 2016, pp. 13–24.</li>
+<li>O. Novo, “Blockchain meets iot: an architecture for scalable access management in iot,” IEEE Internet of Things Journal, 2018.</li>
+<li>H. Shafagh, L. Burkhalter, A. Hithnawi, and S. Duquennoy, “Towards blockchain-based auditable storage and sharing of iot data,” in Proc. of the Cloud Computing Security Workshop, 2017, pp. 45–50.</li>
+<li>A. Reyna, C. Martín, J. Chen, E. Soler, and M. Díaz, “On blockchain and its integration with iot. challenges and opportunities,” Future Generation Computer Systems, 2018.</li>
+<li><a href="https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=security" target="_blank" rel="noopener">Security Services Technical Committee of OASIS—Security Assertion Markup Language (SAML) v2.0</a></li>
+<li>Recordon, D.; Reed, D. OpenID 2.0: A Platform for User-centric Identity Management. In Proceedings of the Second ACM Workshop on Digital Identity Management, Alexandria, VA, USA, 3 November 2006.</li>
+<li>Zhu X, Badr Y. Identity Management Systems for the Internet of Things: A Survey Towards Blockchain Solutions[J]. Sensors, 2018, 18(12): 4215.</li>
+<li><a href="http://www.picosproject.eu" target="_blank" rel="noopener">PICOS—Privacy and Identity Management for Community Services.</a></li>
+<li>Gu H, Potkonjak M. Efficient and Secure Group Key Management in IoT using Multistage Interconnected PUF[C]//Proceedings of the International Symposium on Low Power Electronics and Design. ACM, 2018: 8.</li>
+<li>Novo O. Blockchain meets IoT: An architecture for scalable access management in IoT[J]. IEEE Internet of Things Journal, 2018, 5(2): 1184-1195.</li>
+<li>Hardjono, T.; Pentland, A. Veriﬁable Anonymous Identities and Access Control in Permissioned Blockchains. 2016. Available online: http://connection.mit.edu/wp-content/uploads/sites/29/2014/12/ChainAnch or-Identities-04172016.pdf (accessed on 31 August 2018).</li>
+<li>J.-H. Lee, “Bidaas: blockchain based id as a service,” IEEE Access, vol. 6, pp. 2274–2278, 2018.</li>
+<li><a href="https://www.trusted-iot.org/" target="_blank" rel="noopener">Trust IoT Alliance</a></li>
+<li><a href="https://www.iota.org/" target="_blank" rel="noopener">The Next Generation of Distributed Ledger Technology | IOTA</a></li>
+<li><a href="https://slock.it/" target="_blank" rel="noopener"><strong>slock.it</strong> connects devices to the <strong>blockchain</strong>, enabling the <strong>economy of things</strong></a></li>
+<li><a href="https://www.blockpass.org/" target="_blank" rel="noopener">KYC-as-a-Service for Regulated Industries</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://kyonray.com/2019/07/16/Hyperledger-Indy-Research/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -335,6 +1002,39 @@
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/区块链项目/" itemprop="url" rel="index">
+                    <span itemprop="name">区块链项目</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/区块链项目/Research/" itemprop="url" rel="index">
+                    <span itemprop="name">Research</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -1546,7 +2246,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1557,7 +2257,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -1568,7 +2268,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -1654,7 +2354,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">14.2k</span>
+    <span title="Site words total count">26.9k</span>
   
 </div>
 
