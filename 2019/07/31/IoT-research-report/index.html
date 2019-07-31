@@ -109,7 +109,7 @@
 <meta property="og:image" content="https://kyonray.com/2019/07/31/IoT-research-report/access_control.png">
 <meta property="og:image" content="https://kyonray.com/2019/07/31/IoT-research-report/BIoT_IDM_workflow.png">
 <meta property="og:image" content="https://kyonray.com/2019/07/31/IoT-research-report/IoT%20security%20management.png">
-<meta property="og:updated_time" content="2019-07-31T03:35:22.843Z">
+<meta property="og:updated_time" content="2019-07-31T03:51:26.883Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IoT调研报告">
 <meta name="twitter:description" content="一、简述 本文从物联网（IoT）技术的基础知识开始，主要介绍了物联网的基本定义、主要通信协议，并对现在物联网技术所面临的挑战进行了详细分析。在第三章，研究区块链与物联网结合的契合点，分析区块链是如何解决物联网现在面临的挑战，并提供一些物联网部署在区块链的方法。在第四章，从区块链在物联网中身份标识治理的角度切入，通过对比现有中心化身份管理方法，研究基于区块链的实体身份标识可以如何解决物联网相关的痛点">
@@ -449,7 +449,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  47
+                  46
                 </span>
               
             </div>
@@ -475,9 +475,8 @@
 <h2 id="二认识iot">二、认识IoT</h2>
 <p>物联网是一个计算设备、电子器械、物体、动物或人相互关联的系统，具有唯一标识符（UID）和通过网络传输数据、交互的能力，而无需人与人或人与计算机的互动，终极梦想是万物互联的世界。</p>
 <p>如下图所示是一个物联网系统的样例，物联网生态系统由支持Web的智能设备组成，这些设备使用嵌入式处理器，传感器和通信硬件来收集、发送和处理从环境中获取的数据。 物联网设备通过连接到物联网网关或其他边缘设备来共享它们收集的传感器数据，其中数据被发送到云以进行本地分析或分析。 尽管人们可以与设备进行交互，但设备可以完成大部分工作而无需人工干预。</p>
-<figure>
-<img src="./example_of_iot.png" alt="img"><figcaption>img</figcaption>
-</figure>
+<a id="more"></a>
+<p><img src="./example_of_iot.png"></p>
 <h3 id="三个维度认识iot">1. “三个维度”认识IoT</h3>
 <h4 id="横向维度---物联网产业图谱">1.1 横向维度 - 物联网产业图谱</h4>
 <p>如下图所示，可以看到，身份管理以及安全控制贯穿整个生态架构。</p>
@@ -490,19 +489,13 @@
 <li>通信层：主要是支持数据的可靠传输，内置了感应层向管理控制层的通信机制，如Wifi、3G、LTE、 Ethernet等；</li>
 <li>物理感应层：主要是设备、网关等硬件传感器和相应的传感网络；</li>
 </ul>
-<figure>
-<img src="./iot_arch.png" alt="image-20190730193458199"><figcaption>image-20190730193458199</figcaption>
-</figure>
+<p><img src="./iot_arch.png"></p>
 <h4 id="时间维度---物联网的前世今生与来世">1.3 时间维度 - 物联网的前世、今生与来世</h4>
 <p>在过去的几年中，前物联网从封闭的集中式大型机架构逐渐向以开放接入云为中心的物联网的替代方案发展；下一步物联网将在部署在多节点的分布式云上，实现真正的万物互联，区块链技术在这里充当重要的角色。</p>
-<figure>
-<img src="./image-20190712105542191.png" alt="image-20190712105542191"><figcaption>image-20190712105542191</figcaption>
-</figure>
+<p><img src="./image-20190712105542191.png"></p>
 <p>在这里作者由于知识储备原因（<strong>学术不精</strong>），主要简单介绍通信层的内容，在本章后面的内容展开介绍物联网技术现有的挑战，并在后面的章节介绍平台服务层的相关内容。</p>
 <h3 id="现有iot通信协议">2. 现有IoT通信协议</h3>
-<figure>
-<img src="./protocol_for_iot.png" alt="Figure 2: IoT Elements"><figcaption>Figure 2: IoT Elements</figcaption>
-</figure>
+<p><img src="./protocol_for_iot.png"></p>
 <p>如上图所示，</p>
 <p>现有物联网中<strong>应用数据层的通信协议</strong>主要有以下几种：</p>
 <ul>
@@ -513,18 +506,14 @@
 </ul>
 <p>在<strong>网络层的路由协议</strong>主要有 <code>6LoWPAN</code>与<code>RPL</code>，这两种协议都意在资源受限的设备上能轻松访问网络，但也将带来被攻击的可能，详情可见论文[8].</p>
 <p>在 <strong>数据链路层的协议</strong> 一般就以频率、能耗、可用范围区分，以下图做对比总结：</p>
-<figure>
-<img src="./IoT_Data_Layer_Protocol.png" alt="IoT Standards and Protocols"><figcaption>IoT Standards and Protocols</figcaption>
-</figure>
+<p><img src="./IoT_Data_Layer_Protocol.png"></p>
 <h3 id="现有iot方案存在的挑战">3. 现有IoT方案存在的挑战</h3>
 <p>在过去的几年间，物联网垂直领域相关企业数量处于快速增长期，经过了幻想破灭期的洗礼，投资逐渐理性，技术逐渐成熟。虽然人们对于物联网可以推动许多商业机会、变革现有中心化体系有清楚的认识，但物联网还存在一系列的技术挑战，直接导致了全球物联网应用布局缓慢的局面。以下是对这些挑战的简述：</p>
 <h4 id="网络安全问题">3.1 网络安全问题</h4>
 <p>物联网中的网络安全问题是最关键也是最致命的应用落地门槛。对于传统的Web安全而言，物联网设备往往条件更加严苛：设备条件通常是隔离的硬件，根据其部署条件，所有者往往无法有效监测到设备数据篡改；设备往往是和其他设备进行互联，管理这些M2M的交互、保证两端数据一致性与传统的C/S交互相比更加复杂；此外，物联网设备往往处于资源受限的状态（硬件性能、网络连接、电量低等），使得更加复杂的场景不能得以应用。因此，这种系统更加容易被网络攻击，在以下列出了几种物联网攻击方法与其相应的防御手段。</p>
 <h5 id="现存的iot攻击方法与防御手段">现存的IoT攻击方法与防御手段</h5>
 <p>物联网涵盖了从小型嵌入式处理芯片到大型高端服务器各种设备，因此遇到的安全问题都可能在不同层次不同级别。下图给出了从OSI网络模型自下往上地分析了物联网安全威胁的分类。各个攻击方式的具体防御手段可借鉴论文[2]，在这里不赘述。</p>
-<figure>
-<img src="./IoT%20Security%20Issues.png" alt="IoT Security Issues.png"><figcaption>IoT Security Issues.png</figcaption>
-</figure>
+<p><img src="./IoT%20Security%20Issues.png"></p>
 <h4 id="访问控制与隐私保护">3.2 访问控制与隐私保护</h4>
 <p>物联网设备每日生成大量的数据，可提供设备所有者或者用户所在的环境详细信息以及个人习惯、隐私数据。这些数据可以在没有任何明确的用户授权下收集，并有可能在某个支持IoT共享平台上暴露给第三方。更糟的情况制造商挂羊头卖狗肉，IoT设备主动收集与所提供服务无关的数据。</p>
 <p>用户除了必须信任集中式服务提供商不会侵犯他们的隐私之外，还必须相信数据的传输具有保密性和完整性。任何不安全的数据传输都会使得恶人在未经授权的情况下窃听和收集数据。</p>
@@ -581,9 +570,7 @@
 <h4 id="保证数据完整">1.6保证数据完整</h4>
 <p>物联网应用程序要求传输和分析数据的完整性，因此物联网框架需要对数据泄漏和破坏具有弹性。 区块链网络在节点上存储冗余的副本，这有助于维护数据完整性。</p>
 <p>在论文[5]中有张图，可以很全面的展示Blockchain-based IoT的应用。</p>
-<figure>
-<img src="./BIoT.png" alt="BIoT"><figcaption>BIoT</figcaption>
-</figure>
+<p><img src="./BIoT.png"></p>
 <h3 id="iot如何部署在blockchain上">2. IoT如何部署在Blockchain上？</h3>
 <p>集中式的云服务在物联网的发展中作出了重要贡献，但在数据透明性方面，集中式云服务就像黑匣子一样，物联网用户无法控制和完全信任他们共享的数据。 物联网可以从区块链提供的分布式网络范例中受益，同时消除对集中式服务的信任需求。 然而，区块链仍处于研究和开发的早期阶段，集成物联网和区块链仍存在多项研究挑战。</p>
 <p>物联网中涉及的各种各样的设备，这些设备都是资源限制的，无法托管区块链的整个副本或参与验证区块链的新块，使用区块链在物联网中实现绝对分布式是欠考虑的。 因此，重要的是决定物联网边缘中不同实体（设备，网关等）将扮演什么角色。</p>
@@ -592,30 +579,22 @@
 <li><p>物联网网关设备作为区块链端点：</p>
 <p>在这种方案中，所有通信都通过区块链，而IoT网关则作为区块链网络的端点。在这种情况下，IoT设备将注册到网关设备，并且网关向区块链发出交易。这种方法可以跟踪涉及特定物联网网关和物联网服务的所有通信。此集成方案还可用于验证连接到不同网关的设备之间的通信。在这种方法中，并非所有传输的数据都需要存储在区块链中。区块链本身可以用作控制机制，智能合约充当可编程逻辑，而数据传输可以通过P2P技术进行。</p></li>
 </ul>
-<figure>
-<img src="./scheme_a.png" alt="scheme_a"><figcaption>scheme_a</figcaption>
-</figure>
+<p><img src="./scheme_a.png"></p>
 <ul>
 <li><p>设备作为区块链的交易发起者：</p>
 <p>这种集成方案出自论文[26]，在上述的分析中，我们假设物联网设备实际上没有携带区块链的副本，而只是简单地向区块链发布交易。 与之前的方法类似，因安全考虑，所有IoT交互事件都会记录到区块链中。 在这种方法中，需要为IoT设备提供加密功能。 这种方法物联网设备和应用程序具有更高自治程度，而物联网硬件的计算复杂性增加。</p></li>
 </ul>
-<figure>
-<img src="./scheme_b.png" alt="scheme_b"><figcaption>scheme_b</figcaption>
-</figure>
+<p><img src="./scheme_b.png"></p>
 <ul>
 <li><p>互联的边缘设备作为区块链的端点：</p>
 <p>在这种方法中，物联网网关和设备向区块链发布交易，并且可以与另外的链外通信。 这种方法可确保物联网设备之间的低延迟以及在区块链上记录特定交互。 这种集成方案更适合于交互频繁且需要高吞吐量、低延迟、可靠的物联网数据的场景。</p></li>
 </ul>
-<figure>
-<img src="./scheme_c.png" alt="scheme_c"><figcaption>scheme_c</figcaption>
-</figure>
+<p><img src="./scheme_c.png"></p>
 <ul>
 <li><p>基于云的区块链与物联网边缘混合：</p>
 <p>这种方法是对先前集成方案的扩展，其中物联网用户可以选择将区块链用于记录某些物联网交互事件，其余事件直接发生在物联网设备之间。 这种方法利用区块链的分散记录保护以及实时物联网通信的优势。该方法的主要问题是如何优化实时发生的交互与通过区块链的交互之间的反应时差。</p></li>
 </ul>
-<figure>
-<img src="./scheme_d.png" alt="scheme_d"><figcaption>scheme_d</figcaption>
-</figure>
+<p><img src="./scheme_d.png"></p>
 <h2 id="四iot与blockchain-based-id-management">四、IoT与Blockchain-based ID Management</h2>
 <p>在物联网中，IDM主要可以包括以下几个部分：</p>
 <ul>
@@ -627,9 +606,7 @@
 </ul>
 <p>此外，在传统的IDM通信方法里，还是使用基于中心化PKI的方案，如下图所示，用户之间进行通信需要多次轮训，且对中心CA机构极为依赖。</p>
 <p>但这种方法由于一些物联网的特性（如可扩展性、协同操作性和移动性）而无法直接移植到物联网环境。这些特性要求对于物联网身份管理系统设计来说很重要。</p>
-<figure>
-<img src="./PKI体系.png" alt="PKI"><figcaption>PKI</figcaption>
-</figure>
+<p><img src="./PKI体系.png"></p>
 <h3 id="物联网身份管理系统应该有的特性">1. 物联网身份管理系统应该有的特性</h3>
 <ul>
 <li><p>可扩展性（Scalability）</p>
@@ -644,9 +621,7 @@
 <h3 id="iot传统身份管理方案">2. IoT传统身份管理方案</h3>
 <h4 id="传统idm模型">2.1 传统IDM模型</h4>
 <p>数字身份管理系统负责管理用户的身份信息，由标识符（UserID、电子邮件、URL等），凭证（证书、令牌、生物识别等）和属性（角色、职位、特权等）。下图描绘了传统IDM的示例实例系统，包括三个主要利益相关者：主体（也称为用户），依赖方（也是称为服务提供商）和身份提供商（IdP）。</p>
-<figure>
-<img src="./traditional_IDMS.png" alt="traditional_IDMS"><figcaption>traditional_IDMS</figcaption>
-</figure>
+<p><img src="./traditional_IDMS.png"></p>
 <p>由此可见，在传统的IDM模型中，身份提供者IdP作为依赖方发挥了核心的作用。这种强依赖关系直接导致了信任问题（在中国不会出现这种情况）。而且，随着提供在线身份服务的服务商增加，用户需要记忆的自己的身份标识变得更多了。</p>
 <h4 id="联邦idm模型">2.2 联邦IDM模型</h4>
 <p>联邦IDM模型是一种较新的IDM模型，这种模型尝试在各大IdP之间建立信任关系，一个安全域中的用户可以从另一个域访问服务。例如，<a href="https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=security" target="_blank" rel="noopener">SAML</a>、OpenID[28]和Shibboleth，允许用户仅使用一个身份登录到多个安全域并授予对属于同一联盟的各种系统的访问权限，即无论在一个域中对哪个身份进行身份验证，同一联盟中的另一个域提供的服务都可以根据其域提供的凭据进行访问。</p>
@@ -745,17 +720,13 @@
 <ul>
 <li><p>离不开PKI体系：不使用公钥体系，建起来的城堡就如同沙雕。PKI在物联网中并不能很好适配的主要原因就是其过度中心化的设计，常常容易带来性能瓶颈、单节点故障等问题。现有解决方案DPKI可以有效解决过度中心化的缺点，但其落地为时尚早， 真正的去中心化不切实际；</p></li>
 <li><p>加密成本太高：物联网设备根据设备不同的职能有不一样的硬件情况，但普遍是资源限制的，运算能力弱，存储能力差，蓄电量低，这样就对安全通信、安全存储带来了一系列的挑战；同时，由于成本的关系，不可能给设备都配备上性能高的硬件条件，所以如何平衡安全和成本是一个主要问题：</p>
-<figure>
-<img src="./security_balance.jpg" alt="security is a balance"><figcaption>security is a balance</figcaption>
-</figure>
+<p><img src="./security_balance.jpg"></p>
 <p>再上图可以看到，在通信层使用TLS或轻量级DTLS可以抵抗中间人攻击等通信攻击方式；在针对软件或硬件攻击其密钥，可以使用ARM基于TEE(Trusted Execution Enviroment)/PSA(Platform Security Architecture)进行硬件隔离，存储密钥相关的数据；更深层次的硬件攻击可以使用SE(Secure Element)芯片级的安全保护，但是成本也会大大增加；</p></li>
 <li><p>不能完全实现去中心化：如今DPKI等对中心化体系替换的方案还未成熟，完全去中心化不切实际，所以现在多是从单中心化转变为多中心化，在企业业务层面进行合作；</p></li>
 </ul>
 <h4 id="物联网身份管理与属性管理">3.2 物联网身份管理与属性管理</h4>
 <p>分布式身份管理与属性管理是分布式经济的基础。在物联网中，设备与人与其他设备的关系，以及其所有权的变更，在不同时间不同地点的访问控制权限，都与分布式身份管理息息相关。如下图所示，是一个基于区块链的分布式身份标识系统的样例。</p>
-<figure>
-<img src="./overview_of_bid.png" alt="image-20190724175706761"><figcaption>image-20190724175706761</figcaption>
-</figure>
+<p><img src="./overview_of_bid.png"></p>
 <h5 id="securing-user-identity-and-transactions-symbiotically-iot-meets-blockchain6">3.2.1 Securing User Identity and Transactions Symbiotically: IoT Meets Blockchain[6]</h5>
 <p>论文[6]基于传统PKI与联邦式IDM，提出了一种使用联盟链保护和管理多个物联网设备的分布式身份管理解决方案。该解决方案通过对非对称密钥的重发(rorating key)增加安全性并防止攻击，并提供设备成员DGM机制，可以保证成员内的设备发出Transaction时，区块链内可以认定是从属于哪个DGM发出的Transaction。并且可以调节设备存储量，对存储空间很小的物联网设备很友好。</p>
 <p><strong>1). 定义声明</strong></p>
@@ -767,9 +738,7 @@
 <li>Kown Your Machine（KYM）</li>
 </ul>
 <p><strong>2). 授权密钥管理</strong></p>
-<figure>
-<img src="./auth_key_manage.png" alt="image-20190728160226157"><figcaption>image-20190728160226157</figcaption>
-</figure>
+<p><img src="./auth_key_manage.png"></p>
 <ul>
 <li><p>生成TCA CA RootKey与Primary TCA的ID；</p></li>
 <li><p>生成Primary TCA RootKey： <span class="math inline">\(TCA\_RootKey_{384bit}=HMAC(TCA\_CARootKey,TCA\_ID)\)</span> ；</p></li>
@@ -797,9 +766,7 @@ TCertPrivateKey\\
 \end{align}
 \]</span> <span class="math inline">\(G\)</span> 是ECDSA中的系数。</p>
 <p><strong>4). 属性管理</strong></p>
-<figure>
-<img src="./TCA_key_manage.png" alt="image-20190728205246742"><figcaption>image-20190728205246742</figcaption>
-</figure>
+<p><img src="./TCA_key_manage.png"></p>
 <ul>
 <li><p>生成TCA CA RootKey与Primary TCA的ID；</p></li>
 <li><p>生成Primary TCA RootKey： <span class="math inline">\(TCA\_RootKey_{384bit}=HMAC(TCA\_CARootKey,TCA\_ID)\)</span> ；</p></li>
@@ -830,9 +797,7 @@ Authenticated\_Attribute[i]&amp;=HMAC(Attribute\_HMACKey[i],Attribute[i])
 <ul>
 <li><p>密钥分发</p>
 <p>密钥分发遵循着群组密钥分发协议，请看下图，不再赘述：</p>
-<figure>
-<img src="./group_key_protocol.png" alt="image-20190729013530951"><figcaption>image-20190729013530951</figcaption>
-</figure></li>
+<p><img src="./group_key_protocol.png"></p></li>
 <li><p>密钥存储</p>
 <p>在密钥分发之后，当提供正确的配置参数时，可以从MIPUF中提取群组密钥。 与其他基于加密的密钥管理系统不同，这个方法不直接将群组密钥存储在内存中， 而是从密钥提示(hint) <span class="math inline">\(p_i\)</span> 中提取群组密钥。因为只有当攻击者可以同时访问存储（包含 <span class="math inline">\(p_i,f_i,c_i^{\gamma_i}\)</span> ）和MIPUF（<span class="math inline">\(\Bbb{F}^{\gamma_i}\)</span>），才能获得真实的群组密钥。 只篡改其中一个不损害整个设计的安全性。此外，群组密钥仅用于接收或发送组消息，因此使用低功率MIPUF存储真实密钥也是高能效的。</p></li>
 <li><p>密钥更新</p>
@@ -853,20 +818,14 @@ Sample\ complexity = \frac{(m\cdot k+m)\cdot n+lb(\frac{1}{\delta})}{\epsilon}
 <p>物联网场景比传统的C/S场景更加动态，设备状态、管理权、所有权变化更加频繁。当访问控制查询和更新变得更加频繁时，单个集中式访问控制服务器会存在明显的性能瓶颈。基于区块链技术的分布身份识别，具有可追溯、不可抵赖等特点更加适合物联网的场景。<strong>然而现有的方法还处在验证阶段，离不开中心化的PKI是不能从根本上改变现状的。</strong></p>
 <h5 id="blockchain-meets-iot-an-architecture-for-scalable-access-management-in-iot32">3.4.1 Blockchain Meets IoT: an Architecture for Scalable Access Management in IoT[32]</h5>
 <p>论文[31]提出了一种可用于仲裁物联网中的角色和权限的体系结构。该体系结构是基于区块链技术的物联网分布式访问控制系统，这种架构由概念验证实验支持，并在实际的物联网场景中进行了评估。</p>
-<figure>
-<img src="./access_control.png" alt="image-20190724192501861"><figcaption>image-20190724192501861</figcaption>
-</figure>
+<p><img src="./access_control.png"></p>
 <p>所提出的方法定义一个Management Hub代表物联网设备从区块链请求访问控制信息，其余所有设备都在区块链网络中具有唯一标识。设备在注册时，必须在管理员的控制下注册，并且一定要注册在一个Management Hub下，注册之后管理员便可以对该设备的访问控制权限进行设定。</p>
 <p>在区块链中部署智能合约用于定义访问控制系统中所有的操作。管理者可以和智能合约交互，便于定义系统的访问控制策略。</p>
-<figure>
-<img src="./BIoT_IDM_workflow.png" alt="image-20190728215828943"><figcaption>image-20190728215828943</figcaption>
-</figure>
+<p><img src="./BIoT_IDM_workflow.png"></p>
 <p>上图显示了各个部件的交互情况。</p>
 <h4 id="设备生命周期的安全管理">3.5 设备生命周期的安全管理</h4>
 <p>区块链还可以在物联网设备的供应链和生命周期的每个环节提供可信赖的分布式管理，如下图所示，可以记录设备的所有权（ownership）。</p>
-<figure>
-<img src="./IoT%20security%20management.png" alt="image-20190711100854573"><figcaption>image-20190711100854573</figcaption>
-</figure>
+<p><img src="./IoT%20security%20management.png"></p>
 <ol type="1">
 <li>在开发商处建立设备的Identity；</li>
 <li>在交付时建立所有权(Ownership)，分发密钥对；</li>
@@ -1245,7 +1204,7 @@ Sample\ complexity = \frac{(m\cdot k+m)\cdot n+lb(\frac{1}{\delta})}{\epsilon}
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">26.9k</span>
+    <span title="Site words total count">26.8k</span>
   
 </div>
 
