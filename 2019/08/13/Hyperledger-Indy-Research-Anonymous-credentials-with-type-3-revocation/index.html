@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Kyon&#39;s Blog">
 <meta property="og:description" content="一、简述 匿名凭证的作用是允许用户证明当前identity符合某个属性，且不暴露出其他属性。本文描述的方法通过使用零知识证明的方式保证属性在披露的过程中不被其他人知道，且可实现凭证一次性使用，第二次用于展示给Verifier的时候会被感知。 由于其原稿难懂，有多个符号错误，计算错误，符号未命名的问题，所以本人进行翻译、纠正。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-08-19T04:19:46.478Z">
+<meta property="og:updated_time" content="2019-08-21T01:35:50.194Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hyperledger Indy Research: Anonymous credentials with type-3 revocation">
 <meta name="twitter:description" content="一、简述 匿名凭证的作用是允许用户证明当前identity符合某个属性，且不暴露出其他属性。本文描述的方法通过使用零知识证明的方式保证属性在披露的过程中不被其他人知道，且可实现凭证一次性使用，第二次用于展示给Verifier的时候会被感知。 由于其原稿难懂，有多个符号错误，计算错误，符号未命名的问题，所以本人进行翻译、纠正。">
@@ -399,7 +399,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  6.2k
+                  6.4k
                 </span>
               
 
@@ -415,7 +415,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  32
+                  33
                 </span>
               
             </div>
@@ -548,41 +548,45 @@ c=H_1(Z||\hat Z||\{R_i,\widehat{R_i}\}_{1\le i\le l})
 <ul>
 <li>生成 2128-bit随机数 <span class="math inline">\(v&#39;\)</span> ，673-bit随机数 <span class="math inline">\(\widetilde{v&#39;}\)</span></li>
 <li>生成593-bit随机数 <span class="math inline">\(\{\widetilde{m_i}\}_{i\in A_h}\)</span></li>
-<li>使用Primary Credential的公钥 <span class="math inline">\(P_k\)</span> 计算：</li>
+<li>使用Primary Credential的公钥 <span class="math inline">\(P_k\)</span> 计算Primary Credential的盲化secret：</li>
 </ul>
 <p><span class="math display">\[
-  \tag{2.1}U\leftarrow (S^{v&#39;})\prod_{i\in A_c}R_i^{m_i}
+\tag{2.1}U\leftarrow (S^{v&#39;})\prod_{i\in A_h}R_i^{m_i}
 \]</span></p>
 <ul>
-<li>计算commitment Attribute属性值：</li>
+<li>计算commitment Attribute属性值 <span class="math inline">\(vca\)</span> ，其中 <span class="math inline">\(blind\)</span> 是盲化因子：</li>
 </ul>
 <p><span class="math display">\[
-  \tag{2.2}
-  \{vca_i\}_{i\in A_commit}=\{S^{blind}\cdot Z^{m_i}\}_{i\in A_{commit}}\\
+\tag{2.2}
+  \{vca_i\}_{i\in A_{commit}}=\{S^{blind}\cdot Z^{m_i}\}_{i\in A_{commit}}\\
 \widetilde{r_i}=rand(593bit)_{i\in A_{commit}}
 \]</span></p>
 <p><span class="math display">\[
-\tag{2.3}\{\widetilde{commitment_i}=Z^{\widetilde{m_i}}\cdot S^{\widetilde{r_i}}\}
+\tag{2.3}\{\widetilde{commitment_i}=Z^{\widetilde{m_i}}\cdot S^{\widetilde{r_i}}\}_{i\in A_{commit}}
 \]</span></p>
 <ul>
-<li>另外计算：</li>
+<li>另外计算盲化正确proof：</li>
 </ul>
 <p><span class="math display">\[
-\tag{2.4}\widetilde{U}\leftarrow (S^{\widetilde v&#39;})\prod_{i\in A_c}R_i^{\widetilde m_i}
+\tag{2.4}\widetilde{U}\leftarrow (S^{\widetilde v&#39;})\prod_{i\in A_h}R_i^{\widetilde m_i}
 \]</span></p>
 <p><span class="math display">\[
-\tag{2.5}c\leftarrow H(U||\widetilde U||n_0||\{\widetilde{commitment_i}\}||\{vca_i\})_{i\in A_{commit}}
+\tag{2.5}c\leftarrow H(\{\widetilde{commitment_i}\}||\{vca_i\}||U||\widetilde U||n_0)_{i\in A_{commit}}
 \]</span></p>
 <p><span class="math display">\[
 \tag{2.6}\widehat{v&#39;}\leftarrow \widetilde{v&#39;} + cv&#39;
 \]</span></p></li>
 </ul>
 <p><span class="math display">\[
-  \tag{2.7}\{\widehat{m_i}\leftarrow \widetilde{m_i} +cm_i\}_{i\in A_h}
+\tag{2.7.1}\{\widehat{m_i}\leftarrow \widetilde{m_i} +cm_i\}_{i\in A_h}
+\]</span></p>
+<p><span class="math display">\[
+\tag{2.7.2}
+\{\widehat{r_i}\leftarrow \widetilde{r_i}+c\cdot blind\}_{i\in A_{commit}}
 \]</span></p>
 <ul>
 <li><p>生成80-bit随机数 <span class="math inline">\(n_1\)</span></p></li>
-<li><p>将 <span class="math inline">\(\{U,c,\widehat{v&#39;},\{\widehat{m_i}\}_{i\in A_h},n_1\}\)</span> 打包发送给Issuer</p></li>
+<li><p>将 <span class="math inline">\(\{U,c,\widehat{v&#39;},\{\widehat{m_i}\}_{i\in A_h},n_1,attr\_name\subset\{A_h\},\{A_{commit}\}=\{attr\_name,vca\}\}\)</span> 打包发送给Issuer</p></li>
 <li><p><strong>（2.2.2）</strong>Holder做以下计算，为Non-Credential的数据做准备：</p>
 <ul>
 <li><p>获取撤销公钥 <span class="math inline">\(P_R\)</span> ，并生成随机数 <span class="math inline">\(s&#39;_R \in \Bbb{Z}_q\)</span> ；</p></li>
@@ -597,7 +601,8 @@ c=H_1(Z||\hat Z||\{R_i,\widehat{R_i}\}_{1\le i\le l})
 <li><p><strong>（2.3.1）</strong>Issuer验证Holder发来的Primary Credential模板数据是否正确：</p>
 <ul>
 <li>计算<span class="math inline">\(\widehat{U}\leftarrow (U^{-c})\prod_{i\in A_h}R_i^{\widehat m_i}(S^{\widehat{v&#39;}})\)</span> ；</li>
-<li>验证<span class="math inline">\(c= H(U||\widehat U||n_0)\)</span> ；</li>
+<li><span class="math inline">\(\{\widehat{commitment_i}\leftarrow vca_i^{-c}\cdot Z^{\widehat{m_i}}S^{\widehat{r_i}}\}_{i\in A_{commit}}\)</span></li>
+<li>验证<span class="math inline">\(c= H(\{\widehat{commitment_i}\}||\{vca_i\}||U||\widehat U||n_0)_{i\in A_{commit}}\)</span> ；</li>
 </ul></li>
 <li><p>验证 <span class="math inline">\(\widehat{v&#39;}\)</span> 是一个673-bit的数，<span class="math inline">\(\{\widehat{m_i},\widehat{r_i}\}_{i\in A_h}\)</span> 是594-bit的数；</p></li>
 <li><p><strong>（2.3.2）</strong>Issuer准备为Holder发行Primary凭证：</p>
@@ -605,8 +610,8 @@ c=H_1(Z||\hat Z||\{R_i,\widehat{R_i}\}_{1\le i\le l})
 <li>为当前Holder赋值一个唯一值 <span class="math inline">\(i&lt;L\)</span> 作为标识, 计算 <span class="math inline">\(m_2\leftarrow H(i||\mathcal{H})\)</span> 记录了当前Holder 的信息，并将 <span class="math inline">\(m_2\)</span> 和<span class="math inline">\(i\)</span>保存在本地数据库；</li>
 <li>设置可被披露的属性值 <span class="math inline">\(A_k\)</span> ；</li>
 <li>生成2724-bit 随机数 <span class="math inline">\(v&#39;&#39;\)</span>, 随机素数 <span class="math inline">\(e,\ where\ 2^{596}\leqslant e \leqslant 2^{596}+2^{119}\)</span> ；</li>
-<li>随机生成 <span class="math inline">\(r&lt;p&#39;q&#39;\)</span> ;</li>
-<li>计算：</li>
+<li>随机生成 <span class="math inline">\(r&lt;p&#39;q&#39;\)</span> ，其中 <span class="math inline">\(p&#39;,q&#39;\)</span> 从Primary凭证私钥中得出 ;</li>
+<li>计算<strong>签名</strong>：</li>
 </ul>
 <p><span class="math display">\[
 \tag{2.9}Q\leftarrow \cfrac{Z}{US^{v&#39;&#39;}\prod_{i\in A_k}R_i^{m_i}(mod\ n)}\\
@@ -615,7 +620,7 @@ c=H_1(Z||\hat Z||\{R_i,\widehat{R_i}\}_{1\le i\le l})
 \tag{2.10}A\leftarrow Q^{e^{-1}(mod\ p&#39;q&#39;)}(mod\ n)
 \]</span></p>
 <ul>
-<li>计算：</li>
+<li>计算签名<strong>Proof</strong>：</li>
 </ul></li>
 </ul>
 <p><span class="math display">\[
@@ -631,10 +636,10 @@ c=H_1(Z||\hat Z||\{R_i,\widehat{R_i}\}_{1\le i\le l})
 <li><strong>（2.3.3）</strong>Issuer 将primary pre-credential <span class="math inline">\((\{m_i\}_{i\in A_k},A,e,v&#39;&#39;,s_e,c&#39;)\)</span> 发送给Holder；</li>
 <li><strong>（2.3.4）</strong>Issuer 非撤销凭证（Non-revocation Credential）的颁发
 <ul>
-<li>生成随机数 <span class="math inline">\(s&#39;&#39;,c\ mod\ q\)</span> ；</li>
+<li>生成随机数 <span class="math inline">\(s&#39;&#39;,c\leftarrow Z_q\)</span> ；</li>
 <li>将Primary凭证中的 <span class="math inline">\(m_2\)</span> 也加入到非撤销凭证中，进行两个凭证的关联；</li>
-<li>A作为聚合器将包括index <span class="math inline">\(i\)</span> 的部分，<span class="math inline">\(V\)</span> 是现在未被撤销的集合；</li>
-<li>计算：</li>
+<li><span class="math inline">\(acc_V\)</span>是聚合器值，为证书分配一个未使用的索引index <span class="math inline">\(i\)</span> ，<span class="math inline">\(V\)</span> 是现在未被撤销的集合；</li>
+<li>计算（其中L为最多颁发的证书个数，在代码中表示为n）：</li>
 </ul></li>
 </ul>
 <p><span class="math display">\[
@@ -653,7 +658,7 @@ u_i \leftarrow u^{\gamma_i}
 \]</span></p>
 <p><span class="math display">\[
 \tag{2.18}
-A\leftarrow A\cdot g&#39;_{L+1-i}
+acc_V\leftarrow acc_V\cdot g&#39;_{L+1-i}
 \]</span></p>
 <p><span class="math display">\[
 \tag{2.19}
@@ -665,7 +670,7 @@ wit_i\leftarrow \{\sigma_i,u_i,g_i,w,V\}
 \]</span></p>
 <ul>
 <li>将非撤销凭证 <span class="math inline">\((I_A,\sigma,c,s&#39;&#39;,wit_i,g_i,g&#39;_i,i)\)</span> 发给Holder；</li>
-<li>将更新的 <span class="math inline">\(V,A\)</span> 放到区块链中；</li>
+<li>将更新的 <span class="math inline">\(V,acc_V\)</span> 放到区块链中；</li>
 </ul>
 <h4 id="holder收到两个凭证进行存储">2.4 Holder收到两个凭证，进行存储</h4>
 <ul>
@@ -696,8 +701,8 @@ e(\sigma,y\cdot \widehat h^{c})=e(h_0\cdot h_1^{m_2}h_2^sg_i,\widehat h)
 <p><strong>（3.1）</strong>Issuer在数据库找到要被撤销的凭证，并找出他的索引号 <span class="math inline">\(i\)</span> ，以及聚合器 <span class="math inline">\(A\)</span>，有效凭证集合 <span class="math inline">\(V\)</span></p>
 <ul>
 <li>从 <span class="math inline">\(V\)</span> 中剔除 <span class="math inline">\(i\)</span> ： <span class="math inline">\(V \leftarrow V -\{i\}\)</span> ；</li>
-<li>从聚合器中剔除：<span class="math inline">\(A\leftarrow A/g&#39;_{L+1-i}\)</span> ；</li>
-<li>公布出新的 <span class="math inline">\(\{V,A\}\)</span> ；</li>
+<li>从聚合器中剔除：<span class="math inline">\(acc_V\leftarrow acc_V/g&#39;_{L+1-i}\)</span> ；</li>
+<li>公布出新的 <span class="math inline">\(\{V,acc_V\}\)</span> ；</li>
 </ul>
 <h3 id="holder展示凭证">4. Holder展示凭证</h3>
 <h4 id="verifier向holder发出proof-request">4.1 Verifier向Holder发出Proof Request</h4>
@@ -706,6 +711,7 @@ e(\sigma,y\cdot \widehat h^{c})=e(h_0\cdot h_1^{m_2}h_2^sg_i,\widehat h)
 <li>Holder 需要对应的给出 <span class="math inline">\(d\)</span> 个凭证证明对 <span class="math inline">\((C_p,C_{NR})\)</span> 回应；</li>
 <li>假设模板集合有 <span class="math inline">\(X\)</span> 个属性，其中，公开属性集合 <span class="math inline">\(x_1:A_h=X-x_1\)</span> ，需证明相等的属性 <span class="math inline">\(x_2: m_i=m_j\)</span> ，需证明不相等属性 <span class="math inline">\(x_3:m_i(&gt;&lt;\geq \leq) z\)</span> ；</li>
 <li><span class="math inline">\(x_4=X-x_1-x_2\)</span> ，映射 <span class="math inline">\(\phi:A_h\ to\ \{1,2,...,x_4\}\)</span>，<span class="math inline">\(A_v\)</span> 表示 <span class="math inline">\(x_1\)</span> 披露的属性索引集合；</li>
+<li>Verifier给Holder发80-bit随机数 <span class="math inline">\(n_2\)</span> ，用于之后与Holder交互；</li>
 </ul>
 <h4 id="holder提供证明">4.2 Holder提供证明</h4>
 <ul>
@@ -754,49 +760,59 @@ A\leftarrow \sigma \widetilde h^{\rho};
 <p><span class="math display">\[
 \tag{4.8}
 \mathcal U \leftarrow u_i\widehat h^{r&#39;&#39;&#39;};
-\]</span></p>
+\]</span></p></li>
+</ul>
+<blockquote>
+<p>E、D分别是对<span class="math inline">\(\rho\)</span> 和 <span class="math inline">\(r\)</span> 的承诺</p>
+</blockquote>
+<blockquote>
+<p><span class="math inline">\(\mathcal G\)</span>, <span class="math inline">\(\mathcal W\)</span>, <span class="math inline">\(\mathcal S\)</span>, <span class="math inline">\(\mathcal U\)</span> 分别是对<span class="math inline">\(g_i\)</span>, <span class="math inline">\(w\)</span>, <span class="math inline">\(\sigma_i\)</span>, <span class="math inline">\(u_i\)</span>的盲化</p>
+<p><span class="math inline">\(NonRevocProofCList \leftarrow \{ E, D, A, \mathcal G, \mathcal W, \mathcal S, \mathcal U \}\)</span>, 作为c_list</p>
+<p>以上过程由ProofBuilder::_create_c_list_values() 完成</p>
+</blockquote>
 <ul>
 <li>计算：</li>
 </ul>
 <p><span class="math display">\[
-\tag{4.9}
-m\leftarrow \rho \cdot c;
+  \tag{4.9}
+  m\leftarrow \rho \cdot c;
 \]</span></p>
 <p><span class="math display">\[
-\tag{4.10}
-t\leftarrow o\cdot c;
+  \tag{4.10}
+  t\leftarrow o\cdot c;
 \]</span></p>
 <p><span class="math display">\[
-\tag{4.11}
-m&#39;\leftarrow r\cdot r&#39;&#39;;
+  \tag{4.11}
+  m&#39;\leftarrow r\cdot r&#39;&#39;;
 \]</span></p>
 <p><span class="math display">\[
-\tag{4.12}
-t&#39;\leftarrow o&#39;\cdot r&#39;&#39;;
+  \tag{4.12}
+  t&#39;\leftarrow o&#39;\cdot r&#39;&#39;;
 \]</span></p>
 <ul>
 <li>随机取随机数：<span class="math inline">\(\widetilde{\rho},\widetilde{o},\widetilde{o&#39;},\widetilde{c},\widetilde{m},\widetilde{m&#39;},\widetilde{t},\widetilde{t&#39;},\widetilde{m_2},\widetilde{s},\widetilde{r},\widetilde{r&#39;},\widetilde{r&#39;&#39;},\widetilde{r&#39;&#39;&#39;},mod\ q\)</span> ；</li>
 <li>计算以下公式，并将最终所得放到集合 <span class="math inline">\(\mathcal T\)</span> ：</li>
 </ul>
 <p><span class="math display">\[
-\tag{4.13} \overline{T_1}\leftarrow h^{\widetilde{\rho}}\widetilde h^{\widetilde o};\     \overline{T_2} \leftarrow E^{\widetilde c}h^{-\widetilde m}\widetilde h^{-\widetilde t}
+  \tag{4.13} \overline{T_1}\leftarrow h^{\widetilde{\rho}}\widetilde h^{\widetilde o};\     \overline{T_2} \leftarrow E^{\widetilde c}h^{-\widetilde m}\widetilde h^{-\widetilde t}
 \]</span></p>
 <p><span class="math display">\[
 \tag{4.14}
-  \overline{T_3} \leftarrow e(A,\widehat h)^{\widetilde c}\cdot e(\widetilde h,\widehat h)^{\widetilde r}\cdot e(\widetilde h,y)^{-\widetilde{\rho}}\cdot e(\widetilde h,\widehat h)^{-\widetilde m}\cdot e(h_1,\widehat h)^{-\widetilde{m_2}}\cdot e(h_2,\widehat h)^{-\widetilde s};
+    \overline{T_3} \leftarrow e(acc_V,\widehat h)^{\widetilde c}\cdot e(\widetilde h,\widehat h)^{\widetilde r}\cdot e(\widetilde h,y)^{-\widetilde{\rho}}\cdot e(\widetilde h,\widehat h)^{-\widetilde m}\cdot e(h_1,\widehat h)^{-\widetilde{m_2}}\cdot e(h_2,\widehat h)^{-\widetilde s};
 \]</span></p>
 <p><span class="math display">\[
 \tag{4.15} 
-  \overline{T_4}\leftarrow e(\widetilde h,acc)^{\widetilde r}\cdot e(1/g,\widehat h)^{\widetilde {r&#39;}};\ \overline{T_5} \leftarrow g^{\widetilde r} \widetilde h^{\widetilde{o&#39;}};
+    \overline{T_4}\leftarrow e(\widetilde h,acc_V)^{\widetilde r}\cdot e(1/g,\widehat h)^{\widetilde {r&#39;}};\ \overline{T_5} \leftarrow g^{\widetilde r} \widetilde h^{\widetilde{o&#39;}};
 \]</span></p>
 <p><span class="math display">\[
 \tag{4.16}
-  \overline{T_6}\leftarrow D^{\widetilde{r&#39;&#39;}}g^{-\widetilde{m&#39;}}\widetilde h^{-\widetilde{t&#39;}};\ \overline{T_7}\leftarrow e(pk\cdot \mathcal G,\widehat h)^{\widetilde{r&#39;&#39;}}\cdot e(\widetilde h,\widehat h)^{-\widetilde{m&#39;}}\cdot e(\widetilde h,\mathcal S)^{\widetilde r};
+    \overline{T_6}\leftarrow D^{\widetilde{r&#39;&#39;}}g^{-\widetilde{m&#39;}}\widetilde h^{-\widetilde{t&#39;}};\ \overline{T_7}\leftarrow e(pk\cdot \mathcal G,\widehat h)^{\widetilde{r&#39;&#39;}}\cdot e(\widetilde h,\widehat h)^{-\widetilde{m&#39;}}\cdot e(\widetilde h,\mathcal S)^{\widetilde r};
 \]</span></p>
 <p><span class="math display">\[
 \tag{4.17}
-  \overline{T_8}\leftarrow e(\widetilde h,u)^{\widetilde r}\cdot e(1/g,\widehat h)^{\widetilde{r&#39;&#39;&#39;}};
-\]</span></p></li>
+    \overline{T_8}\leftarrow e(\widetilde h,u)^{\widetilde r}\cdot e(1/g,\widehat h)^{\widetilde{r&#39;&#39;&#39;}};
+\]</span></p>
+<ul>
 <li><p><strong>（4.2.3）</strong>Holder 给出Primary凭证有效证明：</p>
 <ul>
 <li><p>对于每一个凭证 <span class="math inline">\(C_p=(\{m_j\},A,e,v)\)</span> 以及Issuer的公钥 <span class="math inline">\(pk_I\leftarrow (n,S,Z,{R_i}_{1\leq i\leq l})\)</span> ：</p>
@@ -857,7 +873,7 @@ a\leftarrow \begin{cases} -1 &amp;\text{if } * \equiv\ \leq\ or\ &lt;\\ 1 &amp;\
 </ul></li>
 </ul>
 <h5 id="holder计算哈希向verifier提出挑战">4.2.1 Holder计算哈希，向Verifier提出挑战</h5>
-<p>计算：<span class="math inline">\(c_H\leftarrow H(\mathcal T,\mathcal C,n_1)\)</span> ，并将其发给Verifier；</p>
+<p>计算：<span class="math inline">\(c_H\leftarrow H(\mathcal T,\mathcal C,n_2)\)</span> ，并将其发给Verifier；</p>
 <h5 id="最终披露">4.2.2 最终披露</h5>
 <p>Holder进行最终的披露:</p>
 <ul>
@@ -905,11 +921,11 @@ a\leftarrow \begin{cases} -1 &amp;\text{if } * \equiv\ \leq\ or\ &lt;\\ 1 &amp;\
 \]</span></p>
 <p><span class="math display">\[
 \tag{4.37}
-    \widehat{T_3} \leftarrow \Big(\cfrac{e(h_o\mathcal G,\widehat h)}{e(A,y)} \Big)^{c_H}\cdot e(A,\widehat h)^{\widehat c}\cdot e(\widetilde h,\widehat h)^{\widehat r}\cdot e(\widetilde h,y)^{-\widehat{\rho}}\cdot e(\widetilde h,\widehat h)^{-\widehat m}\cdot e(h_1,\widehat h)^{-\widehat{m_2}}\cdot e(h_2,\widehat h)^{-\widehat s};
+    \widehat{T_3} \leftarrow \Big(\cfrac{e(h_o\mathcal G,\widehat h)}{e(A,y)} \Big)^{c_H}\cdot e(acc_V,\widehat h)^{\widehat c}\cdot e(\widetilde h,\widehat h)^{\widehat r}\cdot e(\widetilde h,y)^{-\widehat{\rho}}\cdot e(\widetilde h,\widehat h)^{-\widehat m}\cdot e(h_1,\widehat h)^{-\widehat{m_2}}\cdot e(h_2,\widehat h)^{-\widehat s};
 \]</span></p>
 <p><span class="math display">\[
 \tag{4.38} 
-    \widehat{T_4}\leftarrow \Big(\cfrac{e(\mathcal G,acc)}{e(g,\mathcal W)z} \Big)^{c_H}\cdot e(\widetilde h,acc)^{\widehat r}\cdot e(1/g,\widehat h)^{\widehat {r&#39;}};\ \widehat{T_5} \leftarrow D^{c_H}\cdot g^{\widetilde r} \widetilde h^{\widetilde{o&#39;}};
+    \widehat{T_4}\leftarrow \Big(\cfrac{e(\mathcal G,acc_V)}{e(g,\mathcal W)z} \Big)^{c_H}\cdot e(\widetilde h,acc_V)^{\widehat r}\cdot e(1/g,\widehat h)^{\widehat {r&#39;}};\ \widehat{T_5} \leftarrow D^{c_H}\cdot g^{\widetilde r} \widetilde h^{\widetilde{o&#39;}};
 \]</span></p>
 <p><span class="math display">\[
 \tag{4.39}
@@ -961,9 +977,9 @@ a\leftarrow \begin{cases} -1 &amp;\text{if } * \equiv\ \leq\ or\ &lt;\\ 1 &amp;\
 </ul></li>
 </ul>
 <h5 id="最终的哈希比较">4.3.3 最终的哈希比较</h5>
-<p>Verifier计算 <span class="math inline">\(\widehat{c_H}\leftarrow H(\widehat{\mathcal T},\mathcal C,n_1)\)</span> ；如果 <span class="math inline">\(c_H=\widehat{c_H}\)</span> 则验证成功，否则失败；</p>
+<p>Verifier计算 <span class="math inline">\(\widehat{c_H}\leftarrow H(\widehat{\mathcal T},\mathcal C,n_2)\)</span> ；如果 <span class="math inline">\(c_H=\widehat{c_H}\)</span> 则验证成功，否则失败；</p>
 <h3 id="证明">5. 证明</h3>
-<p>欲证明 <span class="math inline">\(c_H=\widehat{c_H}\)</span> 成立，即证明 <span class="math inline">\(H(\mathcal T,\mathcal C,n_1)=H(\widehat{\mathcal T},\mathcal C,n_1)\)</span> 成立，即证明 <span class="math inline">\(\mathcal T=\widehat{\mathcal T}\)</span> ；</p>
+<p>欲证明 <span class="math inline">\(c_H=\widehat{c_H}\)</span> 成立，即证明 <span class="math inline">\(H(\mathcal T,\mathcal C,n_2)=H(\widehat{\mathcal T},\mathcal C,n_2)\)</span> 成立，即证明 <span class="math inline">\(\mathcal T=\widehat{\mathcal T}\)</span> ；</p>
 <p>在 <span class="math inline">\(\mathcal T\)</span> 中，集合为： <span class="math inline">\(\{T,\{\overline {T_i}\}_{1\le i\le 4},\overline{T_{\Delta}},Q \}\)</span> ；</p>
 <p>在 <span class="math inline">\(\widehat{\mathcal T}\)</span> 中，集合为： <span class="math inline">\(\{\widehat T,\{\widehat{T_i}\}_{1\le i\le 4},\widehat{T_\Delta},\widehat Q\}\)</span> ；</p>
 <h4 id="证明-twidehat-t">5.1 证明 <span class="math inline">\(T=\widehat T\)</span></h4>
@@ -1004,16 +1020,13 @@ T\leftarrow (A&#39;)^{\widetilde e}\Big(\prod_{j\in \mathcal A_{\overline r}}R_j
 \Bigg(\cfrac{Z}{\big(\prod_{j\in \mathcal A_r}R_j^{m_j}\big)(A&#39;)^{2^{596}}} \Bigg)^{-c_H}(A&#39;)^{c_He&#39;}\Bigg(\prod_{j\in (\mathcal A_{\widetilde r})}R_j^{c_H{m_j}} \Bigg)(S^{c_Hv&#39;})\\
 =\Bigg(\cfrac{Z}{\big(\prod_{j\in \mathcal A_r}R_j^{m_j}} \Bigg)^{-c_H}(A&#39;)^{c_H(e&#39;+2^{596})}\Bigg(\prod_{j\in (\mathcal A_{\widetilde r})}R_j^{c_H{m_j}} \Bigg)(S^{c_Hv&#39;})\\
 =\Bigg(\cfrac{Z}{\big(\prod_{j\in \mathcal A_r}R_j^{m_j}} \Bigg)^{-c_H}(A&#39;)^{c_He}\Bigg(\prod_{j\in (\mathcal A_{\widetilde r})}R_j^{c_H{m_j}} \Bigg)(S^{c_Hv&#39;})
-\]</span></p>
-<p>提取<span class="math inline">\(\prod\)</span></p>
-<p><span class="math display">\[
-Z^{-c_H}(A&#39;)^{c_He}(S^{c_Hv&#39;})\Bigg(\prod_{j\in (\mathcal A_{r})}R_j^{c_H{m_j}}\Bigg)\Bigg(\prod_{j\in (\mathcal A_{\widetilde r})}R_j^{c_Hm_j}\Bigg)\\
+\]</span> 提取<span class="math inline">\(\prod\)</span> <span class="math display">\[
+Z^{-c_H}(A&#39;)^{c_He}(S^{c_Hv&#39;})\Bigg(\prod_{j\in (\mathcal A_{r})}R_j^{c_H{m_j}}\Bigg)\Bigg(\prod_{j\in (\mathcal A_{\widetilde r})}R_j^{c_Hm_j}\Bigg)
 \]</span> <span class="math display">\[
-= Z^{-c_H}(A&#39;)^{c_He}(S^{c_Hv&#39;})\Bigg(\prod_{j\in \mathcal A}R_j^{c_H{m_j}}\Bigg)\\
+= Z^{-c_H}(A&#39;)^{c_He}(S^{c_Hv&#39;})\Bigg(\prod_{j\in \mathcal A}R_j^{c_H{m_j}}\Bigg)
 \]</span> <span class="math display">\[
 =Z^{-c_H}(A&#39;)^{c_He}(S^{c_Hv&#39;})\Bigg(\prod_{j\in \mathcal A}R_j^{c_H{m_j}}\Bigg)
-\]</span></p>
-<p><span class="math inline">\(Z=S^{x_Z}\)</span></p>
+\]</span> <span class="math inline">\(Z=S^{x_Z}\)</span></p>
 <p><span class="math inline">\(A&#39;=AS^r\)</span></p>
 <p><span class="math inline">\(A_c+A_k=A\)</span></p>
 <p><span class="math inline">\(A_r+A_{\widetilde{r}} =A\)</span></p>
@@ -1393,7 +1406,7 @@ m_j-a\Delta-\Delta&#39;=20-1-19=0
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">38.5k</span>
+    <span title="Site words total count">38.7k</span>
   
 </div>
 
