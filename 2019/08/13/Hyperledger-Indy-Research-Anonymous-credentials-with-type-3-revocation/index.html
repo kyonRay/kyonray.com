@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Identity,Zero-Knowledge Prove,Hyperledger,">
+  <meta name="keywords" content="Identity,Hyperledger,Zero-Knowledge Prove,">
 
 
 
@@ -80,17 +80,20 @@
 
 
 <meta name="description" content="一、简述 匿名凭证的作用是允许用户证明当前identity符合某个属性，且不暴露出其他属性。本文描述的方法通过使用零知识证明的方式保证属性在披露的过程中不被其他人知道，且可实现凭证一次性使用，第二次用于展示给Verifier的时候会被感知。 由于其原稿难懂，有多个符号错误，计算错误，符号未命名的问题，所以本人进行翻译、纠正。">
-<meta name="keywords" content="Identity,Zero-Knowledge Prove,Hyperledger">
+<meta name="keywords" content="Identity,Hyperledger,Zero-Knowledge Prove">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hyperledger Indy Research: Anonymous credentials with type-3 revocation">
 <meta property="og:url" content="https://kyonray.com/2019/08/13/Hyperledger-Indy-Research-Anonymous-credentials-with-type-3-revocation/index.html">
 <meta property="og:site_name" content="Kyon&#39;s Blog">
 <meta property="og:description" content="一、简述 匿名凭证的作用是允许用户证明当前identity符合某个属性，且不暴露出其他属性。本文描述的方法通过使用零知识证明的方式保证属性在披露的过程中不被其他人知道，且可实现凭证一次性使用，第二次用于展示给Verifier的时候会被感知。 由于其原稿难懂，有多个符号错误，计算错误，符号未命名的问题，所以本人进行翻译、纠正。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-08-21T01:35:50.194Z">
+<meta property="og:image" content="https://kyonray.com/2019/08/13/Hyperledger-Indy-Research-Anonymous-credentials-with-type-3-revocation/Issuer与Prover交互.svg">
+<meta property="og:image" content="https://kyonray.com/2019/08/13/Hyperledger-Indy-Research-Anonymous-credentials-with-type-3-revocation/Prover与Verifier交互.svg">
+<meta property="og:updated_time" content="2019-09-17T05:44:49.912Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hyperledger Indy Research: Anonymous credentials with type-3 revocation">
 <meta name="twitter:description" content="一、简述 匿名凭证的作用是允许用户证明当前identity符合某个属性，且不暴露出其他属性。本文描述的方法通过使用零知识证明的方式保证属性在披露的过程中不被其他人知道，且可实现凭证一次性使用，第二次用于展示给Verifier的时候会被感知。 由于其原稿难懂，有多个符号错误，计算错误，符号未命名的问题，所以本人进行翻译、纠正。">
+<meta name="twitter:image" content="https://kyonray.com/2019/08/13/Hyperledger-Indy-Research-Anonymous-credentials-with-type-3-revocation/Issuer与Prover交互.svg">
 
 
 
@@ -443,20 +446,20 @@
 <p>Indy选择性披露核心的流程在于：</p>
 <p>Init：</p>
 <ul>
-<li>issuser生成属性模板</li>
-<li>prover/holder使用自己的私钥master key和属性（可以盲化或不盲化），用属性模板生成证明，向issuer获取证书</li>
-<li>issuer用自己的私钥对属性进行签名，将其发送给Holder</li>
+<li><p>issuser生成属性模板</p></li>
+<li><p>prover/holder使用自己的私钥master key和属性（可以盲化或不盲化），用属性模板生成证明，向issuer获取证书</p></li>
+<li><p>issuer用自己的私钥对属性进行签名，将其发送给Holder</p></li>
 </ul>
 <p>Verify：</p>
 <ul>
-<li>prover选择要披露的属性，，根据证书生成证书的proof，将proof和属性给Verifier</li>
-<li>Verifier根据issuer的公钥，proof，属性。用证书验证属性是否在proof里。验证proof是否是由Issuer的公钥签发</li>
+<li><p>prover选择要披露的属性，，根据证书生成证书的proof，将proof和属性给Verifier</p></li>
+<li><p>Verifier根据issuer的公钥，proof，属性。用证书验证属性是否在proof里。验证proof是否是由Issuer的公钥签发</p></li>
 </ul>
 <p>核心性质：</p>
 <ul>
-<li>不可伪造性(unforgeable)，即没有人可以使用未经Issuer签发的凭证通过Verifier的验证</li>
-<li>不可链接性(unlinkable)，即不可能使用同样的凭证与多个匿名的presentation关联。技术上用knowledge proof证明他拥有凭证。</li>
-<li>可拓展性(delegatable)，Prover A可以将具有特定属性X的证书C(credential)委托给Prover B，同时Verifier在当B提供属性Y的时候不获取A的身份。技术上代表可以进一步创建证书链。</li>
+<li><p>不可伪造性(unforgeable)，即没有人可以使用未经Issuer签发的凭证通过Verifier的验证</p></li>
+<li><p>不可链接性(unlinkable)，即不可能使用同样的凭证与多个匿名的presentation关联。技术上用knowledge proof证明他拥有凭证。</p></li>
+<li><p>可拓展性(delegatable)，Prover A可以将具有特定属性X的证书C(credential)委托给Prover B，同时Verifier在当B提供属性Y的时候不获取A的身份。技术上代表可以进一步创建证书链。</p></li>
 </ul>
 <h2 id="二protocol-overview">二、Protocol Overview</h2>
 <p>最简单的凭证生命周期：一个凭证，单个issuer，单个持有人，单个验证者</p>
@@ -470,6 +473,11 @@
 <li>Holder 使用符合证明请求 <span class="math inline">\(\mathcal E\)</span> 的未撤销凭证，生成了证明 <span class="math inline">\(P\)</span> ，并发送给Verifier；</li>
 <li>Verifier验证证明<span class="math inline">\(P\)</span>；</li>
 </ol>
+<p>以下<strong>时序图</strong>描述整个协议流程：</p>
+<p>Prover与Issuer交互：</p>
+<p><img src="./Issuer与Prover交互.svg"></p>
+<p>Prover与Verifier交互：</p>
+<p><img src="./Prover与Verifier交互.svg"></p>
 <h2 id="三具体方案步骤">三、具体方案步骤</h2>
 <p>接下来以整个方案的流程逐步详细介绍：</p>
 <h3 id="schema准备">1. Schema准备</h3>
@@ -484,13 +492,13 @@
 <li>随机获取1024-bit的素数 <span class="math inline">\(p&#39;, q&#39;\)</span> ，计算： <span class="math inline">\(p\leftarrow 2p&#39;+1,\ q\leftarrow 2q&#39;+1,\ n\leftarrow pq\)</span></li>
 <li>随机取模n的二次剩余 <span class="math inline">\(S\)</span> ：<span class="math inline">\(S\)</span> 不是n的倍数，且mod n同余于某个数的平方，例如 <span class="math inline">\(S\equiv x^2(mod\ n),\ S^{(n-1)/2}\equiv 1(mod\ n)\)</span> ；</li>
 <li>随机取 <span class="math inline">\(x_Z，x_{R_1},…,x_{R_l}\ \in[2;p&#39;q&#39;-1]\)</span></li>
-<li>计算得公钥 <span class="math inline">\(P_k = (n,S,Z\leftarrow S^{x_Z},\{R_i\leftarrow S^{x_{R_i}}\}_{1\leqslant i \leqslant l})\)</span> ，私钥 <span class="math inline">\(s_k=(p,q)\)</span></li>
+<li>计算得公钥 <span class="math inline">\(P_k = (n,S,Z\leftarrow S^{x_Z},\{R_i\leftarrow S^{x_{R_i}}\}_{1\leqslant i \leqslant l})\)</span> ，私钥 <span class="math inline">\(s_k=(p&#39;,q&#39;)\)</span></li>
 </ul></li>
 </ul>
 <h4 id="issuer提供凭证密钥正确性">1.3 Issuer提供凭证密钥正确性</h4>
 <ul>
-<li><strong>（1.3.1）</strong> Issuer生成一堆随机数 <span class="math inline">\(\widetilde{x_Z}，\widetilde{x_{R_1}},…,\widetilde{x_{R_l}}\ \in[2;p&#39;q&#39;-1]\)</span></li>
-<li>Issuer计算：</li>
+<li><p><strong>（1.3.1）</strong> Issuer生成一堆随机数 <span class="math inline">\(\widetilde{x_Z}，\widetilde{x_{R_1}},…,\widetilde{x_{R_l}}\ \in[2;p&#39;q&#39;-1]\)</span></p></li>
+<li><p>Issuer计算：</p></li>
 </ul>
 <p><span class="math display">\[
 \widetilde{Z}\leftarrow S^{\widetilde{x_Z}}\\
@@ -514,8 +522,8 @@ c\leftarrow H_1(Z||\widetilde Z||\{R_i,\widetilde{R_i}\}_{1\le i\le l})\\
 </ul></li>
 <li><p><strong>（1.4.2）</strong>Issuer生成新的聚合器(Accumulator) <span class="math inline">\(A\)</span> ，其中 <span class="math inline">\(L\)</span> 是凭证的index ：</p>
 <ul>
-<li>随机生成 <span class="math inline">\(\gamma \in \Bbb{Z}_q\)</span> ；</li>
-<li>计算：</li>
+<li><p>随机生成 <span class="math inline">\(\gamma \in \Bbb{Z}_q\)</span> ；</p></li>
+<li><p>计算：</p></li>
 </ul>
 <p><span class="math display">\[
 \tag{1.1}g_1,g_2,…,g_L,g_{L+2},…,g_{2L},\ where\ g_i=g^{\gamma^i}
@@ -527,9 +535,9 @@ c\leftarrow H_1(Z||\widetilde Z||\{R_i,\widetilde{R_i}\}_{1\le i\le l})\\
 \tag{1.3}z=(e(g,g&#39;))^{\gamma^{L+1}}
 \]</span></p>
 <ul>
-<li>设置值 <span class="math inline">\(V\leftarrow \emptyset\)</span> ，聚合器 <span class="math inline">\(acc\leftarrow 1\)</span> ；</li>
-<li>进而得出聚合器的公钥 <span class="math inline">\(P_a=(z)\)</span> ，私钥 <span class="math inline">\((\gamma)\)</span> ；</li>
-<li>之后Issuer把 <span class="math inline">\((P_a,V)\)</span> 公布到区块链上供其他人进行累积、验证， 聚合器的DID设置为 <span class="math inline">\(ID_a=z\)</span> 。</li>
+<li><p>设置值 <span class="math inline">\(V\leftarrow \emptyset\)</span> ，聚合器 <span class="math inline">\(acc\leftarrow 1\)</span> ；</p></li>
+<li><p>进而得出聚合器的公钥 <span class="math inline">\(P_a=(z)\)</span> ，私钥 <span class="math inline">\((\gamma)\)</span> ；</p></li>
+<li><p>之后Issuer把 <span class="math inline">\((P_a,V)\)</span> 公布到区块链上供其他人进行累积、验证， 聚合器的DID设置为 <span class="math inline">\(ID_a=z\)</span> 。</p></li>
 </ul></li>
 </ul>
 <h3 id="credential发行">2. Credential发行</h3>
@@ -546,21 +554,17 @@ c=H_1(Z||\hat Z||\{R_i,\widehat{R_i}\}_{1\le i\le l})
 <li><p>Holder建立与Issuer的连接，从Issuer那获取随机数 <span class="math inline">\(n_0\)</span> ，Holder的DID为 <span class="math inline">\(\mathcal{H}\)</span> ；</p></li>
 <li><p><strong>（2.2.1）</strong>Holder做以下计算，为Primary Credential的数据做准备：</p>
 <ul>
-<li>生成 2128-bit随机数 <span class="math inline">\(v&#39;\)</span> ，673-bit随机数 <span class="math inline">\(\widetilde{v&#39;}\)</span></li>
-<li>生成593-bit随机数 <span class="math inline">\(\{\widetilde{m_i}\}_{i\in A_h}\)</span></li>
-<li>使用Primary Credential的公钥 <span class="math inline">\(P_k\)</span> 计算Primary Credential的盲化secret：</li>
-</ul>
-<p><span class="math display">\[
+<li><p>生成 2128-bit随机数 <span class="math inline">\(v&#39;\)</span> ，673-bit随机数 <span class="math inline">\(\widetilde{v&#39;}\)</span></p></li>
+<li><p>生成593-bit随机数 <span class="math inline">\(\{\widetilde{m_i}\}_{i\in A_h}\)</span></p></li>
+<li><p>使用Primary Credential的公钥 <span class="math inline">\(P_k\)</span> 计算Primary Credential的盲化secret： <span class="math display">\[
 \tag{2.1}U\leftarrow (S^{v&#39;})\prod_{i\in A_h}R_i^{m_i}
-\]</span></p>
-<ul>
-<li>计算commitment Attribute属性值 <span class="math inline">\(vca\)</span> ，其中 <span class="math inline">\(blind\)</span> 是盲化因子：</li>
-</ul>
-<p><span class="math display">\[
+\]</span></p></li>
+<li><p>计算commitment Attribute属性值 <span class="math inline">\(vca\)</span> ，其中 <span class="math inline">\(blind\)</span> 是盲化因子： <span class="math display">\[
 \tag{2.2}
-  \{vca_i\}_{i\in A_{commit}}=\{S^{blind}\cdot Z^{m_i}\}_{i\in A_{commit}}\\
+\{vca_i\}_{i\in A_{commit}}=\{S^{blind}\cdot Z^{m_i}\}_{i\in A_{commit}}\\
 \widetilde{r_i}=rand(593bit)_{i\in A_{commit}}
-\]</span></p>
+\]</span></p></li>
+</ul>
 <p><span class="math display">\[
 \tag{2.3}\{\widetilde{commitment_i}=Z^{\widetilde{m_i}}\cdot S^{\widetilde{r_i}}\}_{i\in A_{commit}}
 \]</span></p>
@@ -591,8 +595,8 @@ c=H_1(Z||\hat Z||\{R_i,\widehat{R_i}\}_{1\le i\le l})
 <ul>
 <li><p>获取撤销公钥 <span class="math inline">\(P_R\)</span> ，并生成随机数 <span class="math inline">\(s&#39;_R \in \Bbb{Z}_q\)</span> ；</p></li>
 <li><p>计算 <span class="math display">\[
-\tag{2.8}U_R\leftarrow h_2^{s&#39;_R},\ where\ h_2\ in\ P_R
-\]</span></p></li>
+ \tag{2.8}U_R\leftarrow h_2^{s&#39;_R},\ where\ h_2\ in\ P_R
+ \]</span></p></li>
 <li><p>将 <span class="math inline">\(U_R\)</span> 发送给Issuer</p></li>
 </ul></li>
 </ul>
@@ -620,57 +624,43 @@ c=H_1(Z||\hat Z||\{R_i,\widehat{R_i}\}_{1\le i\le l})
 \tag{2.10}A\leftarrow Q^{e^{-1}(mod\ p&#39;q&#39;)}(mod\ n)
 \]</span></p>
 <ul>
-<li>计算签名<strong>Proof</strong>：</li>
-</ul></li>
-</ul>
-<p><span class="math display">\[
+<li>计算签名<strong>Proof</strong>： <span class="math display">\[
 \tag{2.11}\widehat A\leftarrow Q^r\ (mod\ n)
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{2.12}c&#39; \leftarrow H(Q||A||\widehat A||n_1)
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{2.13}s_e\leftarrow r-c&#39;e^{-1}\ (mod\ p&#39;q&#39;)
-\]</span></p>
-<ul>
-<li><strong>（2.3.3）</strong>Issuer 将primary pre-credential <span class="math inline">\((\{m_i\}_{i\in A_k},A,e,v&#39;&#39;,s_e,c&#39;)\)</span> 发送给Holder；</li>
-<li><strong>（2.3.4）</strong>Issuer 非撤销凭证（Non-revocation Credential）的颁发
-<ul>
-<li>生成随机数 <span class="math inline">\(s&#39;&#39;,c\leftarrow Z_q\)</span> ；</li>
-<li>将Primary凭证中的 <span class="math inline">\(m_2\)</span> 也加入到非撤销凭证中，进行两个凭证的关联；</li>
-<li><span class="math inline">\(acc_V\)</span>是聚合器值，为证书分配一个未使用的索引index <span class="math inline">\(i\)</span> ，<span class="math inline">\(V\)</span> 是现在未被撤销的集合；</li>
-<li>计算（其中L为最多颁发的证书个数，在代码中表示为n）：</li>
+\]</span></li>
 </ul></li>
-</ul>
-<p><span class="math display">\[
+<li><p><strong>（2.3.3）</strong>Issuer 将primary pre-credential <span class="math inline">\((\{m_i\}_{i\in A_k},A,e,v&#39;&#39;,s_e,c&#39;)\)</span> 发送给Holder；</p></li>
+<li><p><strong>（2.3.4）</strong>Issuer 非撤销凭证（Non-revocation Credential）的颁发</p>
+<ul>
+<li><p>生成随机数 <span class="math inline">\(s&#39;&#39;,c\leftarrow Z_q\)</span> ；</p></li>
+<li><p>将Primary凭证中的 <span class="math inline">\(m_2\)</span> 也加入到非撤销凭证中，进行两个凭证的关联；</p></li>
+<li><p><span class="math inline">\(acc_V\)</span>是聚合器值，为证书分配一个未使用的索引index <span class="math inline">\(i\)</span> ，<span class="math inline">\(V\)</span> 是现在未被撤销的集合；</p></li>
+<li><p>计算（其中L为最多颁发的证书个数，在代码中表示为n）： <span class="math display">\[
 \tag{2.14} \sigma \leftarrow (h_0h_1^{m_2}\cdot U_R\cdot g_i\cdot h_2^{s&#39;&#39;})^{\cfrac{1}{x+c}}
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{2.15}w\leftarrow \prod_{j\in V}g&#39;_{L+1-j+i}
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{2.16}
 \sigma_i \leftarrow g&#39;^{1/(sk+\gamma^i)}
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{2.17}
 u_i \leftarrow u^{\gamma_i}
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{2.18}
 acc_V\leftarrow acc_V\cdot g&#39;_{L+1-i}
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{2.19}
 V\leftarrow V\cup\{i\}
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{2.20}
 wit_i\leftarrow \{\sigma_i,u_i,g_i,w,V\}
-\]</span></p>
-<ul>
-<li>将非撤销凭证 <span class="math inline">\((I_A,\sigma,c,s&#39;&#39;,wit_i,g_i,g&#39;_i,i)\)</span> 发给Holder；</li>
-<li>将更新的 <span class="math inline">\(V,acc_V\)</span> 放到区块链中；</li>
+\]</span></p></li>
+<li><p>将非撤销凭证 <span class="math inline">\((I_A,\sigma,c,s&#39;&#39;,wit_i,g_i,g&#39;_i,i)\)</span> 发给Holder；</p></li>
+<li><p>将更新的 <span class="math inline">\(V,acc_V\)</span> 放到区块链中；</p></li>
+</ul></li>
 </ul>
 <h4 id="holder收到两个凭证进行存储">2.4 Holder收到两个凭证，进行存储</h4>
 <ul>
@@ -684,8 +674,8 @@ wit_i\leftarrow \{\sigma_i,u_i,g_i,w,V\}
 </ul></li>
 <li><p><strong>（2.4.2）</strong>验证 <span class="math inline">\(Q=A^e(mod\ n)\)</span>；</p></li>
 <li><p><strong>（2.4.3）</strong>计算： <span class="math display">\[
-\tag{2.22}\widehat A \leftarrow A^{c&#39;+s_e\cdot e}
-\]</span></p>
+  \tag{2.22}\widehat A \leftarrow A^{c&#39;+s_e\cdot e}
+  \]</span></p>
 <ul>
 <li>验证 <span class="math inline">\(c&#39;=H(Q||A||\widehat A||n_1)\)</span> ；</li>
 </ul></li>
@@ -736,66 +726,50 @@ V_{old}\leftarrow V;
 <p><span class="math display">\[
 \tag{4.2}
 E\leftarrow h^{\rho}\widetilde h^o;
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{4.3}
 D\leftarrow g^{r}\widetilde h^{o&#39;};
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{4.4}
 A\leftarrow \sigma \widetilde h^{\rho};
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{4.5}
 \mathcal G \leftarrow g_i\widetilde h^r;
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{4.6}
 \mathcal W \leftarrow w\widehat h^{r&#39;};
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{4.7}
 \mathcal S \leftarrow \sigma_i \widehat h^{r&#39;&#39;};
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{4.8}
 \mathcal U \leftarrow u_i\widehat h^{r&#39;&#39;&#39;};
-\]</span></p></li>
+\]</span> &gt; E、D分别是对<span class="math inline">\(\rho\)</span> 和 <span class="math inline">\(r\)</span> 的承诺</p></li>
 </ul>
-<blockquote>
-<p>E、D分别是对<span class="math inline">\(\rho\)</span> 和 <span class="math inline">\(r\)</span> 的承诺</p>
-</blockquote>
 <blockquote>
 <p><span class="math inline">\(\mathcal G\)</span>, <span class="math inline">\(\mathcal W\)</span>, <span class="math inline">\(\mathcal S\)</span>, <span class="math inline">\(\mathcal U\)</span> 分别是对<span class="math inline">\(g_i\)</span>, <span class="math inline">\(w\)</span>, <span class="math inline">\(\sigma_i\)</span>, <span class="math inline">\(u_i\)</span>的盲化</p>
 <p><span class="math inline">\(NonRevocProofCList \leftarrow \{ E, D, A, \mathcal G, \mathcal W, \mathcal S, \mathcal U \}\)</span>, 作为c_list</p>
 <p>以上过程由ProofBuilder::_create_c_list_values() 完成</p>
 </blockquote>
 <ul>
-<li>计算：</li>
-</ul>
-<p><span class="math display">\[
+<li><p>计算： <span class="math display">\[
   \tag{4.9}
   m\leftarrow \rho \cdot c;
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
   \tag{4.10}
   t\leftarrow o\cdot c;
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
   \tag{4.11}
   m&#39;\leftarrow r\cdot r&#39;&#39;;
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
   \tag{4.12}
   t&#39;\leftarrow o&#39;\cdot r&#39;&#39;;
-\]</span></p>
-<ul>
-<li>随机取随机数：<span class="math inline">\(\widetilde{\rho},\widetilde{o},\widetilde{o&#39;},\widetilde{c},\widetilde{m},\widetilde{m&#39;},\widetilde{t},\widetilde{t&#39;},\widetilde{m_2},\widetilde{s},\widetilde{r},\widetilde{r&#39;},\widetilde{r&#39;&#39;},\widetilde{r&#39;&#39;&#39;},mod\ q\)</span> ；</li>
-<li>计算以下公式，并将最终所得放到集合 <span class="math inline">\(\mathcal T\)</span> ：</li>
-</ul>
-<p><span class="math display">\[
+\]</span></p></li>
+<li><p>随机取随机数：<span class="math inline">\(\widetilde{\rho},\widetilde{o},\widetilde{o&#39;},\widetilde{c},\widetilde{m},\widetilde{m&#39;},\widetilde{t},\widetilde{t&#39;},\widetilde{m_2},\widetilde{s},\widetilde{r},\widetilde{r&#39;},\widetilde{r&#39;&#39;},\widetilde{r&#39;&#39;&#39;},mod\ q\)</span> ；</p></li>
+<li><p>计算以下公式，并将最终所得放到集合 <span class="math inline">\(\mathcal T\)</span> ： <span class="math display">\[
   \tag{4.13} \overline{T_1}\leftarrow h^{\widetilde{\rho}}\widetilde h^{\widetilde o};\     \overline{T_2} \leftarrow E^{\widetilde c}h^{-\widetilde m}\widetilde h^{-\widetilde t}
-\]</span></p>
+\]</span></p></li>
+</ul>
 <p><span class="math display">\[
 \tag{4.14}
     \overline{T_3} \leftarrow e(acc_V,\widehat h)^{\widetilde c}\cdot e(\widetilde h,\widehat h)^{\widetilde r}\cdot e(\widetilde h,y)^{-\widetilde{\rho}}\cdot e(\widetilde h,\widehat h)^{-\widetilde m}\cdot e(h_1,\widehat h)^{-\widetilde{m_2}}\cdot e(h_2,\widehat h)^{-\widetilde s};
@@ -818,13 +792,16 @@ A\leftarrow \sigma \widetilde h^{\rho};
 <li><p>对于每一个凭证 <span class="math inline">\(C_p=(\{m_j\},A,e,v)\)</span> 以及Issuer的公钥 <span class="math inline">\(pk_I\leftarrow (n,S,Z,{R_i}_{1\leq i\leq l})\)</span> ：</p>
 <ul>
 <li><p>随机选取2128-bit随机数 <span class="math inline">\(r\)</span> ；</p></li>
-<li><p>计算： <span class="math display">\[
+<li><p>计算：</p>
+<p><span class="math display">\[
 \tag{4.18}A&#39;\leftarrow AS^r\ (mod\ n);v&#39;\leftarrow v-e\cdot r;
-\]</span></p></li>
-<li><p>计算：<span class="math inline">\(e&#39;\leftarrow e-2^{596}\)</span> ；</p></li>
+\]</span> 并将 <span class="math inline">\(A&#39;\)</span> 放入集合 <span class="math inline">\(\mathcal C\)</span> ；</p></li>
+</ul></li>
+<li><p>计算：<span class="math inline">\(e&#39;\leftarrow e-2^{596}\)</span> ；</p>
+<ul>
 <li><p>随机取456-bit随机数 <span class="math inline">\(\widetilde e\)</span> ，3060-bit随机数 <span class="math inline">\(\widetilde v\)</span> ；</p></li>
 <li><p>计算以下公式，并将结果放入集合 <span class="math inline">\(\mathcal T\)</span> ； <span class="math display">\[
-\tag{4.19}T\leftarrow (A&#39;)^{\widetilde e}\Big(\prod_{j\in \mathcal A_{\overline r}}R_j^{\widetilde{m_j}}\Big)(s^{\widetilde v})\ (mod\ n)
+\tag{4.19}T\leftarrow (A&#39;)^{\widetilde e}\Big(\prod_{j\in \mathcal A_{\overline r}}R_j^{\widetilde{m_j}}\Big)(S^{\widetilde v})\ (mod\ n)
 \]</span></p></li>
 </ul></li>
 <li><p>对于每一个断言 <span class="math inline">\(p\)</span> ，其操作符 <span class="math inline">\(*\)</span> 都是 <span class="math inline">\(&gt;,\geq, &lt;,\leq\)</span> 其中之一</p>
@@ -838,7 +815,8 @@ m_j-z_j; &amp;\text{if } * \equiv\ \geq\\
 m_j-z_j-1; &amp;\text{if } * \equiv\ &gt;
 \end{cases}
 \]</span></p></li>
-<li><p>计算 <span class="math inline">\(a\)</span> ： <span class="math display">\[
+<li><p>计算 <span class="math inline">\(a\)</span> ：</p>
+<p><span class="math display">\[
 \tag{4.21}
 a\leftarrow \begin{cases} -1 &amp;\text{if } * \equiv\ \leq\ or\ &lt;\\ 1 &amp;\text{if } * \equiv\ \geq\ or\ &gt; \end{cases}
 \]</span></p></li>
@@ -849,27 +827,25 @@ a\leftarrow \begin{cases} -1 &amp;\text{if } * \equiv\ \leq\ or\ &lt;\\ 1 &amp;\
 <ul>
 <li>随机取2128-bit随机数 <span class="math inline">\(r_1,r_2,r_3,r_4,r_{\Delta}\)</span> ；</li>
 </ul></li>
-<li><p>计算以下公式，并将结果按顺序放入集合 <span class="math inline">\(\mathcal C\)</span> ： <span class="math display">\[
-\tag{4.23}\{T_i\leftarrow Z^{u_i}S^{r_i}\ (mod\ n)\}_{1\le i\le 4};
-\]</span></p>
+<li><p>计算以下公式，并将结果按顺序放入集合 <span class="math inline">\(\mathcal C\)</span> ：</p>
 <p><span class="math display">\[
+\tag{4.23}\{T_i\leftarrow Z^{u_i}S^{r_i}\ (mod\ n)\}_{1\le i\le 4};
+\]</span> <span class="math display">\[
 \tag{4.24}T_\Delta \leftarrow Z^\Delta S^{r_\Delta}\ (mod\ n);
 \]</span></p></li>
 <li><p>随机取592-bit数 <span class="math inline">\(\widetilde{u_i}, 1\le i \le 4\)</span> ；</p>
 <ul>
-<li>随机取672-bit数 <span class="math inline">\(\widetilde{r_i}, 1\le i \le 4, \widetilde{r_\Delta}\)</span> ；</li>
-<li>随机取2787-bit随机数 <span class="math inline">\(\widetilde{\alpha}\)</span> ；</li>
-<li>计算以下公式，并将值按顺序放入集合 <span class="math inline">\(\mathcal T\)</span> ：</li>
+<li><p>随机取672-bit数 <span class="math inline">\(\widetilde{r_i}, 1\le i \le 4, \widetilde{r_\Delta}\)</span> ；</p></li>
+<li><p>随机取2787-bit随机数 <span class="math inline">\(\widetilde{\alpha}\)</span> ；</p></li>
+<li><p>计算以下公式，并将值按顺序放入集合 <span class="math inline">\(\mathcal T\)</span> ：</p></li>
 </ul>
 <p><span class="math display">\[
-\tag{4.25}\{\overline{T_i}\leftarrow Z^{\widetilde{u_i}}S^{\widetilde{r_i}}\ (mod\ n)\}_{1\le i\le 4} ;
-\]</span></p>
-<p><span class="math display">\[
-\tag{4.26}\overline{T_\Delta}\leftarrow Z^{\widetilde{m_j}}S^{a\widetilde{r_\Delta}}\ (mod\ n);
-\]</span></p>
-<p><span class="math display">\[
-\tag{4.27}Q\leftarrow (S^{\widetilde{\alpha}}\prod_{i=1}^4 T_i^{\widetilde{u_i}}\ (mod\ n));
-\]</span></p></li>
+  \tag{4.25}\{\overline{T_i}\leftarrow Z^{\widetilde{u_i}}S^{\widetilde{r_i}}\ (mod\ n)\}_{1\le i\le 4} ;
+  \]</span> <span class="math display">\[
+  \tag{4.26}\overline{T_\Delta}\leftarrow Z^{\widetilde{m_j}}S^{a\widetilde{r_\Delta}}\ (mod\ n);
+  \]</span> <span class="math display">\[
+  \tag{4.27}Q\leftarrow (S^{\widetilde{\alpha}}\prod_{i=1}^4 T_i^{\widetilde{u_i}}\ (mod\ n));
+  \]</span></p></li>
 </ul></li>
 </ul>
 <h5 id="holder计算哈希向verifier提出挑战">4.2.1 Holder计算哈希，向Verifier提出挑战</h5>
@@ -877,46 +853,36 @@ a\leftarrow \begin{cases} -1 &amp;\text{if } * \equiv\ \leq\ or\ &lt;\\ 1 &amp;\
 <h5 id="最终披露">4.2.2 最终披露</h5>
 <p>Holder进行最终的披露:</p>
 <ul>
-<li><strong>（4.2.2.1）</strong>对于Non-Revcation Credential：对参数 <span class="math inline">\(\rho, o,c,o&#39;,m,m&#39;,t,t&#39;,m_2,s,r,r&#39;,r&#39;&#39;,r&#39;&#39;&#39;\)</span> 都进行盲化处理，处理方法类似于下面的公式：</li>
+<li><strong>（4.2.2.1）</strong>对于Non-Revcation Credential：对参数 <span class="math inline">\(\rho, o,c,o&#39;,m,m&#39;,t,t&#39;,m_2,s,r,r&#39;,r&#39;&#39;,r&#39;&#39;&#39;\)</span> 都进行盲化处理，处理方法类似于下面的公式： <span class="math display">\[
+\tag{4.28}\widehat \rho \leftarrow \widetilde{\rho} -c_H\rho\ (mod\ q)
+\]</span></li>
 </ul>
-<p><span class="math display">\[
-  \tag{4.28}\widehat \rho \leftarrow \widetilde{\rho} -c_H\rho\ (mod\ q)
-\]</span></p>
 <p>最终得出<span class="math inline">\(\widehat\rho,\widehat o,\widehat c,\widehat{o&#39;},\widehat m,\widehat{m&#39;},\widehat t,\widehat {t&#39;},\widehat{m_2},\widehat s,\widehat r,\widehat {r&#39;},\widehat{r&#39;&#39;},\widehat{r&#39;&#39;&#39;}\)</span> 并将结果放入集合 <span class="math inline">\(\mathcal X\)</span> ；</p>
 <ul>
-<li><strong>（4.2.2.2）</strong>对于Primary 凭证 <span class="math inline">\(C_p=(\{m_j\},A,e,v)\)</span> 计算：</li>
-</ul>
-<p><span class="math display">\[
+<li><p><strong>（4.2.2.2）</strong>对于Primary 凭证 <span class="math inline">\(C_p=(\{m_j\},A,e,v)\)</span> 计算： <span class="math display">\[
 \tag{4.29}\widehat e\leftarrow \widetilde e+c_He&#39;;
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{4.30}\widehat v\leftarrow \widetilde v+c_Hv&#39;;
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{4.31}\{\widehat m_j\leftarrow \widetilde{m_j}+c_Hm_j\}_{j\in \mathcal A_{\overline r}}
-\]</span></p>
-<p>最终得出 <span class="math inline">\(Pr_C=(\widehat e,\widehat v,\{\widehat{m_j}\}_{j\in \mathcal A_{\overline r}},A&#39;)\)</span> 是凭证 <span class="math inline">\(C_p\)</span> 的子证明；</p>
-<ul>
+\]</span> 最终得出 <span class="math inline">\(Pr_C=(\widehat e,\widehat v,\{\widehat{m_j}\}_{j\in \mathcal A_{\overline r}},A&#39;)\)</span> 是凭证 <span class="math inline">\(C_p\)</span> 的子证明；</p></li>
 <li><p><strong>（4.2.2.3）</strong>对每一个断言 <span class="math inline">\(p\)</span> ，计算： <span class="math display">\[
 \tag{4.32}\{\widehat{u_i}\leftarrow \widetilde{u_i}+c_Hu_i\}_{1\le i\le 4};
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{4.33}\{\widehat{r_i}\leftarrow \widetilde{r_i}+c_Hr_i\}_{1\le i\le 4};
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{4.34}\widehat{r_\Delta}\leftarrow \widetilde{r_\Delta}+c_Hr_\Delta;
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{4.35}\widehat\alpha\leftarrow \widetilde\alpha +c_H(r_\Delta-u_1r_1-u_2r_2-u_3r_3-u_4r_4);
-\]</span></p>
-<p>最终得出 <span class="math inline">\(Pr_p=(\{\widehat{u_i}\},\{\widehat{r_i}\},\widehat{r_\Delta},\widehat{\alpha},\widehat{m_j})\)</span> 是断言 <span class="math inline">\(p\)</span> 的子证明；</p></li>
+\]</span> 最终得出 <span class="math inline">\(Pr_p=(\{\widehat{u_i}\},\{\widehat{r_i}\},\widehat{r_\Delta},\widehat{\alpha},\widehat{m_j})\)</span> 是断言 <span class="math inline">\(p\)</span> 的子证明；</p></li>
 </ul>
 <h5 id="holder发送信息给verifier">4.2.3 Holder发送信息给Verifier</h5>
 <p>Holder发送 <span class="math inline">\((c_H,\mathcal X,\{Pr_c\},\{Pr_p\},\mathcal C)\)</span> 给verifier。</p>
 <h4 id="verifier验证">4.3 Verifier验证</h4>
 <p>对于凭证对 <span class="math inline">\((C_p,C_{NR})\)</span> ，Verifier收到证明相关参数 <span class="math inline">\((c_H,\mathcal X,\{Pr_c\},\{Pr_p\},\mathcal C)\)</span></p>
 <h5 id="非撤销检查">4.3.1 非撤销检查</h5>
-<p>Verifier计算以下公式，并将结果放入集合 <span class="math inline">\(\widehat T\)</span> ： <span class="math display">\[
+<p>Verifier计算以下公式，并将结果放入集合 <span class="math inline">\(\widehat T\)</span> ：</p>
+<p><span class="math display">\[
 \tag{4.36} \widehat{T_1}\leftarrow E^{c_H}\cdot h^{\widehat{\rho}}\widetilde h^{\widehat o};\   \widehat{T_2} \leftarrow E^{\widehat c}h^{-\widehat m}\widetilde h^{-\widehat t}
 \]</span></p>
 <p><span class="math display">\[
@@ -962,18 +928,15 @@ z_j+1; &amp;\text{if } * \equiv\ &gt;
 a\leftarrow \begin{cases} -1 &amp;\text{if } * \equiv\ \leq\ or\ &lt;\\ 1 &amp;\text{if } * \equiv\ \geq\ or\ &gt; \end{cases}
 \]</span></p>
 <ul>
-<li><p>使用断言子证明 <span class="math inline">\(Pr_p=(\{\widehat{u_i}\},\{\widehat{r_i}\},\widehat{r_\Delta},\widehat{\alpha},\widehat{m_j})\)</span> 以及集合 <span class="math inline">\(\mathcal C\)</span> ，进行计算： <span class="math display">\[
+<li>使用断言子证明 <span class="math inline">\(Pr_p=(\{\widehat{u_i}\},\{\widehat{r_i}\},\widehat{r_\Delta},\widehat{\alpha},\widehat{m_j})\)</span> 以及集合 <span class="math inline">\(\mathcal C\)</span> ，进行计算： <span class="math display">\[
 \tag{4.44}\{\widehat{T_i}\leftarrow T_i^{-c_H}Z^{\widehat{u_i}}S^{\widehat{r_i}}\ (mod\ n)\}_{1 \le i\le 4};
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{4.45}
 \widehat{T_\Delta}\leftarrow (T_{\Delta}^aZ^{\Delta&#39;})^{-c_H}Z^{\widehat{m_j}}S^{a\widehat{r_\Delta}}\ (mod\ n);
-\]</span></p>
-<p><span class="math display">\[
+\]</span> <span class="math display">\[
 \tag{4.46}
 \widehat{Q}\leftarrow (T_\Delta^{-c_H})\prod_{i=1}^4 T_i^{\widehat{u_i}}(S^{\widehat \alpha})\ (mod\ n);
-\]</span></p>
-<p>最终将 <span class="math inline">\(\widehat{T_1},\widehat{T_2},\widehat{T_3},\widehat{T_4},\widehat{T_{\Delta}},\widehat Q\)</span> 加入到集合 <span class="math inline">\(\widehat{\mathcal T}\)</span> ；</p></li>
+\]</span> 最终将 <span class="math inline">\(\widehat{T_1},\widehat{T_2},\widehat{T_3},\widehat{T_4},\widehat{T_{\Delta}},\widehat Q\)</span> 加入到集合 <span class="math inline">\(\widehat{\mathcal T}\)</span> ；</li>
 </ul></li>
 </ul>
 <h5 id="最终的哈希比较">4.3.3 最终的哈希比较</h5>
@@ -1007,13 +970,14 @@ T\leftarrow (A&#39;)^{\widetilde e}\Big(\prod_{j\in \mathcal A_{\overline r}}R_j
 <p><span class="math inline">\(v=v_1+v_2\)</span></p>
 <p><span class="math inline">\(v&#39;\gets v-e\cdot r\)</span></p>
 <p><span class="math inline">\(\widehat v\leftarrow \widetilde v+c_Hv&#39;\)</span></p>
-<p><span class="math inline">\(\widehat m \leftarrow \widetilde{m} +c_Hm\ (mod\ q)\)</span> <span class="math display">\[
+<p><span class="math inline">\(\widehat{m_j} \leftarrow \widetilde{m_j} +c_Hm_j\ (mod\ q)\)</span> <span class="math display">\[
 T\leftarrow (A&#39;)^{\widetilde e}\Big(\prod_{j\in \mathcal A_{\overline r}}R_j^{\widetilde{m_j}}\Big)(S^{\widetilde v})\ (mod\ n)
 \]</span></p>
 <p><span class="math display">\[
 \Bigg(\cfrac{Z}{\big(\prod_{j\in \mathcal A_r}R_j^{m_j}\big)(A&#39;)^{2^{596}}} \Bigg)^{-c_H}(A&#39;)^{\widehat e}\Bigg(\prod_{j\in (\mathcal A_{\widetilde r})}R_j^{\widehat{m_j}} \Bigg)(S^{\widehat v})\\
-= \Bigg(\cfrac{Z}{\big(\prod_{j\in \mathcal A_r}R_j^{m_j}\big)(A&#39;)^{2^{596}}} \Bigg)^{-c_H}(A&#39;)^{ \widetilde e+c_He&#39;}\Bigg(\prod_{j\in (\mathcal A_{\widetilde r})}R_j^{\widetilde{m} +c_Hm} \Bigg)(S^{\widetilde v+c_Hv&#39;})
-\]</span> 除以<span class="math inline">\(T\)</span>, 得到 <span class="math display">\[
+= \Bigg(\cfrac{Z}{\big(\prod_{j\in \mathcal A_r}R_j^{m_j}\big)(A&#39;)^{2^{596}}} \Bigg)^{-c_H}(A&#39;)^{ \widetilde e+c_He&#39;}\Bigg(\prod_{j\in (\mathcal A_{\widetilde r})}R_j^{\widetilde{m_j} +c_Hm_j} \Bigg)(S^{\widetilde v+c_Hv&#39;})
+\]</span></p>
+<p>除以<span class="math inline">\(T\)</span>, 得到 <span class="math display">\[
 \Bigg(\cfrac{Z}{\big(\prod_{j\in \mathcal A_r}R_j^{m_j}\big)(A&#39;)^{2^{596}}} \Bigg)^{-c_H}(A&#39;)^{c_He&#39;}\Bigg(\prod_{j\in (\mathcal A_{\widetilde r})}R_j^{c_H{m_j}} \Bigg)(S^{c_Hv&#39;})\\
 \]</span></p>
 <p>提取A <span class="math display">\[
@@ -1029,22 +993,24 @@ Z^{-c_H}(A&#39;)^{c_He}(S^{c_Hv&#39;})\Bigg(\prod_{j\in (\mathcal A_{r})}R_j^{c_
 \]</span> <span class="math inline">\(Z=S^{x_Z}\)</span></p>
 <p><span class="math inline">\(A&#39;=AS^r\)</span></p>
 <p><span class="math inline">\(A_c+A_k=A\)</span></p>
-<p><span class="math inline">\(A_r+A_{\widetilde{r}} =A\)</span></p>
+<p><span class="math inline">\(A_r+A_\widetilde {r} =A\)</span></p>
 <p><span class="math inline">\(A\)</span>表示所有属性</p>
 <p><span class="math inline">\(Q\leftarrow \cfrac{Z}{US^{v_2}\prod_{i\in A_k}R_i^{m_i}(mod\ n)}\\\)</span></p>
 <p><span class="math inline">\(U=(S^{v_1})\prod_{i\in A_c}R_i^{m_i}\)</span></p>
-<p><span class="math inline">\(A\leftarrow Q^{e^{-1} (mod\ p&#39;q&#39;)}(mod\ n)\)</span> <span class="math display">\[
+<p><span class="math inline">\(A\leftarrow Q^{e^{-1} (mod\ p&#39;q&#39;)}(mod\ n)\)</span></p>
+<p><span class="math display">\[
 Z^{-c_H}(A&#39;)^{c_He}(S^{c_Hv&#39;})\\
 =Z^{-c_H}S^{rc_He}(\cfrac{Z}{US^{v_2}\prod_{i\in A_k}R_i^{m_i}(mod\ n)})^{c_He\cdot e^{-1}}(S^{c_Hv&#39;})\\
 =S^{rc_He+c_Hv&#39;}((S^{v_1+v_2})\prod_{i\in A_c}R_i^{m_i}\prod_{i\in A_k}R_i^{m_i}(mod\ n))^{-c_H}\\
 =S^{rc_He+c_H(v-er)-c_Hv}\prod_{i\in A_c}R_i^{m_i}\prod_{i\in A_k}R_i^{m_i}(mod\ n))^{-c_H}\\
 = (\prod_{i\in A_c}R_i^{m_i}\prod_{i\in A_k}R_i^{m_i}(mod\ n)))^{-c_H}\\
 = \Bigg(\prod_{j\in \mathcal A}R_j^{-c_H{m_j}}\Bigg)
-\]</span> 要让等式成立，则<span class="math inline">\((\prod_{i\in A_c}R_i^{m_i}\prod_{i\in A_k}R_i^{m_i}(mod\ n)))^{-c_H}=1\)</span>，连乘公式左右为披露属性和未披露属性</p>
+\]</span> 连乘公式左右为披露属性和未披露属性：</p>
 <p><span class="math inline">\(R_i= S^{x_{R_i}}\)</span></p>
 <p>即： <span class="math display">\[
 \Bigg(\prod_{j\in \mathcal A}R_j^{-c_H{m_j}}\Bigg)\cdot \Bigg(\prod_{j\in \mathcal A}R_j^{c_H{m_j}}\Bigg) =1
-\]</span> 证毕。</p>
+\]</span></p>
+<p>证毕。</p>
 <h4 id="证明-overlinet_deltawidehatt_delta">5.2 证明 <span class="math inline">\(\overline{T_\Delta}=\widehat{T_\Delta}\)</span></h4>
 <p><span class="math display">\[
 \overline{T_\Delta}\leftarrow Z^{\widetilde{m_j}}S^{a\widetilde{r_\Delta}}\ (mod\ n);\\
@@ -1056,7 +1022,7 @@ T_\Delta=Z^{\Delta}S^{r_\Delta}\\
 \widehat{r_\Delta}\leftarrow \widetilde{r_\Delta}+c_Hr_\Delta;\\
 \]</span> 所以有： <span class="math display">\[
 \Large\begin{aligned}
-\widehat{T_i}&amp;=(Z^{\Delta a} S^{ar_\Delta}\cdot Z^{\Delta &#39;})^{-c_H}\cdot Z^{\widetilde{m_j}+c_H m_j}\cdot S^{a(\widetilde{r_\Delta}+c_H r_\Delta)}\\
+\widehat{T_\Delta}&amp;=(Z^{\Delta a} S^{ar_\Delta}\cdot Z^{\Delta &#39;})^{-c_H}\cdot Z^{\widetilde{m_j}+c_H m_j}\cdot S^{a(\widetilde{r_\Delta}+c_H r_\Delta)}\\
 &amp;=Z^{-\Delta a c_H} S^{-c_Har_\Delta}\cdot Z^{-c_H\Delta &#39;}\cdot Z^{\widetilde{m_j}+c_H m_j}\cdot S^{a\widetilde{r_\Delta}+ac_H r_\Delta}\\
 &amp;=Z^{\widetilde{m_j}}Z^{c_H(m_j-a\Delta-\Delta&#39;)}\cdot S^{a\widetilde {r_\Delta}}
 \end{aligned}
@@ -1076,7 +1042,8 @@ z_j; &amp;\text{if } * \equiv\ \geq\\
 z_j+1; &amp;\text{if } * \equiv\ &gt;
 \end{cases}\\
 a\leftarrow \begin{cases} -1 &amp;\text{if } * \equiv\ \leq\ or\ &lt;\\ 1 &amp;\text{if } * \equiv\ \geq\ or\ &gt; \end{cases}
-\]</span> 假设这里的原属性值是 <code>20</code> ，待检测基准值 <code>18</code> ，那么 Verifier是检测 <span class="math inline">\(&gt;\)</span> 关系，检测原属性值是大于基准值的，所以有： <span class="math display">\[
+\]</span></p>
+<p>假设这里的原属性值是 <code>20</code> ，待检测基准值 <code>18</code> ，那么 Verifier是检测 <span class="math inline">\(&gt;\)</span> 关系，检测原属性值是大于基准值的，所以有： <span class="math display">\[
 \begin{aligned}
 \Delta &amp;\leftarrow m_j-z_j-1\\
 &amp;\leftarrow 20-18-1\\
@@ -1095,7 +1062,8 @@ m_j-a\Delta-\Delta&#39;=20-1-19=0
 &amp;=Z^{\widetilde{m_j}}S^{a\widetilde{r_\Delta}}\\
 &amp;=\overline{T_\Delta}
 \end{aligned}
-\]</span> 证毕。</p>
+\]</span></p>
+<p>证毕。</p>
 
       
     </div>
@@ -1162,9 +1130,9 @@ m_j-a\Delta-\Delta&#39;=20-1-19=0
           
             <a href="/tags/Identity/" rel="tag"># Identity</a>
           
-            <a href="/tags/Zero-Knowledge-Prove/" rel="tag"># Zero-Knowledge Prove</a>
-          
             <a href="/tags/Hyperledger/" rel="tag"># Hyperledger</a>
+          
+            <a href="/tags/Zero-Knowledge-Prove/" rel="tag"># Zero-Knowledge Prove</a>
           
         </div>
       
