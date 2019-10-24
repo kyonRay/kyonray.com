@@ -473,22 +473,22 @@
 <p>从横向看，Indy主要分为项目分布、生态系统架构、数据模型(DID、DID Document、Verified Credentials)；从纵向看，Indy主要分为业务层(Business Layer)、应用层(Applications Layer)和技术层(Technology Layer)。</p>
 <p>总体架构如下图所示：</p>
 <figure>
-<img src="./HBB-Indy-Sovrin_ARM_v0.27.png" alt="HBB-Indy-Sovrin ARM v0.27"><figcaption>HBB-Indy-Sovrin ARM v0.27</figcaption>
+<img src="./HBB-Indy-Sovrin_ARM_v0.27.png" alt><figcaption>HBB-Indy-Sovrin ARM v0.27</figcaption>
 </figure>
 <h3 id="业务层">1. 业务层</h3>
 <figure>
-<img src="./image-20190704181446731.png" alt="image-20190704181446731"><figcaption>image-20190704181446731</figcaption>
+<img src="./image-20190704181446731.png" alt><figcaption>image-20190704181446731</figcaption>
 </figure>
 <p>业务层主要使用以下几个应用层提供的功能服务：凭证发行（Issue）、凭证存储（Local Store）、数据请求（Request）、凭证披露（Present）、凭证验证（Verify）、凭证撤销（Revocate）用户注册登录等。</p>
 <h3 id="应用层">2. 应用层</h3>
 <p>应用层主要功能：提供DID服务、提供凭证服务、提供特定业务服务。</p>
 <figure>
-<img src="./image-20190704181354240.png" alt="image-20190704181354240"><figcaption>image-20190704181354240</figcaption>
+<img src="./image-20190704181354240.png" alt><figcaption>image-20190704181354240</figcaption>
 </figure>
 <p>应用层由Indy底下 <a href="https://github.com/hyperledger/indy-agent" target="_blank" rel="noopener">Indy-Agent</a> 和 <a href="https://github.com/hyperledger/indy-sdk" target="_blank" rel="noopener">Indy-SDK</a> 两个项目支撑。Indy-SDK项目提供钱包功能组件（Wallet Component）支撑数据存储与开发，使用技术层Agent API提供的服务；Indy-Agent项目提供代理功能组件（Agent Component）支撑业务开发。</p>
 <h3 id="技术层">3. 技术层</h3>
 <figure>
-<img src="./image-20190704181540967.png" alt="image-20190704181540967"><figcaption>image-20190704181540967</figcaption>
+<img src="./image-20190704181540967.png" alt><figcaption>image-20190704181540967</figcaption>
 </figure>
 <p>技术层也可再分为<strong>Cloud Agent</strong>层和<strong>Ledger</strong>层。</p>
 <p><strong>Cloud Agent</strong>层由Indy-Agent项目、Indy-SDK项目和 <a href="https://github.com/decentralized-identity/universal-resolver" target="_blank" rel="noopener">DIF Universal-Resolver</a> 项目作支撑，主要功能是提供对Edge Agent的服务，直接与Ledger层进行交互，将请求结果返回到应用层。Indy-SDK项目调用Ledger层的API，实现直接与区块链进行交互；Indy-Agent项目调用Indy-SDK的钱包API，提供代理功能组件，并提供凭证注册组件（Credential Registry Node Component）实现凭证的注册；DIF Universal-Resolver项目提供DID的解析器组件，直接与Ledger层交互，解析出DID。</p>
@@ -497,27 +497,27 @@
 <h3 id="数据模型">4. 数据模型</h3>
 <p>DID、DID Document都是按照W3C所定的<a href="https://w3c-ccg.github.io/did-spec/" target="_blank" rel="noopener">数据标准</a>建立的，主要关系如下图所示：</p>
 <figure>
-<img src="./image-20190704171205582.png" alt="image-20190704171205582"><figcaption>image-20190704171205582</figcaption>
+<img src="./image-20190704171205582.png" alt><figcaption>image-20190704171205582</figcaption>
 </figure>
 <h2 id="二hyperledger-indy工作流">二、Hyperledger Indy工作流</h2>
 <p>以一个Alice从Faber大学毕业找工作的场景简单介绍Hyperledger Indy的工作流。（<a href="https://medium.com/@kctheservant/exploring-hyperledger-indy-through-indy-dev-example-10075d2547ae" target="_blank" rel="noopener">链接</a>）</p>
 <p><strong>Step 1:</strong> 政府生成凭证模板(Schema)</p>
 <figure>
-<img src="./Step1.png" alt="img"><figcaption>img</figcaption>
+<img src="./Step1.png" alt><figcaption>img</figcaption>
 </figure>
 <p>政府颁发Transcript Schema和Job-Certificate Schema，并将其记录到分布式账本中。每个人都可以访问这些模板。</p>
 <p><strong>Step 2：</strong> Faber大学和Acme公司生成他们自己的凭证定义(Credential definition)</p>
 <p>Faber大学和Acme公司根据政府发布的模板创建自己的凭证的定义，并将定义上传到链上。</p>
 <figure>
-<img src="./step2_1.png" alt="img"><figcaption>img</figcaption>
+<img src="./step2_1.png" alt><figcaption>img</figcaption>
 </figure>
 <figure>
-<img src="./step2_2.png" alt="img"><figcaption>img</figcaption>
+<img src="./step2_2.png" alt><figcaption>img</figcaption>
 </figure>
 <p>Alice从Faber大学获得成绩单(凭证)，然后再申请工作时想Acme公司提供证书作为教育资格证明。</p>
 <p><strong>Step 3：</strong> Alice从Faber大学获得成绩单凭证</p>
 <figure>
-<img src="./step3.png" alt="img"><figcaption>img</figcaption>
+<img src="./step3.png" alt><figcaption>img</figcaption>
 </figure>
 <p>具体子步骤如下：</p>
 <ul>
@@ -529,7 +529,7 @@
 </ul>
 <p><strong>Step 4：</strong> Acme公司请求Alice的教育证明</p>
 <figure>
-<img src="./step4.png" alt="img"><figcaption>img</figcaption>
+<img src="./step4.png" alt><figcaption>img</figcaption>
 </figure>
 <p>具体子步骤如下：</p>
 <ul>
@@ -542,7 +542,7 @@
 <p>之后Alice获得了Acme的工作凭证（job-certificate），并将该凭证发送给Thrift银行以证明聘期，便可申请贷款。（Alice使用Faber大学给的教育凭证完成了KYC过程）</p>
 <p><strong>Step5：</strong> Alice获得了Acme公司给的工作证明</p>
 <figure>
-<img src="./step5.png" alt="img"><figcaption>img</figcaption>
+<img src="./step5.png" alt><figcaption>img</figcaption>
 </figure>
 <p>具体子步骤如下：</p>
 <ul>
@@ -553,7 +553,7 @@
 </ul>
 <p><strong>Step 6 ：</strong> Thrift银行请求Alice的聘期证明，以及Alice 的KYC</p>
 <figure>
-<img src="./step6.png" alt="img"><figcaption>img</figcaption>
+<img src="./step6.png" alt><figcaption>img</figcaption>
 </figure>
 <p>具体子步骤如下：</p>
 <ul>
@@ -591,7 +591,7 @@
 <p>接下来将按照项目文件的主体部分进行逐层解析。</p>
 <h3 id="indy-plenum">1. Indy-Plenum</h3>
 <figure>
-<img src="./Indy-Plenum.png" alt="Indy-Plenum.png"><figcaption>Indy-Plenum.png</figcaption>
+<img src="./Indy-Plenum.png" alt><figcaption>Indy-Plenum.png</figcaption>
 </figure>
 <p>从内容上看，Plenum项目主要实现了基于RBFT改进的共识机制以及共识操作方法，定义了四种链分别存储整个Indy的配置、事务等信息，定义了DID的wallet以及DID签名验证方法。项目主要分为以下几个部分：</p>
 <h4 id="plenum包">1.1 plenum包</h4>
@@ -631,7 +631,7 @@
 <p>crypto包是对Indy-Crypto项目部分功能的封装，主要实现了BLS多重签名。（<strong>注：</strong>BLS多重签名将在Indy-Crypto项目中详细说明）</p>
 <h4 id="存储组件">1.4 存储组件</h4>
 <figure>
-<img src="./storages.png" alt="img"><figcaption>img</figcaption>
+<img src="./storages.png" alt><figcaption>img</figcaption>
 </figure>
 <p>在Ledger组件中默认使用RocksDB和LevelDB进行KV存储，且使用<a href="https://blog.ethereum.org/2015/11/15/merkling-in-ethereum/" target="_blank" rel="noopener"><strong>Merkle Patricia Trie</strong></a> 存储账本状态。每个节点均维护四个账本：</p>
 <ul>
@@ -645,7 +645,7 @@
 <p>TODO: 测试Plenum性能指标。</p>
 <h3 id="indy-node">2. Indy-Node</h3>
 <figure>
-<img src="./Indy-Node.png" alt="Indy-Node.png"><figcaption>Indy-Node.png</figcaption>
+<img src="./Indy-Node.png" alt><figcaption>Indy-Node.png</figcaption>
 </figure>
 <p>Indy-Node项目主要实现了基于Plenum BFT共识协议的分布式账本，以及节点的功能。主要包括：处理读写请求、定义交易类型以及交易分类存储。</p>
 <p>接下来将按照项目文件的主体部分进行逐层解析。</p>
@@ -678,7 +678,7 @@
 <p>Indy中节点可分为<code>common user</code>，<code>trust anchor</code>，<code>steward</code>，<code>trustee</code> 四类，每种特殊交易都有特定的角色权限才可以进行。具体可看<a href="https://hyperledger-indy.readthedocs.io/projects/node/en/latest/auth_rules.html" target="_blank" rel="noopener">链接</a>。</p>
 <h3 id="indy-sdk">3. Indy-SDK</h3>
 <figure>
-<img src="./Indy-SDK.png" alt="Indy-SDK.png"><figcaption>Indy-SDK.png</figcaption>
+<img src="./Indy-SDK.png" alt><figcaption>Indy-SDK.png</figcaption>
 </figure>
 <p>Indy-SDK作为Plenum分布式账本的SDK，主要是实现了代理端软件Agent可以与分布式账本、DID钱包以及DID doc进行互通，实现凭证Credential，为不同编程语言封装了主要功能。</p>
 <h4 id="libindy">3.1 libindy</h4>
@@ -700,12 +700,12 @@
 <h5 id="command-line-interface">Command Line Interface</h5>
 <p>CLI组件设计如下图所示：</p>
 <figure>
-<img src="./cli-components.svg" alt="cli-components"><figcaption>cli-components</figcaption>
+<img src="./cli-components.svg" alt><figcaption>cli-components</figcaption>
 </figure>
 <h5 id="wallet">Wallet</h5>
 <p>Wallet组件设计如下图所示：</p>
 <figure>
-<img src="./wallet-components.svg" alt="Wallet Components"><figcaption>Wallet Components</figcaption>
+<img src="./wallet-components.svg" alt><figcaption>Wallet Components</figcaption>
 </figure>
 <p>在Secrets API，允许调用密钥生成、DID生成等需要访问加密实体的方法；在Non-secrets API只允许访问存取wallet中特定的DID数据。Wallet API提供方法将钱包记录在本地SQL数据库中存取。</p>
 <h5 id="decentrailized-key-management">Decentrailized Key Management</h5>
@@ -1021,7 +1021,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1032,7 +1032,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -1043,7 +1043,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -1145,7 +1145,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">38.7k</span>
+    <span title="Site words total count">39.3k</span>
   
 </div>
 

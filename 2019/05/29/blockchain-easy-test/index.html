@@ -490,7 +490,7 @@
 <h4 id="chain-方法测试">1). /chain 方法测试</h4>
 <p>使用Postman 发送GET方法HTTP请求</p>
 <figure>
-<img src="./shotcut1.png" alt="shotcut1"><figcaption>shotcut1</figcaption>
+<img src="./shotcut1.png" alt><figcaption>shotcut1</figcaption>
 </figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> cURL方式访问</span><br><span class="line"><span class="meta">$</span> curl -X GET "http://localhost:5000/chain"</span><br></pre></td></tr></table></figure>
 <p>可以看到区块链的结构如下：</p>
@@ -499,7 +499,7 @@
 <h4 id="mine-方法测试">2). /mine 方法测试</h4>
 <p>使用Postman 发送GET方法HTTP请求</p>
 <figure>
-<img src="./shotcut2.png" alt="image-20190526204644640"><figcaption>image-20190526204644640</figcaption>
+<img src="./shotcut2.png" alt><figcaption>image-20190526204644640</figcaption>
 </figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> cURL方式访问</span><br><span class="line"><span class="meta">$</span> curl -X GET "http://localhost:5000/mine"</span><br></pre></td></tr></table></figure>
 <p>可以看到服务器将交易池的所有交易打包产生了一个新的区块<code>index2</code>，并计算了前一块的哈希值。</p>
@@ -508,7 +508,7 @@
 <h4 id="transactionsnew方法测试">3). /transactions/new方法测试</h4>
 <p>使用Postman 发送POST方法HTTP请求，这里需要使用JSON格式写入body。</p>
 <figure>
-<img src="./shotcut3.png" alt="image-20190526204808458"><figcaption>image-20190526204808458</figcaption>
+<img src="./shotcut3.png" alt><figcaption>image-20190526204808458</figcaption>
 </figure>
 <p>如上图所示，alice向bob发出数量为1的交易。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> cURL方式访问</span><br><span class="line"><span class="meta">$</span> curl -X POST -H "Content-Type: application/json" -d '&#123;</span><br><span class="line"> "sender": "alice",</span><br><span class="line"> "recipient": "bob",</span><br><span class="line"> "amount": 1</span><br><span class="line">&#125;' "http://localhost:5000/transactions/new"</span><br></pre></td></tr></table></figure>
@@ -522,7 +522,7 @@
 <p>使用Postman 发送POST方法的HTTP请求，这里需要填入JSON格式写入body。</p>
 <p><strong>注意</strong>：这里填入的node是你新起的服务端口，可以有一个，可以有多个</p>
 <figure>
-<img src="./shocut4.png" alt="image-20190526204930747"><figcaption>image-20190526204930747</figcaption>
+<img src="./shocut4.png" alt><figcaption>image-20190526204930747</figcaption>
 </figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> cURL方式访问</span><br><span class="line"><span class="meta">$</span> curl -X POST -H "Content-Type: application/json" -d '&#123;</span><br><span class="line">    "nodes": ["http://0.0.0.0:5001"]</span><br><span class="line">&#125;' "http://localhost:5000/nodes/register"</span><br></pre></td></tr></table></figure>
 <p>在 http://0.0.0.0:5001 的服务节点也要用<code>/nodes/register</code>方法把端口<code>5000</code>的服务节点加进去，数据就可以互通。</p>
@@ -738,7 +738,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -749,7 +749,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -760,7 +760,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -862,7 +862,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">38.7k</span>
+    <span title="Site words total count">39.3k</span>
   
 </div>
 
