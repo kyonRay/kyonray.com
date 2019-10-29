@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="blockchain,HotStuff,Consensus,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Facebook 的Libra基于HotStuff进行改进，HotStuff可以将网络消息复杂度降到线性级，可在较多节点上进行部署（大于100），吞吐量相对于传统PBFT提升可观，并在数学上证明了安全性。 1. 传统BFT 共识传统BFT共识存在以下缺陷：  需要提前知道所有参与者信息，较难扩容； 平方级别的消息传递复杂度； 增加大量节点会导致网络拥塞； Leader节点会承受整个网络的负载，负载">
+<meta name="keywords" content="blockchain,HotStuff,Consensus">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HotStuﬀ:BFT Consensus in the Lens of Blockchain">
+<meta property="og:url" content="https://kyonray.com/2019/10/29/research-in-HotStuff/index.html">
+<meta property="og:site_name" content="Kyon&#39;s Blog">
+<meta property="og:description" content="Facebook 的Libra基于HotStuff进行改进，HotStuff可以将网络消息复杂度降到线性级，可在较多节点上进行部署（大于100），吞吐量相对于传统PBFT提升可观，并在数学上证明了安全性。 1. 传统BFT 共识传统BFT共识存在以下缺陷：  需要提前知道所有参与者信息，较难扩容； 平方级别的消息传递复杂度； 增加大量节点会导致网络拥塞； Leader节点会承受整个网络的负载，负载">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://kyonray.com/2019/10/29/research-in-HotStuff/HotStuff.png">
+<meta property="og:image" content="https://kyonray.com/2019/10/29/research-in-HotStuff/chainHotStuff.png">
+<meta property="og:image" content="https://kyonray.com/2019/10/29/research-in-HotStuff/chainHotStuff2.png">
+<meta property="og:updated_time" content="2019-10-29T03:06:43.588Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HotStuﬀ:BFT Consensus in the Lens of Blockchain">
+<meta name="twitter:description" content="Facebook 的Libra基于HotStuff进行改进，HotStuff可以将网络消息复杂度降到线性级，可在较多节点上进行部署（大于100），吞吐量相对于传统PBFT提升可观，并在数学上证明了安全性。 1. 传统BFT 共识传统BFT共识存在以下缺陷：  需要提前知道所有参与者信息，较难扩容； 平方级别的消息传递复杂度； 增加大量节点会导致网络拥塞； Leader节点会承受整个网络的负载，负载">
+<meta name="twitter:image" content="https://kyonray.com/2019/10/29/research-in-HotStuff/HotStuff.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kyonray.com/2019/10/29/research-in-HotStuff/">
+
+
+
+
+
+  <title>HotStuﬀ:BFT Consensus in the Lens of Blockchain | Kyon's Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kyon's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Learning, Sharing.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kyonray.com/2019/10/29/research-in-HotStuff/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kyon Kwok">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://img.inmywordz.com/uploads/20170527171017_34.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kyon's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">HotStuﬀ:BFT Consensus in the Lens of Blockchain</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-29T10:52:19+08:00">
+                2019-10-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/区块链项目/" itemprop="url" rel="index">
+                    <span itemprop="name">区块链项目</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/29/research-in-HotStuff/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/29/research-in-HotStuff/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/10/29/research-in-HotStuff/" class="leancloud_visitors" data-flag-title="HotStuﬀ:BFT Consensus in the Lens of Blockchain">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.1k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  14
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Facebook 的Libra基于HotStuff进行改进，HotStuff可以将网络消息复杂度降到线性级，可在较多节点上进行部署（大于100），吞吐量相对于传统PBFT提升可观，并在数学上证明了安全性。</p>
+<h2 id="1-传统BFT-共识"><a href="#1-传统BFT-共识" class="headerlink" title="1. 传统BFT 共识"></a>1. 传统BFT 共识</h2><p>传统BFT共识存在以下缺陷：</p>
+<ol>
+<li>需要提前知道所有参与者信息，较难扩容；</li>
+<li>平方级别的消息传递复杂度；</li>
+<li>增加大量节点会导致网络拥塞；</li>
+<li>Leader节点会承受整个网络的负载，负载不均衡。</li>
+</ol>
+<p>同样，相对于PoX等的共识，有着重要的优势：</p>
+<ol>
+<li>BFT协议速度只和与网络发送的短消息的速度有关，没有额外的能源消耗或等待时间；</li>
+<li>交易延迟非常小，延迟与网络延迟同数量级；</li>
+<li>容错率相对于PoX类型高很多。</li>
+</ol>
+<a id="more"></a>
+<h2 id="2-与传统BFT共识的对比"><a href="#2-与传统BFT共识的对比" class="headerlink" title="2. 与传统BFT共识的对比"></a>2. 与传统BFT共识的对比</h2><p>HotStuff基于一个新的框架，这个框架相比于传统BFT有着很大的不同：</p>
+<ol>
+<li>采用树/链结构，投票只会投给当前认为主链上扩展的新部分；</li>
+<li>不是通过链长度来判定主链，而是通过最近一次成功获得大部分投票的块决定；</li>
+<li>view change算法没有特殊情况；</li>
+<li>工程友好。</li>
+</ol>
+<h2 id="3-摘要与介绍"><a href="#3-摘要与介绍" class="headerlink" title="3. 摘要与介绍"></a>3. 摘要与介绍</h2><blockquote>
+<p>We present HotStuff, a leader-based Byzantine fault-tolerant replication protocol for the partially synchronous model. Once network communication becomes synchronous, HotStuff enables a correct leader to drive the protocol to consensus at the pace of actual (vs. maximum) network delay—a property called responsiveness—and with communication complexity that is linear in the number of replicas. <u>To our knowledge, HotStuff is the first partially synchronous BFT replication protocol exhibiting these combined properties.</u> Its simplicity enables it to be further pipelined and simplified into a practical, concise protocol for building large-scale replication services.</p>
+</blockquote>
+<p>在摘要中主要说明了HotStuff的两个特别属性：responsiveness、linearity，在网络最大时延时间内完成共识，即<strong>低延迟</strong>，消息复杂度与节点的数量关系是线性的，即 <strong>O(n)</strong>。这两种特性在其他部分同步BFT共识协议中是第一次集成在一起，并且在实验部分成功部署了100个节点，TPS和交易延迟与BFT-SMaRt[5]相近，且在leader节点宕机的情况下，能保持<strong>线性级别的 view change</strong>。</p>
+<h2 id="4-主要HotStuff模型"><a href="#4-主要HotStuff模型" class="headerlink" title="4. 主要HotStuff模型"></a>4. 主要HotStuff模型</h2><h3 id="4-1阶段"><a href="#4-1阶段" class="headerlink" title="4.1阶段"></a>4.1阶段</h3><h4 id="4-1-1-Prepare-phase"><a href="#4-1-1-Prepare-phase" class="headerlink" title="4.1.1 Prepare phase"></a>4.1.1 Prepare phase</h4><ul>
+<li>新的leader收集n-f个 <strong>NEW-VIEW</strong> 消息，里面包括了最高的 prepareQC；</li>
+<li>leader根据prepareQC寻找一个highest preceding view 分支，并标记为highQC，因为highQC是获得commit最高的块，它可以断定没有更高的view到达确认状态（safe）；</li>
+<li>leader使用 <strong>CREATELEAF</strong> 方法在highQC的尾端节点扩展新proposal，建立一个新的图子节点，并附上指向父图子节点的哈希指针；</li>
+<li>之后leader便将新的proposal放到 <strong>PREPARE</strong> 消息发给其他所有，proposal里包含了highQC的安全性证明；</li>
+<li>replica节点收到了来自leader的 <strong>PREPARE</strong> 消息后，节点使用 <strong>SAFENODE</strong> 方法检测是否接受，如果接受那么replica节点就会发出 <strong>PREPARE vote</strong> 消息，并签名，发给leader。</li>
+</ul>
+<h4 id="4-1-2-SAFENODE-predicate"><a href="#4-1-2-SAFENODE-predicate" class="headerlink" title="4.1.2 SAFENODE predicate"></a>4.1.2 SAFENODE predicate</h4><p>该方法的作用是验证highQC的可靠性：</p>
+<ul>
+<li>safety rule：新的proposal m从现有本地的<code>lockedQC</code>树节点延伸；</li>
+<li>liveness rule：如果proposal m的验证结果 m.justify，即当前node所在的view，对于现在的<code>lockedQC</code>有更高的 viewNumber；</li>
+<li>如果以上两条有一条为真，那么就检测正确；</li>
+</ul>
+<h4 id="4-1-3-PRE-COMMIT-phase"><a href="#4-1-3-PRE-COMMIT-phase" class="headerlink" title="4.1.3 PRE-COMMIT phase"></a>4.1.3 PRE-COMMIT phase</h4><ul>
+<li>当leader收到proposal的 n-f 个 <strong>PREPARE vote</strong> ，将他们聚合（聚合签名）成一个 <strong>prepareQC</strong>；</li>
+<li>leader将 <strong>prepareQC</strong> 放入 <strong>PRE-COMMIT</strong> 消息中，广播出去；</li>
+<li>replica节点收到消息，对消息l进行哈希并签名，放到 <strong>PRE-COMMIT vote</strong> 发给leader；</li>
+</ul>
+<h4 id="4-1-4-COMMIT-phase"><a href="#4-1-4-COMMIT-phase" class="headerlink" title="4.1.4 COMMIT phase"></a>4.1.4 COMMIT phase</h4><ul>
+<li>当leader收到了proposal的 n-f 个 <strong>PRE-COMMIT vote</strong> ，再对这些vote进行聚合成一个 <strong>precommitQC</strong>；</li>
+<li>leader将 <strong>precommitQC</strong> 装进 <strong>COMMIT</strong> 消息中，进行广播；</li>
+<li>replica节点收到消息，投出 <strong>COMMIT vote</strong> 给leader；</li>
+<li>replica节点从lockedQC变更为<strong>precommitQC</strong>（为了安全/正确性需要）；</li>
+</ul>
+<h4 id="4-1-5-DECIDE-phase"><a href="#4-1-5-DECIDE-phase" class="headerlink" title="4.1.5 DECIDE phase"></a>4.1.5 DECIDE phase</h4><ul>
+<li>leader收到了 n-f 个 <strong>COMMIT vote</strong> ，聚合成一个 <strong>commitQC</strong>，放进 <strong>DECIDE message</strong>；</li>
+<li>发送 <strong>DECIDE message</strong> 给所有其他replica节点；</li>
+<li>replica节点收到了  <strong>DECIDE message</strong> 后，判断在proposal的 commitQC，执行client commands命令；</li>
+<li>将执行结果返回给client；</li>
+<li>replica节点增加 <strong>viewNumber</strong> ，结束这次view；</li>
+</ul>
+<h4 id="4-1-6-NEXTVIEW-interrupt"><a href="#4-1-6-NEXTVIEW-interrupt" class="headerlink" title="4.1.6 NEXTVIEW interrupt"></a>4.1.6 NEXTVIEW interrupt</h4><ul>
+<li>在所有的阶段，replica都会等待对应viewNumber的消息，使用 <strong>NEXTVIEW(viewNumber)</strong> 工具判断，如果超时就进行下一个View；</li>
+<li>如果 <strong>NEXTVIEW(viewNumber)</strong> 中断了等待，那么replica就会增加当前viewNumber，开始下一个view；</li>
+</ul>
+<h4 id="4-1-7-基本流程图"><a href="#4-1-7-基本流程图" class="headerlink" title="4.1.7 基本流程图"></a>4.1.7 基本流程图</h4><p><img src="./HotStuff.png" alt></p>
+<h3 id="4-2-数据结构"><a href="#4-2-数据结构" class="headerlink" title="4.2 数据结构"></a>4.2 数据结构</h3><h4 id="4-2-1-Messages"><a href="#4-2-1-Messages" class="headerlink" title="4.2.1 Messages"></a>4.2.1 Messages</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> Type&#123;</span><br><span class="line">  New_VIEW,</span><br><span class="line">  PREPARE,</span><br><span class="line">  PRE_COMMIT,</span><br><span class="line">  COMMIT,</span><br><span class="line">  DECIDE</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Messages</span>&#123;</span></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    Type  type;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> curView;</span><br><span class="line">  Node node;</span><br><span class="line">    <span class="keyword">uint64_t</span>  justyfy; <span class="comment">// optional</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">char</span> partialSig[<span class="number">256</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-2-2-Quorum-certificates"><a href="#4-2-2-Quorum-certificates" class="headerlink" title="4.2.2 Quorum certificates"></a>4.2.2 Quorum certificates</h4><p>翻译为法定证书，一个QC，一个三元组 <code>&lt;type,viewNumber,node&gt;</code>，之后的签名聚合基于这个三元组进行聚合。</p>
+<h4 id="4-2-3-Tree-and-branches"><a href="#4-2-3-Tree-and-branches" class="headerlink" title="4.2.3 Tree and branches"></a>4.2.3 Tree and branches</h4><p>叙述分支冲突、节点冲突的情况。</p>
+<p>一个节点（node）包含了：</p>
+<ul>
+<li>Client‘s command</li>
+<li>指向父节点的哈希指针</li>
+</ul>
+<p>replica节点当且仅当节点可以领导(led by)本地分支时才发送消息；当有落后时，可以从其他节点中拉取；</p>
+<p>如果两个分支都不是另一个的扩展，则这两个分支是冲突的（conflict）；当两个节点所领导的分支发生冲突，则这两个节点是冲突的。</p>
+<h4 id="4-2-4-Bookkeeping-variables"><a href="#4-2-4-Bookkeeping-variables" class="headerlink" title="4.2.4 Bookkeeping variables"></a>4.2.4 Bookkeeping variables</h4><p>主要是记录当前协议的状态的变量：</p>
+<ul>
+<li>viewNumber：记录当前view，初始化为1，并由NEXTVIEW自增；</li>
+<li>lockedQC：记录当前replica节点投COMMIT票最高QC，初始化为空；</li>
+<li>prepareQC：记录当前replica节点投PRE-COMMIT票最高QC，初始化为空；</li>
+<li>replica节点维护一个最高节点（node），该节点所在的分支是有效的。</li>
+</ul>
+<h3 id="4-3-协议细节"><a href="#4-3-协议细节" class="headerlink" title="4.3 协议细节"></a>4.3 协议细节</h3><h4 id="4-3-1-工具模块"><a href="#4-3-1-工具模块" class="headerlink" title="4.3.1 工具模块"></a>4.3.1 工具模块</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">// 构造一个msg</span><br><span class="line">function Msg(_type,node,qc)</span><br><span class="line">    m._type := _type</span><br><span class="line">    m.viewNumber := curView</span><br><span class="line">    m.node := node</span><br><span class="line">    m.justify := qc</span><br><span class="line">    return m</span><br><span class="line"></span><br><span class="line">// r节点对其签名投票</span><br><span class="line">function voteMsg(_type, node, qc)</span><br><span class="line">    m := Msg(_type, node, qc)</span><br><span class="line">    m.partialSig := tsign_r (⟨m._type, m.viewNumber, m.node⟩)</span><br><span class="line">    return m</span><br><span class="line"></span><br><span class="line">// 生成叶子结点</span><br><span class="line">procedure createLeaf(parent, cmd)</span><br><span class="line">    b.parent ← parent</span><br><span class="line">    b.cmd ← cmd</span><br><span class="line">    return b</span><br><span class="line"></span><br><span class="line">// 生成一个完整的QC</span><br><span class="line">function QC(V )</span><br><span class="line">    qc._type ← m._type : m ∈ V</span><br><span class="line">    qc.viewNumber ← m.viewNumber : m ∈ V</span><br><span class="line">    qc.node ← m.node : m ∈ V</span><br><span class="line">    // 签名聚合</span><br><span class="line">    qc.sig ← tcombine(⟨qc._type, qc.viewNumber, qc.node⟩, &#123;m.partialSig | m ∈ V &#125;)</span><br><span class="line">    return qc</span><br><span class="line"></span><br><span class="line">function matchingMsg(m, t, v)</span><br><span class="line">    return (m._type = t) ∧ (m.viewNumber = v)</span><br><span class="line">function matchingQC(qc, t, v)</span><br><span class="line">    return (qc._type = t) ∧ (qc.viewNumber = v)</span><br><span class="line"></span><br><span class="line">function safeNode(node, qc)</span><br><span class="line">    return (node extends from lockedQC.node) ∨ // safety rule </span><br><span class="line">    (qc.viewNumber &gt; lockedQC .viewNumber) // liveness rule</span><br></pre></td></tr></table></figure>
+<h4 id="4-3-2-Basic-HotStuff"><a href="#4-3-2-Basic-HotStuff" class="headerlink" title="4.3.2 Basic HotStuff"></a>4.3.2 Basic HotStuff</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">for curView ← 1, 2, 3, . . . do</span><br><span class="line">▷ prepare phase</span><br><span class="line">as a leader // r = leader(curView)</span><br><span class="line">// we assume special new-view messages from view 0</span><br><span class="line">    wait for (n − f ) new-view messages:</span><br><span class="line">        M ← &#123;m | matchingMsg(m, new-view, curView −1)&#125;</span><br><span class="line">    highQC ← (max&#123;m.justify.viewNumber&#125; m∈M).justify</span><br><span class="line">    curProposal ← createLeaf(highQC.node, client’s command)</span><br><span class="line">    broadcast Msg(prepare, curProposal, highQC)</span><br><span class="line">as a replica</span><br><span class="line">    wait for message m from leader(curView)</span><br><span class="line">        m : matchingMsg(m, prepare, curView)</span><br><span class="line">    if m.node extends from m.justify.node ∧ safeNode(m.node, m.justify) then</span><br><span class="line">    send voteMsg(prepare, m.node, ⊥) to leader(curView)</span><br><span class="line"></span><br><span class="line">▷ pre-commit phase</span><br><span class="line">as a leader</span><br><span class="line">    wait for (n − f ) votes:</span><br><span class="line">        V ← &#123;v | matchingMsg(v, prepare, curView)&#125;</span><br><span class="line">    prepareQC ← QC(V )</span><br><span class="line">    broadcast Msg(pre-commit, ⊥, prepareQC)</span><br><span class="line">as a replica</span><br><span class="line">    wait for message m from leader(curView)</span><br><span class="line">        m : matchingQC(m.justify, prepare, curView)</span><br><span class="line">    prepareQC ← m.justify</span><br><span class="line">    send to leader(curView)</span><br><span class="line">        voteMsg(pre-commit, m.justify.node, ⊥)</span><br><span class="line"></span><br><span class="line">▷ commit phase</span><br><span class="line">as a leader</span><br><span class="line">    wait for (n − f ) votes:</span><br><span class="line">        V ← &#123;v | matchingMsg(v, pre-commit, curView)&#125;</span><br><span class="line">    precommitQC ← QC(V )</span><br><span class="line">    broadcast Msg(commit, ⊥, precommitQC)</span><br><span class="line">as a replica</span><br><span class="line">    wait for message m from leader(curView)</span><br><span class="line">        m : matchingQC(m.justify, pre-commit, curView)</span><br><span class="line">    lockedQC ← m.justify</span><br><span class="line">    send to leader(curView)</span><br><span class="line">        voteMsg(commit, m.justify.node, ⊥)</span><br><span class="line"></span><br><span class="line">▷ decide phase</span><br><span class="line">as a leader</span><br><span class="line">    wait for (n − f ) votes:</span><br><span class="line">        V ← &#123;v | matchingMsg(v, commit, curView)&#125;</span><br><span class="line">    commitQC ← QC(V )</span><br><span class="line">    broadcast Msg(decide, ⊥, commitQC)</span><br><span class="line">as a replica</span><br><span class="line">    wait for message m from leader(curView)</span><br><span class="line">        m : matchingQC(m.justify, commit, curView)</span><br><span class="line">    execute new commands through m.justify.node,</span><br><span class="line">    respond to clients</span><br><span class="line"></span><br><span class="line">▷ Finally</span><br><span class="line">    nextView interrupt:</span><br><span class="line">        goto this line if nextView(curView) is called during “wait for” in any phase</span><br><span class="line">        send Msg(new-view, ⊥, prepareQC) to leader(curView + 1)</span><br></pre></td></tr></table></figure>
+<h3 id="4-4-Safety-liveness-and-complexity"><a href="#4-4-Safety-liveness-and-complexity" class="headerlink" title="4.4 Safety, liveness and complexity"></a>4.4 Safety, liveness and complexity</h3><h4 id="4-4-1-安全性引理"><a href="#4-4-1-安全性引理" class="headerlink" title="4.4.1 安全性引理"></a>4.4.1 安全性引理</h4><p>安全性假设：定义一个quorum certificate $qc$ 当且仅当以下共识为真时是有效的：</p>
+<p>$tverify(<qc.type,qc.viewnumber,qc.node>,qc.sig)$ </qc.type,qc.viewnumber,qc.node></p>
+<ul>
+<li>对于任意有效的 $qc_1,qc_2$ ，有 $qc_1.type=qc_2.type$ 且 $qc_1.node $ 和 $ qc_2.node$ 冲突，那么有 $qc_1.viewNumber\ne qc_2.viewNumber$ ；</li>
+<li>定理：如果有两个冲突的节点 $w,a$ 那么这两个节点不可能同时被commit，即使这两个节点都来自于正确的replica；</li>
+</ul>
+<h4 id="4-4-2-活跃性引理"><a href="#4-4-2-活跃性引理" class="headerlink" title="4.4.2 活跃性引理"></a>4.4.2 活跃性引理</h4><p>主要是定义两个函数 LEADER、NEXTVIEW。</p>
+<ul>
+<li>If a correct replica is locked such that $lockedQC = precommitQC$ , then at least $f + 1$ correct replicas voted for some $prepareQC$ matching $lockedQC$.</li>
+<li>定理：在GST之后，在一段时间内所有replica节点都在一段时间 $T_f$ 内保持在同一个view中，且leader对于当前view是有效的，那么就能达成共识。</li>
+</ul>
+<h4 id="4-4-3-复杂度"><a href="#4-4-3-复杂度" class="headerlink" title="4.4.3 复杂度"></a>4.4.3 复杂度</h4><p>在每个阶段，都是由leader进行广播，所有replica节点接受消息，并签上签名返回给leader，leader进行阈值签名聚合，所以消息复杂度都是 $O(n)$ 。</p>
+<h2 id="5-链式HotStuff"><a href="#5-链式HotStuff" class="headerlink" title="5. 链式HotStuff"></a>5. 链式HotStuff</h2><p>在基本HotStuff中，Leader主节点需要三个阶段来确认一个请求提交。这些阶段都非常相似，除了收集其它副本节点的投票外，大部分没有做多少实际工作。</p>
+<h3 id="5-1-基本流程"><a href="#5-1-基本流程" class="headerlink" title="5.1 基本流程"></a>5.1 基本流程</h3><p>链式HotStuff （Chained HotStuff）提升基本HotStuff的效用并同时并大大简化其流程。方法是在每个<strong>Prepare</strong>阶段，都<strong>主动地转换视图</strong>。具体说来，在链式HotStuff中，对<strong>Prepare</strong>阶段的投票，由下一个在prepareQC的视图的Leader来收集。同样，依此类推，<strong>Pre-Commit</strong>和<strong>Commit</strong>阶段的投票也由与之相应的下一个视图的leader来收集。这样，新Leader在视图v+1的<strong>Prepare</strong>提议阶段，同时作为视图v的<strong>Pre-Commit</strong>阶段。而新的Leader在视图v+2的<strong>Prepare</strong>提议阶段，同时可以作为视图v+1的<strong>Pre-Commit</strong>阶段，以及视图v的<strong>Commit</strong>阶段。因为所有阶段的数据结构都一样，因此可以用流水线的方式来提升共识的效率。下图展示了链式HotStuff的基于Basic HotStuff的流水线形式。</p>
+<p><img src="./chainHotStuff.png" alt></p>
+<p>视图 $v_1$, $v_2$, $v_3$作为在$v_1$提交的命令<code>cmd1</code>的<strong>Prepare</strong>，<strong>Pre-Commit</strong>和<strong>Commit</strong>阶段。<code>cmd1</code>命令在$v_4$里确认。视图$v_2$,$v_3$,$v_4$作为在$v_2$提交的<code>cmd2</code>的三个基础HotStuff的阶段，<code>cmd2</code>在$v_5$里得到确认，依此类推。</p>
+<p>因此链式HotStuff中，只有两类型的消息，一种是<strong>New-View</strong>，一种是<strong>Generic phase</strong>的<strong>Generic</strong>消息。<code>genericQC</code>实现所有不同阶段的功能。</p>
+<p>链式HotStuff中，如果下图，节点 $ b’$ 中的QC直接对应父图节点 $b$ ，这样形成了<code>One-Chain</code>； 如果在<code>One-Chain</code>的基础上，下一个图节点 $b’’$ 中的QC直接对应 $b’$ ，这样就形成了<code>Two-Chain</code>，在这个基础上，下一个图节点 $b^*$ 中的QC直接对应 $b’’$ , 这样就形成了<code>Three-Chain</code>。显示视图$v_4$，$v_5$，$v_6$ 形成了一个<code>Three-Chain</code>。</p>
+<p><img src="./chainHotStuff2.png" alt></p>
+<h3 id="5-2-链式HotStuff伪代码"><a href="#5-2-链式HotStuff伪代码" class="headerlink" title="5.2 链式HotStuff伪代码"></a>5.2 链式HotStuff伪代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">procedure createLeaf(parent, cmd, qc)</span><br><span class="line">    b.parent ← branch extending with blanks from parent to height curView;</span><br><span class="line">    b.cmd ← cmd;</span><br><span class="line">    b.justify ← qc;</span><br><span class="line">    return b</span><br><span class="line"></span><br><span class="line">for curView ← 1, 2, 3, . . . do</span><br><span class="line"></span><br><span class="line">▷ generic phase</span><br><span class="line">as a leader // r = leader(curView)</span><br><span class="line">    wait for (n − f ) NEW-VIEW messages:</span><br><span class="line">        M ← &#123;m | matchingMsg(m, NEW-VIEW, curView −1)&#125;</span><br><span class="line">    // M包含了上个leader的NEW-VIEW消息，等待上一个leader</span><br><span class="line"></span><br><span class="line">    genericQC ← (max &#123;m.justify.viewNumber&#125; m∈M).justify</span><br><span class="line">    curProposal ← createLeaf(genericQC.node, client’s command, genericQC)</span><br><span class="line">    // prepare 阶段 (leader-half)</span><br><span class="line">    broadcast Msg(generic, curProposal, ⊥)</span><br><span class="line"></span><br><span class="line">as a replica</span><br><span class="line">    wait for message m from leader(curView)</span><br><span class="line">        m : matchingMsg(m, generic, curView)</span><br><span class="line">    b∗ ← m.node;</span><br><span class="line">    b′′ ← b∗.justify.node;</span><br><span class="line">    b′ ← b′′.justify.node;</span><br><span class="line">    b ← b′.justify.node</span><br><span class="line">    if safeNode(b∗ , b∗.justify) then</span><br><span class="line">        send voteMsg(generic, b∗ , ⊥) to leader(curView)</span><br><span class="line"></span><br><span class="line">    // 开始b∗的父节点 pre-commit 阶段</span><br><span class="line">    if b∗.parent = b′′ then</span><br><span class="line">    genericQC ← b∗.justify</span><br><span class="line"></span><br><span class="line">    // 开始b∗的祖父节点的 commit 阶段</span><br><span class="line">    if (b∗.parent = b′′) ∧ (b′′.parent = b′ ) then</span><br><span class="line">    lockedQC ← b′′.justify</span><br><span class="line"></span><br><span class="line">    // 开始b∗的祖祖父节点 decide 阶段</span><br><span class="line">    if (b∗.parent = b′′) ∧ (b′′.parent = b′) ∧ (b′.parent = b) then</span><br><span class="line">        execute new commands through b, respond to clients</span><br><span class="line">        // 表明当前cmd已经被确认，可以执行</span><br><span class="line"></span><br><span class="line">as a leader // pre-commit 阶段 (leader-half)</span><br><span class="line">    wait for (n − f) votes:</span><br><span class="line">        V ← &#123;v | matchingMsg(v, generic, curView)&#125;</span><br><span class="line">    genericQC ← QC(V)</span><br><span class="line">    // for liveness, the message here counts as (n − f ) at Line 5</span><br><span class="line"></span><br><span class="line">as the next leader</span><br><span class="line">    wait for message m from leader(curView)</span><br><span class="line">        m : matchingMsg(m, NEW-VIEW, curView)</span><br><span class="line"></span><br><span class="line">▷ Finally</span><br><span class="line">    nextView interrupt:</span><br><span class="line">    goto this line if nextView(curView) is called during “wait for” in any phase</span><br><span class="line">    send Msg(NEW-VIEW, ⊥, genericQC) to leader(curView + 1)</span><br></pre></td></tr></table></figure>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1]. Maofan Yin, Dahlia Malkhi, Michael K. Reiter, Guy Golan Gueta, and Ittai Abraham. 2018. HotStuff: BFT Consensus in the Lens of Blockchain. CoRR abs/1803.05069 (2018). arXiv:1803.05069</p>
+<p>[2]. Maofan Yin, Dahlia Malkhi, Michael K. Reiter, Guy Golan Gueta, and Ittai Abraham. 2019. HotStuff: BFT Consensus with Linearity and Responsiveness. In 2019 ACM Symposium on Principles of Distributed Computing (PODC ’19), July 29-August 2, 2019, Toronto, ON, Canada. ACM, New York, NY, USA, 10 pages. <a href="https://doi.org/10.1145/3293611.3331591" target="_blank" rel="noopener">https://doi.org/10.1145/3293611.3331591</a></p>
+<p>[3]. <a href="https://www.8btc.com/article/432718" target="_blank" rel="noopener">Facebook Libra 采用的 HotStuff 算法，究竟是怎样一种尤物</a></p>
+<p>[4]. <a href="https://www.8btc.com/article/442785" target="_blank" rel="noopener">Libra 采用的 HotStuff 算法作者亲述：「尤物」诞生记</a></p>
+<p>[5]. Alysson Neves Bessani, João Sousa, and Eduardo Adílio Pelinson Alchieri. State machine replication for the masses with BFT-SMART. In 44th Annual IEEE/IFIP International Conference on Dependable Systems and Networks, DSN 2014, Atlanta, GA, USA, June 23-26, 2014, pages 355–362, 2014.</p>
+<p>[6]. <a href="https://www.jianshu.com/p/3b3551833726" target="_blank" rel="noopener">（邹均）LibraBFT共识协议：三难问题平衡术</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Buy me a cup of coffee☕️.</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/index/wechatpay.jpg" alt="Kyon Kwok 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/index/alipay.jpg" alt="Kyon Kwok 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Kyon Kwok
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://kyonray.com/2019/10/29/research-in-HotStuff/" title="HotStuﬀ:BFT Consensus in the Lens of Blockchain">https://kyonray.com/2019/10/29/research-in-HotStuff/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/blockchain/" rel="tag"># blockchain</a>
+          
+            <a href="/tags/HotStuff/" rel="tag"># HotStuff</a>
+          
+            <a href="/tags/Consensus/" rel="tag"># Consensus</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/13/Hyperledger-Indy-Research-Anonymous-credentials-with-type-3-revocation/" rel="next" title="Hyperledger Indy Research: Anonymous credentials with type-3 revocation">
+                <i class="fa fa-chevron-left"></i> Hyperledger Indy Research: Anonymous credentials with type-3 revocation
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://img.inmywordz.com/uploads/20170527171017_34.png" alt="Kyon Kwok">
+            
+              <p class="site-author-name" itemprop="name">Kyon Kwok</p>
+              <p class="site-description motion-element" itemprop="description">博学之，慎思之，明辨之，笃行之。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kyonRay" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/yoyokyon" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:rui.kwok@outlook.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/kyon_guo" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.instagram.com/kyonguo" target="_blank" title="Instagram">
+                      
+                        <i class="fa fa-fw fa-instagram"></i></a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-传统BFT-共识"><span class="nav-number">1.</span> <span class="nav-text">1. 传统BFT 共识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-与传统BFT共识的对比"><span class="nav-number">2.</span> <span class="nav-text">2. 与传统BFT共识的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-摘要与介绍"><span class="nav-number">3.</span> <span class="nav-text">3. 摘要与介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-主要HotStuff模型"><span class="nav-number">4.</span> <span class="nav-text">4. 主要HotStuff模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1阶段"><span class="nav-number">4.1.</span> <span class="nav-text">4.1阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-1-Prepare-phase"><span class="nav-number">4.1.1.</span> <span class="nav-text">4.1.1 Prepare phase</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-2-SAFENODE-predicate"><span class="nav-number">4.1.2.</span> <span class="nav-text">4.1.2 SAFENODE predicate</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-3-PRE-COMMIT-phase"><span class="nav-number">4.1.3.</span> <span class="nav-text">4.1.3 PRE-COMMIT phase</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-4-COMMIT-phase"><span class="nav-number">4.1.4.</span> <span class="nav-text">4.1.4 COMMIT phase</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-5-DECIDE-phase"><span class="nav-number">4.1.5.</span> <span class="nav-text">4.1.5 DECIDE phase</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-6-NEXTVIEW-interrupt"><span class="nav-number">4.1.6.</span> <span class="nav-text">4.1.6 NEXTVIEW interrupt</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-7-基本流程图"><span class="nav-number">4.1.7.</span> <span class="nav-text">4.1.7 基本流程图</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-数据结构"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-1-Messages"><span class="nav-number">4.2.1.</span> <span class="nav-text">4.2.1 Messages</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-2-Quorum-certificates"><span class="nav-number">4.2.2.</span> <span class="nav-text">4.2.2 Quorum certificates</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-3-Tree-and-branches"><span class="nav-number">4.2.3.</span> <span class="nav-text">4.2.3 Tree and branches</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-4-Bookkeeping-variables"><span class="nav-number">4.2.4.</span> <span class="nav-text">4.2.4 Bookkeeping variables</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-协议细节"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 协议细节</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-1-工具模块"><span class="nav-number">4.3.1.</span> <span class="nav-text">4.3.1 工具模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-2-Basic-HotStuff"><span class="nav-number">4.3.2.</span> <span class="nav-text">4.3.2 Basic HotStuff</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-Safety-liveness-and-complexity"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 Safety, liveness and complexity</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-1-安全性引理"><span class="nav-number">4.4.1.</span> <span class="nav-text">4.4.1 安全性引理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-2-活跃性引理"><span class="nav-number">4.4.2.</span> <span class="nav-text">4.4.2 活跃性引理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-3-复杂度"><span class="nav-number">4.4.3.</span> <span class="nav-text">4.4.3 复杂度</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-链式HotStuff"><span class="nav-number">5.</span> <span class="nav-text">5. 链式HotStuff</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-基本流程"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 基本流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-链式HotStuff伪代码"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 链式HotStuff伪代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+<span class="post-meta-divider">|</span>
+  <span class="with-love">
+    <i class="fa fa-bitcoin"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kyon Kwok</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">41.4k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_uv">Total visitor: <span id="busuanzi_value_site_uv"></span></span>
+</div>
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: 'Rc8TVyTv0GxKNDMlLF6hm0VL-gzGzoHsz',
+        appKey: 'fCmBbPUmqLfv5wIDri6kutnJ',
+        placeholder: '欢迎吐槽留言~ 可留下邮箱方便交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("Rc8TVyTv0GxKNDMlLF6hm0VL-gzGzoHsz", "fCmBbPUmqLfv5wIDri6kutnJ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
