@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一、版本  fisco-bcos：2.1.0 commit：cb68124d4fbf3df563a57dfff5f0c6eedc1419cc branch：master  二、共识模块框架 FISCO BCOS实现了一套可扩展的共识框架，可插件化扩展不同的共识算法，目前支持 PBFT(Practical Byzantine Fault Tolerance) 和 Raft(Replication a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FISCO-BCOS 源代码研读(一) —— 共识算法模块">
+<meta property="og:url" content="https://kyonray.com/2019/12/02/FISCO-BCOS-source-code-reading-libconsensus/index.html">
+<meta property="og:site_name" content="Kyon&#39;s Blog">
+<meta property="og:description" content="一、版本  fisco-bcos：2.1.0 commit：cb68124d4fbf3df563a57dfff5f0c6eedc1419cc branch：master  二、共识模块框架 FISCO BCOS实现了一套可扩展的共识框架，可插件化扩展不同的共识算法，目前支持 PBFT(Practical Byzantine Fault Tolerance) 和 Raft(Replication a">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://kyonray.com/2019/12/02/FISCO-BCOS-source-code-reading-libconsensus/architecture1.png">
+<meta property="og:image" content="https://kyonray.com/2019/12/02/FISCO-BCOS-source-code-reading-libconsensus/pbft_process.png">
+<meta property="og:updated_time" content="2019-12-02T08:20:01.358Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="FISCO-BCOS 源代码研读(一) —— 共识算法模块">
+<meta name="twitter:description" content="一、版本  fisco-bcos：2.1.0 commit：cb68124d4fbf3df563a57dfff5f0c6eedc1419cc branch：master  二、共识模块框架 FISCO BCOS实现了一套可扩展的共识框架，可插件化扩展不同的共识算法，目前支持 PBFT(Practical Byzantine Fault Tolerance) 和 Raft(Replication a">
+<meta name="twitter:image" content="https://kyonray.com/2019/12/02/FISCO-BCOS-source-code-reading-libconsensus/architecture1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kyonray.com/2019/12/02/FISCO-BCOS-source-code-reading-libconsensus/">
+
+
+
+
+
+  <title>FISCO-BCOS 源代码研读(一) —— 共识算法模块 | Kyon's Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kyon's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Learning, Sharing.</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kyonray.com/2019/12/02/FISCO-BCOS-source-code-reading-libconsensus/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kyon Kwok">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://img.inmywordz.com/uploads/20170527171017_34.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kyon's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">FISCO-BCOS 源代码研读(一) —— 共识算法模块</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-02T15:52:24+08:00">
+                2019-12-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/12/02/FISCO-BCOS-source-code-reading-libconsensus/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/12/02/FISCO-BCOS-source-code-reading-libconsensus/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/12/02/FISCO-BCOS-source-code-reading-libconsensus/" class="leancloud_visitors" data-flag-title="FISCO-BCOS 源代码研读(一) —— 共识算法模块">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  6.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  32
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2><span id="一-版本">一、版本</span></h2>
+<ul>
+<li>fisco-bcos：2.1.0</li>
+<li>commit：cb68124d4fbf3df563a57dfff5f0c6eedc1419cc</li>
+<li>branch：master</li>
+</ul>
+<h2><span id="二-共识模块框架">二、共识模块框架</span></h2>
+<p>FISCO BCOS实现了一套可扩展的共识框架，可插件化扩展不同的共识算法，目前支持 <strong>PBFT(Practical Byzantine Fault Tolerance)</strong> 和 <strong>Raft(Replication and Fault Tolerant)</strong> 共识算法，共识模块框架如下图：</p>
+<a id="more"></a>
+<figure>
+<img src="./architecture1.png" alt><figcaption>共识模块框架</figcaption>
+</figure>
+<p>Sealer线程</p>
+<blockquote>
+<p>交易打包线程，负责从交易池取交易，并基于节点最高块打包交易，产生新区块，产生的新区块交给Engine线程处理，PBFT和Raft的交易打包线程分别为PBFTSealer和RaftSealer。</p>
+</blockquote>
+<p>Engine线程</p>
+<blockquote>
+<p>共识线程，负责从本地或通过网络接收新区块，并根据接收的共识消息包完成共识流程，最终将达成共识的新区块写入区块链(BlockChain)，区块上链后，从交易池中删除已经上链的交易，PBFT和Raft的共识线程分别为PBFTEngine和RaftEngine。</p>
+</blockquote>
+<!-- toc -->
+<ul>
+<li><a href="#三-依赖模块">三、依赖模块</a></li>
+<li><a href="#四-共识算法模块文件结构">四、共识算法模块文件结构</a>
+<ul>
+<li><a href="#consensusinterface">ConsensusInterface</a></li>
+<li><a href="#common">Common</a></li>
+<li><a href="#consensusenginebase">ConsensusEngineBase</a>
+<ul>
+<li><a href="#1-构造函数">1. 构造函数</a></li>
+<li><a href="#2-继承重写函数">2. 继承重写函数</a></li>
+<li><a href="#3-其他成员函数">3. 其他成员函数</a></li>
+<li><a href="#4-protect属性成员">4. protect属性成员</a></li>
+</ul></li>
+<li><a href="#sealer">Sealer</a>
+<ul>
+<li><a href="#1-构造函数析构函数">1. 构造函数/析构函数</a></li>
+<li><a href="#2-成员函数">2. 成员函数</a></li>
+<li><a href="#3-protect属性成员">3. protect属性成员</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#五-bcos中pbft模块是如何使用这些接口的">五、BCOS中PBFT模块是如何使用这些接口的</a>
+<ul>
+<li><a href="#common-1">Common</a></li>
+<li><a href="#pbftmsgcache">PBFTMsgCache</a></li>
+<li><a href="#pbftreqcache">PBFTReqCache</a></li>
+<li><a href="#timemanager">TimeManager</a></li>
+<li><a href="#pbftsealer">PBFTSealer</a>
+<ul>
+<li><a href="#1-构造函数-1">1. 构造函数</a></li>
+<li><a href="#2-重写继承成员函数">2. 重写继承成员函数</a></li>
+<li><a href="#3-其他重要成员函数">3. 其他重要成员函数</a></li>
+</ul></li>
+<li><a href="#pbftengine">PBFTEngine</a>
+<ul>
+<li><a href="#1-构造函数-2">1. 构造函数</a></li>
+<li><a href="#2-其他重要函数">2. 其他重要函数</a>
+<ul>
+<li><a href="#持续监听消息队列">持续监听消息队列</a></li>
+<li><a href="#handlemsg判断请求类型">handleMsg判断请求类型</a></li>
+<li><a href="#处理prepare请求">处理Prepare请求</a></li>
+<li><a href="#处理sign请求">处理Sign请求</a></li>
+<li><a href="#处理commit请求">处理Commit请求</a></li>
+<li><a href="#处理viewchange请求">处理ViewChange请求</a></li>
+<li><a href="#checkandcommit">checkAndCommit</a></li>
+<li><a href="#checkandsave">checkAndSave</a></li>
+<li><a href="#checkandchangeview">checkAndChangeView</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+<!-- tocstop -->
+<h2><span id="三-依赖模块">三、依赖模块</span></h2>
+<ol type="1">
+<li>sync</li>
+<li>blockverifier</li>
+<li>p2p</li>
+<li>security</li>
+</ol>
+<h2><span id="四-共识算法模块文件结构">四、共识算法模块文件结构</span></h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── CMakeLists.txt          # cmake 构建配置</span><br><span class="line">├── Common.h                # 基础数据结构、异常处理</span><br><span class="line">├── ConsensusEngineBase.cpp # 共识基础引擎的实现</span><br><span class="line">├── ConsensusEngineBase.h   # 共识基础引擎的头文件</span><br><span class="line">├── ConsensusInterface.h    # 共识接口/基类</span><br><span class="line">├── Sealer.cpp              # 共识打包提交实现</span><br><span class="line">├── Sealer.h                # 共识打包提交接口</span><br><span class="line">├── pbft                    # PBFT共识模块</span><br><span class="line">│   ├── Common.h</span><br><span class="line">│   ├── PBFTEngine.cpp</span><br><span class="line">│   ├── PBFTEngine.h</span><br><span class="line">│   ├── PBFTMsgCache.h</span><br><span class="line">│   ├── PBFTReqCache.cpp</span><br><span class="line">│   ├── PBFTReqCache.h</span><br><span class="line">│   ├── PBFTSealer.cpp</span><br><span class="line">│   ├── PBFTSealer.h</span><br><span class="line">│   └── TimeManager.h</span><br><span class="line">└── raft                     # Raft共识模块</span><br><span class="line">    ├── Common.h</span><br><span class="line">    ├── RaftEngine.cpp</span><br><span class="line">    ├── RaftEngine.h</span><br><span class="line">    ├── RaftSealer.cpp</span><br><span class="line">    └── RaftSealer.h</span><br></pre></td></tr></table></figure>
+<h3><span id="consensusinterface">ConsensusInterface</span></h3>
+<p><code>ConsensusInterface.h</code>作为一个基类为最顶端类包，其他类继承该类的虚函数进行override。</p>
+<p><code>Class ConsensusInterface</code>主要包含了以下两种：</p>
+<ol type="1">
+<li>共识模块控制</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 共识模块的开关</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line"><span class="comment">// 共识模块状态</span></span><br><span class="line"><span class="keyword">virtual</span> <span class="keyword">const</span> <span class="built_in">std</span>::<span class="function"><span class="built_in">string</span> <span class="title">consensusStatus</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line"><span class="comment">// 协议ID，当handler注册为p2p模块时使用</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> PROTOCOL_ID <span class="keyword">const</span>&amp; <span class="title">protocolId</span><span class="params">()</span> <span class="keyword">const</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// update the context of PBFT after commit a block into the block-chain</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">reportBlock</span><span class="params">(dev::eth::Block <span class="keyword">const</span>&amp; block)</span> </span>= <span class="number">0</span>;</span><br><span class="line"><span class="comment">// 群组ID</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> GROUP_ID <span class="title">groupId</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> <span class="number">0</span>; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 一个块内最多交易数（默认1000）</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> uint64_t <span class="title">maxBlockTransactions</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="number">1000</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// view/view change</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> VIEWTYPE <span class="title">view</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> <span class="number">0</span>; &#125;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> VIEWTYPE <span class="title">toView</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> <span class="number">0</span>; &#125;</span><br></pre></td></tr></table></figure>
+<ol start="2" type="1">
+<li>共识节点控制</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 共识节点列表</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> h512s <span class="title">sealerList</span><span class="params">()</span> <span class="keyword">const</span> </span>= <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">appendSealer</span><span class="params">(h512 <span class="keyword">const</span>&amp; _sealer)</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 节点类型 共识节点/观察者节点</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> NodeAccountType <span class="title">accountType</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">setNodeAccountType</span><span class="params">(NodeAccountType <span class="keyword">const</span>&amp;)</span> </span>= <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> IDXTYPE <span class="title">nodeIdx</span><span class="params">()</span> <span class="keyword">const</span> </span>= <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<h3><span id="common">Common</span></h3>
+<p><code>Common.h</code>文件主要定义了命名空间<code>consensus</code>的共识与节点的状态、异常处理，以及节点的类型<code>NodeAccountType</code>、打包成块结构体<code>Sealing</code> ：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Sealing</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    dev::eth::Block block;</span><br><span class="line">    <span class="comment">/// hash set for filter fetched transactions</span></span><br><span class="line">    h256Hash m_transactionSet;</span><br><span class="line">    dev::blockverifier::ExecutiveContext::Ptr p_execContext;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3><span id="consensusenginebase">ConsensusEngineBase</span></h3>
+<p>定义了<code>ConsensusEngineBase</code>类，该类继承了 <code>Woker</code> 类和 <code>ConsensusInterface</code> 类：</p>
+<h4><span id="1-构造函数">1. 构造函数</span></h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ConsensusEngineBase类构造函数</span></span><br><span class="line">ConsensusEngineBase(<span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::p2p::P2PInterface&gt; _service,		<span class="comment">// 指定p2p服务</span></span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::txpool::TxPoolInterface&gt; _txPool,					<span class="comment">// 指定交易池</span></span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::blockchain::BlockChainInterface&gt; _blockChain,<span class="comment">// 指定区块链</span></span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::sync::SyncInterface&gt; _blockSync,							<span class="comment">// 区块同步机制</span></span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::blockverifier::BlockVerifierInterface&gt; _blockVerifier,</span><br><span class="line">        PROTOCOL_ID <span class="keyword">const</span>&amp; _protocolId, 		<span class="comment">// 协议id</span></span><br><span class="line">        KeyPair <span class="keyword">const</span>&amp; _keyPair,						<span class="comment">// 密钥对</span></span><br><span class="line">        dev::h512s <span class="keyword">const</span>&amp; _sealerList = dev::h512s()) <span class="comment">// 共识节点，默认为空 </span></span><br><span class="line">				: Worker(<span class="string">"ConsensusEngine"</span>, <span class="number">0</span>),			<span class="comment">// Worker类初始化，类似于监听</span></span><br><span class="line">        m_service(_service),								<span class="comment">// 对protected成员进行赋值</span></span><br><span class="line">        m_txPool(_txPool),</span><br><span class="line">        m_blockChain(_blockChain),</span><br><span class="line">        m_blockSync(_blockSync),</span><br><span class="line">        m_blockVerifier(_blockVerifier),</span><br><span class="line">        m_consensusBlockNumber(<span class="number">0</span>),</span><br><span class="line">        m_protocolId(_protocolId),</span><br><span class="line">        m_keyPair(_keyPair),</span><br><span class="line">        m_sealerList(_sealerList)</span><br><span class="line">    &#123;</span><br><span class="line">        assert(m_service &amp;&amp; m_txPool &amp;&amp; m_blockChain &amp;&amp; m_blockSync &amp;&amp; m_blockVerifier);</span><br><span class="line">        <span class="keyword">if</span> (m_protocolId == <span class="number">0</span>)</span><br><span class="line">            BOOST_THROW_EXCEPTION(dev::eth::InvalidProtocolID()</span><br><span class="line">                              &lt;&lt; errinfo_comment(<span class="string">"Protocol id must be larger than 0"</span>));</span><br><span class="line">        m_groupId = dev::eth::getGroupAndProtocol(m_protocolId).first;</span><br><span class="line">        <span class="built_in">std</span>::sort(m_sealerList.begin(), m_sealerList.end());  <span class="comment">// 对sealerList排序</span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">// 析构函数</span></span><br><span class="line"><span class="keyword">virtual</span> ~ConsensusEngineBase() &#123; stop(); &#125;</span><br></pre></td></tr></table></figure>
+<h4><span id="2-继承重写函数">2. 继承重写函数</span></h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 共识节点操作</span></span><br><span class="line">dev::<span class="function">h512s <span class="title">sealerList</span><span class="params">()</span> <span class="keyword">const</span> override</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">appendSealer</span><span class="params">(h512 <span class="keyword">const</span>&amp; _sealer)</span> override</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="built_in">std</span>::<span class="function"><span class="built_in">string</span> <span class="title">consensusStatus</span><span class="params">()</span> override</span>;</span><br><span class="line"><span class="function">PROTOCOL_ID <span class="keyword">const</span>&amp; <span class="title">protocolId</span><span class="params">()</span> <span class="keyword">const</span> override </span>&#123; <span class="keyword">return</span> m_protocolId; &#125;</span><br><span class="line"><span class="function">GROUP_ID <span class="title">groupId</span><span class="params">()</span> <span class="keyword">const</span> override </span>&#123; <span class="keyword">return</span> m_groupId; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 节点类型：共识节点/观察者节点</span></span><br><span class="line"><span class="function">NodeAccountType <span class="title">accountType</span><span class="params">()</span> override </span>&#123; <span class="keyword">return</span> m_accountType; &#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setNodeAccountType</span><span class="params">(dev::consensus::NodeAccountType <span class="keyword">const</span>&amp; _accountType)</span> override</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 当前节点在sealerList所在位</span></span><br><span class="line"><span class="function">IDXTYPE <span class="title">nodeIdx</span><span class="params">()</span> <span class="keyword">const</span> override </span>&#123; <span class="keyword">return</span> m_idx; &#125;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">reportBlock</span><span class="params">(dev::eth::Block <span class="keyword">const</span>&amp;)</span> override </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> override</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> override</span>;</span><br></pre></td></tr></table></figure>
+<h4><span id="3-其他成员函数">3. 其他成员函数</span></h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 构造一个JSON object，内含共识的基本属性</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">getBasicConsensusStatus</span><span class="params">(Json::Value&amp; status_obj)</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="comment">// 设定是否允许增加区块</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setAllowFutureBlocks</span><span class="params">(<span class="keyword">bool</span> isAllowFutureBlocks)</span></span>;</span><br><span class="line"><span class="comment">// 最小的有效节点数量 m_nodeNum所有节点，m_f至少有效节点数</span></span><br><span class="line"><span class="function">IDXTYPE <span class="title">minValidNodes</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> m_nodeNum - m_f; &#125;</span><br><span class="line"><span class="comment">// 更新sealer节点数量</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">resetConfig</span><span class="params">()</span> </span>&#123; m_nodeNum = m_sealerList.size(); &#125;</span><br><span class="line"><span class="comment">// 交易进入交易池</span></span><br><span class="line">void dropHandledTransactions(dev::eth::Block const&amp; block)；</span><br><span class="line"><span class="comment">// 通过index获取Sealer</span></span><br><span class="line"><span class="function"><span class="keyword">inline</span> h512 <span class="title">getSealerByIndex</span><span class="params">(<span class="keyword">size_t</span> <span class="keyword">const</span>&amp; index)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">// message/session/data -&gt; request</span></span></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">bool</span> <span class="title">decodeToRequests</span><span class="params">(T&amp; req, <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::p2p::P2PMessage&gt; message,</span></span></span><br><span class="line"><span class="function"><span class="params">      <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::p2p::P2PSession&gt; session)</span></span></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">bool</span> <span class="title">decodeToRequests</span><span class="params">(T&amp; req, bytesConstRef data)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">// 执行打包区块</span></span></span><br><span class="line">dev::blockverifier::ExecutiveContext::Ptr executeBlock(dev::eth::Block&amp; block);</span><br><span class="line">  </span><br><span class="line"><span class="comment">// 检查block是否有效：区块交易数量、时间戳、区块高度、父区块存在</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">checkBlockValid</span><span class="params">(dev::eth::Block <span class="keyword">const</span>&amp; block)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 更新共识节点/p2p监听节点list/区块包含最大交易数</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">updateConsensusNodeList</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">updateNodeListInP2P</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">updateMaxBlockTransactions</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line"><span class="comment">// 区块是否已经存在，使用hash查询</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">blockExists</span><span class="params">(h256 <span class="keyword">const</span>&amp; blockHash)</span></span></span><br></pre></td></tr></table></figure>
+<h4><span id="4-protect属性成员">4. protect属性成员</span></h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">  <span class="built_in">std</span>::atomic&lt;<span class="keyword">uint64_t</span>&gt; m_maxBlockTransactions = &#123;<span class="number">1000</span>&#125;;</span><br><span class="line">  <span class="comment">/// 主要参数</span></span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::p2p::P2PInterface&gt; m_service;				<span class="comment">// p2p服务handler</span></span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::txpool::TxPoolInterface&gt; m_txPool;		<span class="comment">// 交易池handler</span></span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::blockchain::BlockChainInterface&gt; m_blockChain;	<span class="comment">// 区块链handler</span></span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::sync::SyncInterface&gt; m_blockSync;		<span class="comment">// 区块同步handler</span></span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::blockverifier::BlockVerifierInterface&gt; m_blockVerifier;	<span class="comment">// 区块验证</span></span><br><span class="line">  PROTOCOL_ID m_protocolId;									<span class="comment">// 定义用哪一种协议</span></span><br><span class="line">  KeyPair m_keyPair;												<span class="comment">// 密钥对（私钥/公钥/地址）</span></span><br><span class="line">  <span class="keyword">mutable</span> SharedMutex m_sealerListMutex;		<span class="comment">// seal list 独占锁</span></span><br><span class="line">  dev::h512s m_sealerList;									<span class="comment">// seal list 共识节点列表</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/// 其他参数</span></span><br><span class="line"><span class="comment">// 记录区块</span></span><br><span class="line">  <span class="built_in">std</span>::atomic&lt;<span class="keyword">int64_t</span>&gt; m_consensusBlockNumber = &#123;<span class="number">0</span>&#125;;  <span class="comment">// 等待交易的区块</span></span><br><span class="line">  dev::eth::BlockHeader m_highestBlock;								<span class="comment">// 最高区块</span></span><br><span class="line"><span class="comment">// 关于节点</span></span><br><span class="line">  <span class="built_in">std</span>::atomic&lt;IDXTYPE&gt; m_nodeNum = &#123;<span class="number">0</span>&#125;;								<span class="comment">// 节点个数</span></span><br><span class="line">  <span class="built_in">std</span>::atomic&lt;IDXTYPE&gt; m_f = &#123;<span class="number">0</span>&#125;;											<span class="comment">// 至少正确的节点个数</span></span><br><span class="line">  GROUP_ID m_groupId;																	<span class="comment">// 群组号，一般是从protocolID得出</span></span><br><span class="line">  <span class="built_in">std</span>::atomic&lt;NodeAccountType&gt; m_accountType = &#123;NodeAccountType::ObserverAccount&#125;;<span class="comment">//该节点类型</span></span><br><span class="line">  <span class="built_in">std</span>::atomic&lt;IDXTYPE&gt; m_idx = &#123;<span class="number">0</span>&#125;;										<span class="comment">// 该节点id</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// flags</span></span><br><span class="line">  <span class="keyword">bool</span> m_allowFutureBlocks = <span class="literal">true</span>;			<span class="comment">// 是否允许添加新区块</span></span><br><span class="line">  <span class="keyword">bool</span> m_startConsensusEngine = <span class="literal">false</span>;	<span class="comment">// 共识是否启动</span></span><br><span class="line">  <span class="keyword">bool</span> m_omitEmptyBlock = <span class="literal">true</span>;					<span class="comment">// 是否删除空区块</span></span><br><span class="line">  <span class="built_in">std</span>::<span class="keyword">atomic_bool</span> m_cfgErr = &#123;<span class="literal">false</span>&#125;;	<span class="comment">// 是否有错误</span></span><br><span class="line">  <span class="comment">/// node list record when P2P last update</span></span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">string</span> m_lastNodeList;						<span class="comment">// 记录上一次P2P通信的节点列表</span></span><br><span class="line">  <span class="built_in">std</span>::atomic&lt;IDXTYPE&gt; m_connectedNode = &#123;<span class="number">0</span>&#125;;		<span class="comment">// 已连接的节点ID</span></span><br></pre></td></tr></table></figure>
+<h3><span id="sealer">Sealer</span></h3>
+<p>定义了<code>Sealer</code> 类，继承 <code>Worker</code> ，开启shared_ptr支持。</p>
+<h4><span id="1-构造函数析构函数">1. 构造函数/析构函数</span></h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 构造函数</span></span><br><span class="line">Sealer(<span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::txpool::TxPoolInterface&gt; _txPool,			<span class="comment">// 交易池模块</span></span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::blockchain::BlockChainInterface&gt; _blockChain,	<span class="comment">// 区块链模块</span></span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::sync::SyncInterface&gt; _blockSync)				<span class="comment">// 区块同步模块</span></span><br><span class="line">      : Worker(<span class="string">"Sealer"</span>, <span class="number">0</span>),		<span class="comment">// Worker监听</span></span><br><span class="line">        m_txPool(_txPool),</span><br><span class="line">        m_blockSync(_blockSync),</span><br><span class="line">        m_blockChain(_blockChain),</span><br><span class="line">        m_consensusEngine(<span class="literal">nullptr</span>)</span><br><span class="line">&#123;</span><br><span class="line">    assert(m_txPool &amp;&amp; m_blockSync &amp;&amp; m_blockChain);</span><br><span class="line">    <span class="keyword">if</span> (m_txPool-&gt;status().current &gt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        m_syncTxPool = <span class="literal">true</span>;</span><br><span class="line">  	&#125;</span><br><span class="line">		<span class="comment">// 注册一个handler，一旦新的交易进入，引发调用</span></span><br><span class="line">    m_tqReady = m_txPool-&gt;onReady([=]() &#123; <span class="keyword">this</span>-&gt;onTransactionQueueReady(); &#125;);</span><br><span class="line">    m_blockSubmitted = m_blockChain-&gt;onReady([=](<span class="keyword">int64_t</span>) &#123; <span class="keyword">this</span>-&gt;onBlockChanged(); &#125;);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">virtual</span> ~Sealer() <span class="keyword">noexcept</span> &#123; stop(); &#125;</span><br></pre></td></tr></table></figure>
+<h4><span id="2-成员函数">2. 成员函数</span></h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Sealer模块的开关</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 回调函数 通知所有线程</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">onTransactionQueueReady</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">onBlockChanged</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打包时添加额外的数据</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setExtraData</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">vector</span>&lt;bytes&gt; <span class="keyword">const</span>&amp; _extra)</span> </span>&#123; m_extraData = _extra; &#125;</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;bytes&gt; <span class="function"><span class="keyword">const</span>&amp; <span class="title">extraData</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> m_extraData; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 判断是否需要重置打包</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">shouldResetSealing</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">// 重新打包</span></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">resetSealingBlock</span><span class="params">(h256Hash <span class="keyword">const</span>&amp; filter, <span class="keyword">bool</span> resetNextLeader)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">resetSealingBlock</span><span class="params">(Sealing&amp; sealing, h256Hash <span class="keyword">const</span>&amp; filter, <span class="keyword">bool</span> resetNextLeader)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">resetBlock</span><span class="params">(dev::eth::Block&amp; block, <span class="keyword">bool</span> resetNextLeader = <span class="literal">false</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回共识接口</span></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::consensus::ConsensusInterface&gt; <span class="function"><span class="keyword">const</span> <span class="title">consensusEngine</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">reportNewBlock</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">// 是打包还是继续等待</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">shouldSeal</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">shouldWait</span><span class="params">(<span class="keyword">bool</span> <span class="keyword">const</span>&amp; wait)</span> <span class="keyword">const</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 从交易池取交易</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loadTransactions</span><span class="params">(<span class="keyword">uint64_t</span> <span class="keyword">const</span>&amp; transToFetch)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">checkTxsEnough</span><span class="params">(<span class="keyword">uint64_t</span> maxTxsCanSeal)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">// 以免下一个leader打包好了，最新的区块还没达成共识</span></span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">canHandleBlockForNextLeader</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="literal">true</span>; &#125;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">reachBlockIntervalTime</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="literal">false</span>; &#125;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">handleBlock</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">shouldHandleBlock</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="literal">true</span>; &#125;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">doWork</span><span class="params">(<span class="keyword">bool</span> wait)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doWork</span><span class="params">()</span> override </span>&#123; doWork(<span class="literal">true</span>); &#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">isBlockSyncing</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<h4><span id="3-protect属性成员">3. protect属性成员</span></h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// 主要参数</span></span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::txpool::TxPoolInterface&gt; m_txPool;							<span class="comment">// 交易池模块</span></span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::sync::SyncInterface&gt; m_blockSync;							<span class="comment">// 区块同步模块</span></span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::blockchain::BlockChainInterface&gt; m_blockChain;	<span class="comment">// 区块链模块</span></span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::consensus::ConsensusInterface&gt; m_consensusEngine;<span class="comment">// 所属共识引擎</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/// 其他参数</span></span><br><span class="line">  Sealing m_sealing;							<span class="comment">// 目前正在打包的块，包括头、交易、执行上下文</span></span><br><span class="line">  <span class="keyword">mutable</span> SharedMutex x_sealing;	<span class="comment">// 打包独占锁</span></span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;bytes&gt; m_extraData;	<span class="comment">// 额外的数据</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 同步相关</span></span><br><span class="line">  <span class="built_in">std</span>::condition_variable m_signalled;			<span class="comment">// 通知其他所有线程的信号量</span></span><br><span class="line">  <span class="built_in">std</span>::condition_variable m_blockSignalled;	<span class="comment">// 通知其他所有线程区块的信号量</span></span><br><span class="line">  Mutex x_signalled;												<span class="comment">// 信号独占锁</span></span><br><span class="line">  Mutex x_blocksignalled;										<span class="comment">// 信号独占锁</span></span><br><span class="line">  <span class="built_in">std</span>::atomic&lt;<span class="keyword">bool</span>&gt; m_syncTxPool = &#123;<span class="literal">false</span>&#125;;	<span class="comment">// 是否在调用 syncTransactionQueue</span></span><br><span class="line">  <span class="built_in">std</span>::atomic&lt;<span class="keyword">bool</span>&gt; m_syncBlock = &#123;<span class="literal">false</span>&#125;;	<span class="comment">// 是否有新的区块提交到区块链</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">bool</span> m_remoteWorking = <span class="literal">false</span>;							<span class="comment">// 远程的worker是否有被重置</span></span><br><span class="line">  <span class="keyword">bool</span> m_startConsensus = <span class="literal">false</span>;						<span class="comment">// 共识是否开启</span></span><br><span class="line"></span><br><span class="line">  Handler&lt;&gt; m_tqReady;											<span class="comment">// 消息列表就绪</span></span><br><span class="line">  Handler&lt;<span class="keyword">int64_t</span>&gt; m_blockSubmitted;				<span class="comment">// 有区块提交</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">uint64_t</span> m_maxBlockCanSeal = <span class="number">1000</span>;				<span class="comment">// 单个区块最高可打包多少个交易</span></span><br><span class="line">  <span class="keyword">mutable</span> SharedMutex x_maxBlockCanSeal;		<span class="comment">// 独占锁</span></span><br></pre></td></tr></table></figure>
+<h2><span id="五-bcos中pbft模块是如何使用这些接口的">五、BCOS中PBFT模块是如何使用这些接口的</span></h2>
+<p>先看PBFT模块的文件结构，和共识模板相似，有common，有Engine，有Sealer。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">pbft</span><br><span class="line">├── Common.h</span><br><span class="line">├── PBFTEngine.cpp</span><br><span class="line">├── PBFTEngine.h			# 共识引擎接口</span><br><span class="line">├── PBFTMsgCache.h		# 消息缓存</span><br><span class="line">├── PBFTReqCache.cpp</span><br><span class="line">├── PBFTReqCache.h		# 请求缓存	</span><br><span class="line">├── PBFTSealer.cpp</span><br><span class="line">├── PBFTSealer.h			# 块打包</span><br><span class="line">└── TimeManager.h			# 时间管理模块，主要记录上次共识/签名的时间</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>PBFT共识主要包括Pre-prepare、Prepare和Commit三个阶段：</p>
+<ul>
+<li><strong>Pre-prepare</strong>：负责执行区块，产生签名包，并将签名包广播给所有共识节点；</li>
+<li><strong>Prepare</strong>：负责收集签名包，某节点收集满<code>2*f+1</code>的签名包后，表明自身达到可以提交区块的状态，开始广播Commit包；</li>
+<li><strong>Commit</strong>：负责收集Commit包，某节点收集满<code>2*f+1</code>的Commit包后，直接将本地缓存的最新区块提交到数据库。</li>
+</ul>
+</blockquote>
+<p><img src="./pbft_process.png"></p>
+<h3><span id="common">Common</span></h3>
+<p>Common 定义了PBFT的几种消息形式：<code>PBFTMsgPacket</code>、<code>PBFTMsg</code>、<code>PreapareReq</code>、<code>SignReq</code> 、<code>CommitReq</code>、<code>ViewChangeReq</code> 。</p>
+<ul>
+<li><code>PBFTMsgPacket</code> 定义了PBFT整个消息的属性，有发送节点的id、所在位、消息类型(prepare、commit、sign)、TTL、data、时间戳，并定义了消息的编码和解码，使用到了 <code>libdevcore</code> 的<code>RLP</code> 类型；</li>
+<li><code>PBFTMsg</code> 是消息基础结构，定义了区块链高度、当前view、发送节点所在位，时间戳、区块哈希、签名等，并定义了消息的编码和解码，使用到了 <code>libdevcore</code> 的<code>RLP</code> 类型；</li>
+<li><code>PreapareReq</code> 是在<code>PBFTMsg</code>基础上的扩展，并给出四种不同的构造方法：
+<ul>
+<li>使用PBFTMsg模板，参数为keyPair、区块链高、当前view、节点所在位、区块哈希值；</li>
+<li>从另一个特定的PrepareReq进行构造，参数为另一个prepareReq、keyPair、当前view、节点所在位；</li>
+<li>从给定的区块、keypair、view、idx进行构造；</li>
+<li>从给定区块以及执行打包结果，更新PrepareReq；</li>
+</ul></li>
+<li><code>SignReq</code>是在<code>PBFTMsg</code>基础上的扩展， 定义了一种构造方法，参数为PrepareReq、keyPair、idx；</li>
+<li><code>CommitReq</code>是在<code>PBFTMsg</code>基础上的扩展，定义了一种构造方法，参数为PrepareReq、keyPair、idx；</li>
+<li><code>ViewChangeReq</code>是在<code>PBFTMsg</code>基础上的扩展，定义了一种构造方法，参数为 keyPair、区块链高、view、idx、区块哈希；</li>
+</ul>
+<h3><span id="pbftmsgcache">PBFTMsgCache</span></h3>
+<p>定义了消息缓存的结构<code>PBFTMsgCache</code>，都是以消息队列的形式实现，并实现了插入缓存的方式，类成员有：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// 四种消息的缓存</span></span><br><span class="line">QueueSet&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt; m_knownPrepare;</span><br><span class="line">QueueSet&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt; m_knownSign;</span><br><span class="line">QueueSet&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt; m_knownCommit;</span><br><span class="line">QueueSet&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt; m_knownViewChange;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 缓存读写锁</span></span><br><span class="line"><span class="keyword">mutable</span> SharedMutex x_knownPrepare;</span><br><span class="line"><span class="keyword">mutable</span> SharedMutex x_knownSign;</span><br><span class="line"><span class="keyword">mutable</span> SharedMutex x_knownCommit;</span><br><span class="line"><span class="keyword">mutable</span> SharedMutex x_knownViewChange;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 缓存最大值</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">unsigned</span> c_knownPrepare = <span class="number">1024</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">unsigned</span> c_knownSign = <span class="number">1024</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">unsigned</span> c_knownCommit = <span class="number">1024</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">unsigned</span> c_knownViewChange = <span class="number">1024</span>;</span><br></pre></td></tr></table></figure>
+<p>此外，定义了广播消息缓存类 <code>PBFTBroadcastCache</code> ，根据发送节点id的哈希存储收到的消息缓存（hashmap）。</p>
+<h3><span id="pbftreqcache">PBFTReqCache</span></h3>
+<p>定义了请求缓存类型 <code>PBFTReqCache</code> ，有以下成员：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// prepare请求缓存</span></span><br><span class="line">PrepareReq m_prepareCache = PrepareReq();</span><br><span class="line"></span><br><span class="line"><span class="comment">/// raw prepare请求缓存</span></span><br><span class="line">PrepareReq m_rawPrepareCache;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// 签名请求signReq(maps between hash and sign requests) 缓存</span></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">unordered_map</span>&lt;h256, <span class="built_in">std</span>::<span class="built_in">unordered_map</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>, SignReq&gt;&gt; m_signCache;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// cache for received-viewChange requests(maps between view and view change requests)</span></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">unordered_map</span>&lt;VIEWTYPE, <span class="built_in">unordered_map</span>&lt;IDXTYPE, ViewChangeReq&gt;&gt; m_recvViewChangeReq;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// cache for commited requests(maps between hash and commited requests)</span></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">unordered_map</span>&lt;h256, <span class="built_in">std</span>::<span class="built_in">unordered_map</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>, CommitReq&gt;&gt; m_commitCache;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// cache for prepare request need to be backup and saved</span></span><br><span class="line">PrepareReq m_committedPrepareCache;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// cache for the future prepare cache</span></span><br><span class="line"><span class="comment">/// key: block hash, value: the cached future prepeare</span></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">unordered_map</span>&lt;<span class="keyword">uint64_t</span>, <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;PrepareReq&gt;&gt; m_futurePrepareCache;</span><br></pre></td></tr></table></figure>
+<p>此外还实现了对请求缓存进行增删改查的方法，以及判断是否要进入viewchange。</p>
+<h3><span id="timemanager">TimeManager</span></h3>
+<p>该模块主要作用是记录时间，设定timeout。</p>
+<h3><span id="pbftsealer">PBFTSealer</span></h3>
+<p>定义了<code>PBFTSealer</code>类，该类直接继承<code>Sealer</code>。</p>
+<p>在继承<code>Sealer</code>类的同时，增加了几个新的成员变量</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;PBFTEngine&gt; m_pbftEngine;		<span class="comment">// 指向特定的PBFT共识引擎</span></span><br><span class="line"><span class="keyword">uint64_t</span> m_lastTimeoutTx = <span class="number">0</span>;								<span class="comment">// 能产生timeout的最小交易数</span></span><br><span class="line"><span class="keyword">uint64_t</span> m_maxNoTimeoutTx = <span class="number">0</span>;							<span class="comment">// 不产生timeout的最大交易数</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int64_t</span> m_timeoutCount = <span class="number">0</span>;									<span class="comment">// 记录有多少次timeout</span></span><br><span class="line"><span class="keyword">uint64_t</span> m_lastBlockNumber = <span class="number">0</span>;							<span class="comment">// 最后一个Block数</span></span><br><span class="line"><span class="keyword">bool</span> m_enableDynamicBlockSize = <span class="literal">true</span>;				<span class="comment">// 是否动态调整区块大小</span></span><br><span class="line"><span class="keyword">float</span> m_blockSizeIncreaseRatio = <span class="number">0.5</span>;				<span class="comment">// 区块大小增长率</span></span><br></pre></td></tr></table></figure>
+<h4><span id="1-构造函数">1. 构造函数</span></h4>
+<p>构造函数调用基类<code>Sealer</code> 的构造函数，并对PBFTSealer指向的PBFTEngine进行初始化。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 略去函数名和函数参数</span></span><br><span class="line">&#123;</span><br><span class="line">		<span class="comment">// 初始化指定engine</span></span><br><span class="line">		m_consensusEngine = <span class="built_in">std</span>::make_shared&lt;PBFTEngine&gt;(_service, _txPool, _blockChain, _blockSync, _blockVerifier, _protocolId, _baseDir, _key_pair, _sealerList);</span><br><span class="line">		m_pbftEngine = <span class="built_in">std</span>::dynamic_pointer_cast&lt;PBFTEngine&gt;(m_consensusEngine);</span><br><span class="line">    </span><br><span class="line">		<span class="comment">/// 绑定回调函数，当timeout的时候重置block</span></span><br><span class="line">		m_pbftEngine-&gt;onViewChange(boost::bind(&amp;PBFTSealer::resetBlockForViewChange, <span class="keyword">this</span>));</span><br><span class="line">  </span><br><span class="line">  	<span class="comment">/// 绑定回调函数，当下一个leader收到了prepare block时重置block</span></span><br><span class="line">		m_pbftEngine-&gt;onNotifyNextLeaderReset(</span><br><span class="line">				boost::bind(&amp;PBFTSealer::resetBlockForNextLeader, <span class="keyword">this</span>, _1));</span><br><span class="line">		</span><br><span class="line">  	<span class="comment">/// set thread name for PBFTSealer</span></span><br><span class="line">		<span class="built_in">std</span>::<span class="built_in">string</span> threadName = <span class="string">"PBFTSeal-"</span> + <span class="built_in">std</span>::to_string(m_pbftEngine-&gt;groupId());</span><br><span class="line">		setName(threadName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4><span id="2-重写继承成员函数">2. 重写继承成员函数</span></h4>
+<p>在这里对继承的<code>Sealer</code>成员函数进行了重写：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> override</span>&#123;</span><br><span class="line">  <span class="comment">// 判断是否使用区块大小动态调整</span></span><br><span class="line">  <span class="comment">// 启用Engine</span></span><br><span class="line">  <span class="comment">// 启用Sealer</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> override</span>&#123;</span><br><span class="line">  <span class="comment">// 关闭Sealer</span></span><br><span class="line">  <span class="comment">// 关闭Engine</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">shouldResetSealing</span><span class="params">()</span> override</span>&#123;</span><br><span class="line">  <span class="comment">// 只有leader需要重置sealing</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// 关键入口</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">handleBlock</span><span class="params">()</span> override</span>&#123;</span><br><span class="line">  <span class="comment">// 1. 判断是否打包过多交易了，是的话重置sealing，通知其他线程</span></span><br><span class="line">  <span class="comment">// 2. setBlock，填充区块头，计算默克尔树</span></span><br><span class="line">  <span class="comment">// 3. 调用Engine的generatePrepare方法，该方法即为PBFT中Pre-Prepare阶段</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">shouldSeal</span><span class="params">()</span> override</span>&#123;</span><br><span class="line">  <span class="comment">// 该节点是否能产生块</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">shouldHandleBlock</span><span class="params">()</span> override</span>&#123;</span><br><span class="line">  <span class="comment">// 只有leader节点可以产生最新的区块</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">reachBlockIntervalTime</span><span class="params">()</span> override</span>;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">canHandleBlockForNextLeader</span><span class="params">()</span> override</span>;</span><br></pre></td></tr></table></figure>
+<h4><span id="3-其他重要成员函数">3. 其他重要成员函数</span></h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 回调函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">resetBlockForViewChange</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="comment">/// view change时重置block</span></span><br><span class="line">  <span class="comment">// </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">resetBlockForNextLeader</span><span class="params">(dev::h256Hash <span class="keyword">const</span>&amp; filter)</span></span>&#123;</span><br><span class="line">  <span class="comment">/// 为下一个leader重置block</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="pbftengine">PBFTEngine</span></h3>
+<p>定义了<code>PBFTEngine</code>类，直接继承了共识模板 <code>ConsensusEngineBase</code> 类，增加了几个成员变量</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="built_in">std</span>::atomic&lt;VIEWTYPE&gt; m_view = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="built_in">std</span>::atomic&lt;VIEWTYPE&gt; m_toView = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> m_baseDir;</span><br><span class="line">    <span class="built_in">std</span>::<span class="keyword">atomic_bool</span> m_leaderFailed = &#123;<span class="literal">false</span>&#125;;</span><br><span class="line">    <span class="built_in">std</span>::<span class="keyword">atomic_bool</span> m_notifyNextLeaderSeal = &#123;<span class="literal">false</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 备份msg到数据库</span></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::db::LevelDB&gt; m_backupDB = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/// static vars</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> c_backupKeyCommitted;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> c_backupMsgDirName;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">unsigned</span> c_PopWaitSeconds = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 广播消息/请求缓存</span></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;PBFTBroadcastCache&gt; m_broadCastCache;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;PBFTReqCache&gt; m_reqCache;</span><br><span class="line">    TimeManager m_timeManager;</span><br><span class="line">    PBFTMsgQueue m_msgQueue;		<span class="comment">// 消息队列</span></span><br><span class="line">    <span class="keyword">mutable</span> Mutex m_mutex;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">// 线程信号</span></span><br><span class="line">    <span class="built_in">std</span>::condition_variable m_signalled;</span><br><span class="line">    Mutex x_signalled;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 回调函数</span></span><br><span class="line">    <span class="built_in">std</span>::function&lt;<span class="keyword">void</span>()&gt; m_onViewChange = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="built_in">std</span>::function&lt;<span class="keyword">void</span>(dev::h256Hash <span class="keyword">const</span>&amp; filter)&gt; m_onNotifyNextLeaderReset = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="built_in">std</span>::function&lt;<span class="keyword">void</span>(<span class="keyword">uint64_t</span> <span class="keyword">const</span>&amp; sealingTxNumber)&gt; m_onTimeout = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="built_in">std</span>::function&lt;<span class="keyword">void</span>(</span><br><span class="line">        <span class="keyword">uint64_t</span> <span class="keyword">const</span>&amp; blockNumber, <span class="keyword">uint64_t</span> <span class="keyword">const</span>&amp; sealingTxNumber, <span class="keyword">unsigned</span> <span class="keyword">const</span>&amp; changeCycle)&gt;</span><br><span class="line">        m_onCommitBlock = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/// for output time-out caused viewchange</span></span><br><span class="line">    <span class="comment">/// m_fastViewChange is false: output viewchangeWarning to indicate PBFT consensus timeout</span></span><br><span class="line">    <span class="built_in">std</span>::<span class="keyword">atomic_bool</span> m_fastViewChange = &#123;<span class="literal">false</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">uint8_t</span> maxTTL = MAXTTL;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/// map between nodeIdx to view</span></span><br><span class="line">    <span class="keyword">mutable</span> SharedMutex x_viewMap;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">map</span>&lt;IDXTYPE, VIEWTYPE&gt; m_viewMap;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">std</span>::atomic&lt;<span class="keyword">uint64_t</span>&gt; m_sealingNumber = &#123;<span class="number">0</span>&#125;;</span><br></pre></td></tr></table></figure>
+<h4><span id="1-构造函数">1. 构造函数</span></h4>
+<p>构造函数调用<code>ConsensusEngineBase</code> 的构造函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 略去函数名与参数部分</span></span><br><span class="line">&#123;</span><br><span class="line">		PBFTENGINE_LOG(INFO) &lt;&lt; LOG_DESC(<span class="string">"Register handler for PBFTEngine"</span>);</span><br><span class="line">  	<span class="comment">// p2p服务绑定回调函数 onRecvPBFTMessage </span></span><br><span class="line">		m_service-&gt;registerHandlerByProtoclID(</span><br><span class="line">				m_protocolId, boost::bind(&amp;PBFTEngine::onRecvPBFTMessage, <span class="keyword">this</span>, _1, _2, _3));</span><br><span class="line">  	<span class="comment">// 初始化广播/请求缓存</span></span><br><span class="line">		m_broadCastCache = <span class="built_in">std</span>::make_shared&lt;PBFTBroadcastCache&gt;();</span><br><span class="line">		m_reqCache = <span class="built_in">std</span>::make_shared&lt;PBFTReqCache&gt;();</span><br><span class="line">		<span class="comment">/// set thread name for PBFTEngine</span></span><br><span class="line">		<span class="built_in">std</span>::<span class="built_in">string</span> threadName = <span class="string">"PBFT-"</span> + <span class="built_in">std</span>::to_string(m_groupId);</span><br><span class="line">		setName(threadName);</span><br><span class="line">		<span class="comment">/// register checkSealerList to blockSync for check SealerList</span></span><br><span class="line">  	<span class="comment">// blockSync服务注册回调函数，在同步的时候进行验证</span></span><br><span class="line">		m_blockSync-&gt;registerConsensusVerifyHandler(boost::bind(&amp;PBFTEngine::checkBlock, <span class="keyword">this</span>, _1));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4><span id="2-其他重要函数">2. 其他重要函数</span></h4>
+<p>从<code>PBFTSealer</code>模块中看，<code>Sealer</code> 基类重写了<code>Worker</code> 的<code>doWork</code>方法，并对shouldHandle的Block进行了<code>handleBlock</code>，在 <code>handleBlock</code> 函数中调用了Engine模块的<code>generatePrepare</code>方法，发送Prepare消息。该方法只有leader节点才能调用。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// 生成一个PrepareReq消息块，广播出去</span></span><br><span class="line"><span class="keyword">bool</span> PBFTEngine::generatePrepare(Block <span class="keyword">const</span>&amp; block)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="function">Guard <span class="title">l</span><span class="params">(m_mutex)</span></span>;</span><br><span class="line">    m_notifyNextLeaderSeal = <span class="literal">false</span>;</span><br><span class="line">    <span class="function">PrepareReq <span class="title">prepare_req</span><span class="params">(block, m_keyPair, m_view, nodeIdx())</span></span>;</span><br><span class="line">    bytes prepare_data;</span><br><span class="line">    prepare_req.encode(prepare_data); <span class="comment">// 序列化成bytes</span></span><br><span class="line">  	</span><br><span class="line"></span><br><span class="line">  	<span class="comment">/// 广播Prepare请求</span></span><br><span class="line">    <span class="keyword">bool</span> succ = broadcastMsg(PrepareReqPacket, prepare_req.uniqueKey(), ref(prepare_data));</span><br><span class="line">    <span class="keyword">if</span> (succ)</span><br><span class="line">    &#123;</span><br><span class="line">      	<span class="comment">// 如果是空块，view change</span></span><br><span class="line">        <span class="keyword">if</span> (prepare_req.pBlock-&gt;getTransactionSize() == <span class="number">0</span> &amp;&amp; m_omitEmptyBlock)</span><br><span class="line">        &#123;</span><br><span class="line">            m_leaderFailed = <span class="literal">true</span>;</span><br><span class="line">            changeViewForFastViewChange();</span><br><span class="line">            m_timeManager.m_changeCycle = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      	<span class="comment">// 非空块，leader处理Prepare消息</span></span><br><span class="line">        handlePrepareMsg(prepare_req);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/// reset the block according to broadcast result</span></span><br><span class="line">    PBFTENGINE_LOG(INFO) &lt;&lt; LOG_DESC(<span class="string">"generateLocalPrepare"</span>)</span><br><span class="line">                      &lt;&lt; LOG_KV(<span class="string">"hash"</span>, prepare_req.block_hash.abridged())</span><br><span class="line">                      &lt;&lt; LOG_KV(<span class="string">"H"</span>, prepare_req.height) &lt;&lt; LOG_KV(<span class="string">"nodeIdx"</span>, nodeIdx())</span><br><span class="line">                      &lt;&lt; LOG_KV(<span class="string">"myNode"</span>, m_keyPair.pub().abridged());</span><br><span class="line">    m_signalled.notify_all();</span><br><span class="line">    <span class="keyword">return</span> succ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5><span id="持续监听消息队列">持续监听消息队列</span></h5>
+<p>leader广播出Prepare消息之后，其他节点进行消息接收，通过<code>PBFTEngine::workLoop</code> 循环从消息队列<code>m_msgQueue</code>接收、处理消息，<code>m_msgQueue</code> 消息队列在PBFTEngine构造函数初始化的时候p2p服务绑定的回调函数<code>PBFTEngine::onRecvPBFTMessage</code> 进行push：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// workLoop是重写的Worker类的workLoop方法</span></span><br><span class="line"><span class="keyword">void</span> PBFTEngine::workLoop()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">while</span> (isWorking())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">          	<span class="comment">// 从m_msgQueue消息队列取</span></span><br><span class="line">            <span class="built_in">std</span>::pair&lt;<span class="keyword">bool</span>, PBFTMsgPacket&gt; ret = m_msgQueue.tryPop(c_PopWaitSeconds);</span><br><span class="line">            <span class="keyword">if</span> (ret.first)</span><br><span class="line">            &#123;</span><br><span class="line">                PBFTENGINE_LOG(TRACE)</span><br><span class="line">               &lt;&lt; LOG_DESC(<span class="string">"workLoop: handleMsg"</span>)</span><br><span class="line">               &lt;&lt; LOG_KV(<span class="string">"type"</span>, <span class="built_in">std</span>::to_string(ret.second.packet_id))</span><br><span class="line">               &lt;&lt; LOG_KV(<span class="string">"fromIdx"</span>, ret.second.node_idx) &lt;&lt; LOG_KV(<span class="string">"nodeIdx"</span>, nodeIdx())</span><br><span class="line">               &lt;&lt; LOG_KV(<span class="string">"myNode"</span>, m_keyPair.pub().abridged());</span><br><span class="line">              	<span class="comment">/// 对接收到的消息进行处理</span></span><br><span class="line">                handleMsg(ret.second);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">/// to avoid of cpu problem</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (m_reqCache-&gt;futurePrepareCacheSize() == <span class="number">0</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">std</span>::unique_lock&lt;<span class="built_in">std</span>::mutex&gt; l(x_signalled);</span><br><span class="line">                m_signalled.wait_for(l, <span class="built_in">std</span>::chrono::milliseconds(<span class="number">5</span>));</span><br><span class="line">            &#125;</span><br><span class="line">          	<span class="comment">// 只要node是sealer</span></span><br><span class="line">            <span class="keyword">if</span> (nodeIdx() != MAXIDX)</span><br><span class="line">            &#123;</span><br><span class="line">              	<span class="comment">// 检查是否timeout，如果timeout代表着leader宕机/被控制</span></span><br><span class="line">              	<span class="comment">// 需要view change</span></span><br><span class="line">                checkTimeout();</span><br><span class="line">                handleFutureBlock();</span><br><span class="line">              	<span class="comment">// 清除reqcache缓存</span></span><br><span class="line">                collectGarbage();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (<span class="built_in">std</span>::exception&amp; _e)</span><br><span class="line">        &#123;</span><br><span class="line">            LOG(ERROR) &lt;&lt; _e.what();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5><span id="handlemsg判断请求类型">handleMsg判断请求类型</span></h5>
+<p>在以上<code>workLoop</code>可以看出，节点循环对消息使用<code>handleMsg</code>方法进行处理：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> PBFTEngine::handleMsg(PBFTMsgPacket <span class="keyword">const</span>&amp; pbftMsg)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="function">Guard <span class="title">l</span><span class="params">(m_mutex)</span></span>;</span><br><span class="line">    PBFTMsg pbft_msg;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> key;</span><br><span class="line">    <span class="keyword">bool</span> succ = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">switch</span> (pbftMsg.packet_id)</span><br><span class="line">    &#123;</span><br><span class="line">    <span class="keyword">case</span> PrepareReqPacket:	<span class="comment">// Prepare消息</span></span><br><span class="line">    &#123;</span><br><span class="line">        PrepareReq prepare_req;</span><br><span class="line">        succ = handlePrepareMsg(prepare_req, pbftMsg);</span><br><span class="line">        key = prepare_req.uniqueKey();	<span class="comment">// 返回签名</span></span><br><span class="line">        pbft_msg = prepare_req;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> SignReqPacket:</span><br><span class="line">    &#123;</span><br><span class="line">        succ = handleSignMsg(req, pbftMsg);</span><br><span class="line">      	<span class="comment">// 其余同上</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> CommitReqPacket:</span><br><span class="line">    &#123;</span><br><span class="line">        succ = handleCommitMsg(req, pbftMsg);</span><br><span class="line">      	<span class="comment">// 其余同上</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> ViewChangeReqPacket:</span><br><span class="line">    &#123;</span><br><span class="line">        succ = handleViewChangeMsg(req, pbftMsg);</span><br><span class="line">      	<span class="comment">// 其余同上</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">    &#123;</span><br><span class="line">       <span class="comment">// 略：error</span></span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pbftMsg.ttl == <span class="number">1</span>)&#123;	<span class="keyword">return</span>; &#125;</span><br><span class="line">    <span class="keyword">bool</span> height_flag = (pbft_msg.height &gt; m_highestBlock.number()) ||</span><br><span class="line">                       (m_highestBlock.number() - pbft_msg.height &lt; <span class="number">10</span>);</span><br><span class="line">    <span class="keyword">if</span> (succ &amp;&amp; key.size() &gt; <span class="number">0</span> &amp;&amp; height_flag)	<span class="comment">// 消息handle成功，且高度一致</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">unordered_set</span>&lt;h512&gt; filter;</span><br><span class="line">        filter.insert(pbftMsg.node_id);</span><br><span class="line">        <span class="comment">/// get the origin gen node id of the request</span></span><br><span class="line">        h512 gen_node_id = getSealerByIndex(pbft_msg.idx);</span><br><span class="line">        <span class="keyword">if</span> (gen_node_id != h512())</span><br><span class="line">        &#123;</span><br><span class="line">            filter.insert(gen_node_id);</span><br><span class="line">        &#125;</span><br><span class="line">      	<span class="comment">// TTL-1，再次发送</span></span><br><span class="line">        <span class="keyword">unsigned</span> current_ttl = pbftMsg.ttl - <span class="number">1</span>;</span><br><span class="line">        broadcastMsg(pbftMsg.packet_id, key, ref(pbftMsg.data), filter, current_ttl);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>handleMsg</code>执行流程图如下所示：</p>
+<div id="flowchart-0" class="flow-chart">
+
+</div>
+<p>以下将分别讲述 <code>handlePrepareMsg</code>、<code>handleSignMsg</code>、<code>handleCommitMsg</code>、<code>handleViewChangeMsg</code>四个方法：</p>
+<h5><span id="处理prepare请求">处理Prepare请求</span></h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> PBFTEngine::handlePrepareMsg(PrepareReq <span class="keyword">const</span>&amp; prepareReq, <span class="built_in">std</span>::<span class="built_in">string</span> <span class="keyword">const</span>&amp; endpoint)</span><br><span class="line">&#123;</span><br><span class="line">    Timer t;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">ostringstream</span> oss;</span><br><span class="line">    <span class="comment">/// oss 记录log，省略</span></span><br><span class="line">    <span class="comment">/// 检查Prepare Request是否有效</span></span><br><span class="line">    <span class="keyword">auto</span> valid_ret = isValidPrepare(prepareReq, oss);</span><br><span class="line">    <span class="keyword">if</span> (valid_ret == CheckResult::INVALID)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/// 更新当前view</span></span><br><span class="line">    updateViewMap(prepareReq.idx, prepareReq.view);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (valid_ret == CheckResult::FUTURE)	<span class="comment">// 若是未来的prepare请求，为了时间顺序先不处理</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/// 将当前prepareReq缓存到reqCache</span></span><br><span class="line">    m_reqCache-&gt;addRawPrepare(prepareReq);</span><br><span class="line">		<span class="comment">// 执行块内请求</span></span><br><span class="line">    Sealing workingSealing;</span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        execBlock(workingSealing, prepareReq, oss);</span><br><span class="line">        <span class="comment">// old block (has already executed correctly by block sync)</span></span><br><span class="line">        <span class="keyword">if</span> (workingSealing.p_execContext == <span class="literal">nullptr</span> &amp;&amp;</span><br><span class="line">            workingSealing.block.getTransactionSize() &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (<span class="built_in">std</span>::exception&amp; e)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 块执行错误，省略</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/// 造成空块是否需要删除</span></span><br><span class="line">    <span class="keyword">if</span> (needOmit(workingSealing))</span><br><span class="line">    &#123;</span><br><span class="line">        changeViewForFastViewChange();</span><br><span class="line">        m_timeManager.m_changeCycle = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  	<span class="comment">/// 使用block执行结果更新请求，对请求进行签名，重新生成一个PrepareReq</span></span><br><span class="line">    <span class="function">PrepareReq <span class="title">sign_prepare</span><span class="params">(prepareReq, workingSealing, m_keyPair)</span></span>;</span><br><span class="line">    m_reqCache-&gt;addPrepareReq(sign_prepare);</span><br><span class="line">    <span class="comment">// log省略</span></span><br><span class="line"></span><br><span class="line">  	<span class="comment">// 使用刚刚重新生成的PrepareReq，生成SignReq，广播出去，并添加到signCache</span></span><br><span class="line">    <span class="keyword">if</span> (!broadcastSignReq(sign_prepare))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 广播失败，log省略</span></span><br><span class="line">    &#125;</span><br><span class="line">  	<span class="comment">// 从signCache检查已签名的signReq是否达到2/3，如果达到，可以进行commit</span></span><br><span class="line">    checkAndCommit();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>handlePrepareMsg</code>方法的处理流程如下图所示：</p>
+<div id="flowchart-1" class="flow-chart">
+
+</div>
+<h5><span id="处理sign请求">处理Sign请求</span></h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> PBFTEngine::handleSignMsg(SignReq&amp; sign_req, PBFTMsgPacket <span class="keyword">const</span>&amp; pbftMsg)</span><br><span class="line">&#123;</span><br><span class="line">    Timer t;</span><br><span class="line">    <span class="keyword">bool</span> valid = decodeToRequests(sign_req, ref(pbftMsg.data));</span><br><span class="line">    <span class="keyword">if</span> (!valid)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">ostringstream</span> oss;</span><br><span class="line">    <span class="comment">// oss log 省略</span></span><br><span class="line">  	<span class="comment">// 判断是否是有效的SignReq</span></span><br><span class="line">    <span class="keyword">auto</span> check_ret = isValidSignReq(sign_req, oss);</span><br><span class="line">    <span class="keyword">if</span> (check_ret == CheckResult::INVALID)&#123;	<span class="keyword">return</span> <span class="literal">false</span>;	&#125;</span><br><span class="line">  	<span class="comment">// 更新当前view</span></span><br><span class="line">    updateViewMap(sign_req.idx, sign_req.view);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (check_ret == CheckResult::FUTURE)&#123;	<span class="keyword">return</span> <span class="literal">true</span>;	&#125;</span><br><span class="line">  	<span class="comment">// 添加进SignCache</span></span><br><span class="line">    m_reqCache-&gt;addSignReq(sign_req);</span><br><span class="line">		</span><br><span class="line">  	<span class="comment">// 检查是否达到2/3</span></span><br><span class="line">    checkAndCommit();</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>handleSignMsg</code> 方法执行流程如下所示</p>
+<div id="flowchart-2" class="flow-chart">
+
+</div>
+<h5><span id="处理commit请求">处理Commit请求</span></h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> PBFTEngine::handleCommitMsg(CommitReq&amp; commit_req, PBFTMsgPacket <span class="keyword">const</span>&amp; pbftMsg)</span><br><span class="line">&#123;</span><br><span class="line">    Timer t;</span><br><span class="line">    <span class="keyword">bool</span> valid = decodeToRequests(commit_req, ref(pbftMsg.data));</span><br><span class="line">    <span class="keyword">if</span> (!valid)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">ostringstream</span> oss;</span><br><span class="line">    <span class="comment">/// oss log 省略</span></span><br><span class="line">  	<span class="comment">// 判断是否是有效的commit方法</span></span><br><span class="line">    <span class="keyword">auto</span> valid_ret = isValidCommitReq(commit_req, oss);</span><br><span class="line">    <span class="keyword">if</span> (valid_ret == CheckResult::INVALID)&#123;	<span class="keyword">return</span> <span class="literal">false</span>;	&#125;</span><br><span class="line">    <span class="comment">/// 更新当前view</span></span><br><span class="line">    updateViewMap(commit_req.idx, commit_req.view);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (valid_ret == CheckResult::FUTURE)&#123;	<span class="keyword">return</span> <span class="literal">true</span>;	&#125;</span><br><span class="line">  	<span class="comment">// 添加进commitCache</span></span><br><span class="line">    m_reqCache-&gt;addCommitReq(commit_req);</span><br><span class="line">    <span class="comment">// 检查是否达到2/3</span></span><br><span class="line">  	checkAndSave();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>handleCommitMsg</code>方法处理流程如下图所示：</p>
+<div id="flowchart-3" class="flow-chart">
+
+</div>
+<h5><span id="处理viewchange请求">处理ViewChange请求</span></h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> PBFTEngine::handleViewChangeMsg(ViewChangeReq&amp; viewChange_req, PBFTMsgPacket <span class="keyword">const</span>&amp; pbftMsg)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">bool</span> valid = decodeToRequests(viewChange_req, ref(pbftMsg.data));</span><br><span class="line">    <span class="keyword">if</span> (!valid)&#123;	<span class="keyword">return</span> <span class="literal">false</span>;	&#125;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">ostringstream</span> oss;</span><br><span class="line">    <span class="comment">/// oss log 省略</span></span><br><span class="line">  	<span class="comment">// 判断view change请求的有效性</span></span><br><span class="line">    valid = isValidViewChangeReq(viewChange_req, pbftMsg.node_idx, oss);</span><br><span class="line">    <span class="keyword">if</span> (!valid)&#123;	<span class="keyword">return</span> <span class="literal">false</span>;	&#125;</span><br><span class="line">		<span class="comment">// 添加到viewchangeCache</span></span><br><span class="line">    m_reqCache-&gt;addViewChangeReq(viewChange_req);</span><br><span class="line">  	<span class="comment">// 如果change的就是下一个view</span></span><br><span class="line">    <span class="keyword">if</span> (viewChange_req.view == m_toView)</span><br><span class="line">    &#123;</span><br><span class="line">      	<span class="comment">// 检查是否达到2/3个viewchange</span></span><br><span class="line">        checkAndChangeView();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        VIEWTYPE min_view = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">bool</span> should_trigger = m_reqCache-&gt;canTriggerViewChange(</span><br><span class="line">            min_view, m_f, m_toView, m_highestBlock, m_consensusBlockNumber);</span><br><span class="line">        <span class="keyword">if</span> (should_trigger)</span><br><span class="line">        &#123;</span><br><span class="line">            m_toView = min_view - <span class="number">1</span>;</span><br><span class="line">            changeViewForFastViewChange();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>handleViewChangeMsg</code> 处理流程如下图所示：</p>
+<div id="flowchart-4" class="flow-chart">
+
+</div>
+<h5><span id="checkandcommit">checkAndCommit</span></h5>
+<p><code>checkAndCommit</code>方法会在<code>handlePrepareMsg</code>和<code>handleSignMsg</code> 两个方法中调用，用于确定是否达到2/3，是否可以进行下PREPARE阶段的消息传递。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> PBFTEngine::checkAndCommit()</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">size_t</span> sign_size = m_reqCache-&gt;getSigCacheSize(m_reqCache-&gt;prepareCache().block_hash);</span><br><span class="line">  	<span class="comment">// 必须等于，否则会出现多次验证情况</span></span><br><span class="line">    <span class="keyword">if</span> (sign_size == minValidNodes())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// log 省略</span></span><br><span class="line">        <span class="keyword">if</span> (m_reqCache-&gt;prepareCache().view != m_view)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// view不相等，错误退出，log省略</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      	<span class="comment">// 更新当前commitedPrepare消息</span></span><br><span class="line">        m_reqCache-&gt;updateCommittedPrepare();</span><br><span class="line">        <span class="comment">// 备份commited消息到数据库 log省略</span></span><br><span class="line">        backupMsg(c_backupKeyCommitted, m_reqCache-&gt;committedPrepareCache());</span><br><span class="line">        <span class="comment">// 广播Commit消息，在PBFT流程中，相当于广播PREPARE/COMMIT阶段消息</span></span><br><span class="line">        <span class="keyword">if</span> (!broadcastCommitReq(m_reqCache-&gt;prepareCache()))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// log 广播失败</span></span><br><span class="line">        &#125;</span><br><span class="line">        m_timeManager.m_lastSignTime = utcTime();</span><br><span class="line">      	<span class="comment">// 查看该消息是否到达2/3，是否可以进一步到达COMMIT结束阶段</span></span><br><span class="line">        checkAndSave();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5><span id="checkandsave">checkAndSave</span></h5>
+<p><code>checkAndSave</code>方法会在<code>handleCommitMsg</code>方法中调用，用于确定 SignReq 和 CommitReq 这两个请求都到达2/3，且view和高度height都正确，那么就可以加入到区块中，进行落盘。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> PBFTEngine::checkAndSave()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">auto</span> start_commit_time = utcTime();</span><br><span class="line">    <span class="keyword">auto</span> record_time = utcTime();</span><br><span class="line">    <span class="keyword">size_t</span> sign_size = m_reqCache-&gt;getSigCacheSize(prepareCache().block_hash);</span><br><span class="line">    <span class="keyword">size_t</span> commit_size = m_reqCache-&gt;getCommitCacheSize(prepareCache().block_hash);</span><br><span class="line">  	<span class="comment">//// signReq 和 commitReq 都满足 &gt;= 2/3</span></span><br><span class="line">    <span class="keyword">if</span> (sign_size &gt;= minValidNodes() &amp;&amp; commit_size &gt;= minValidNodes())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/// 得到足够的票数 log 省略</span></span><br><span class="line">        <span class="keyword">if</span> (m_reqCache-&gt;prepareCache().view != m_view)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// view是错误的，log错误返回</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">/// add sign-list into the block header</span></span><br><span class="line">        <span class="keyword">if</span> (m_reqCache-&gt;prepareCache().height &gt; m_highestBlock.number())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">/// Block block(m_reqCache-&gt;prepareCache().block);</span></span><br><span class="line">           <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;dev::eth::Block&gt; p_block = m_reqCache-&gt;prepareCache().pBlock;</span><br><span class="line">           </span><br><span class="line">          <span class="comment">/// 生成一个签名表&lt;签名人idx，签名&gt;，放入p_block</span></span><br><span class="line">           m_reqCache-&gt;generateAndSetSigList(*p_block, minValidNodes());</span><br><span class="line">           <span class="keyword">auto</span> genSig_time_cost = utcTime() - record_time;</span><br><span class="line">           record_time = utcTime();</span><br><span class="line">            <span class="comment">/// 调用blockchain模块commit该块</span></span><br><span class="line">          	CommitResult ret = m_blockChain-&gt;commitBlock((*p_block),</span><br><span class="line">                <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;ExecutiveContext&gt;(m_reqCache-&gt;prepareCache().p_execContext));</span><br><span class="line">            <span class="keyword">auto</span> commitBlock_time_cost = utcTime() - record_time;</span><br><span class="line">            record_time = utcTime();</span><br><span class="line"></span><br><span class="line">            <span class="comment">/// 如果成功</span></span><br><span class="line">            <span class="keyword">if</span> (ret == CommitResult::OK)</span><br><span class="line">            &#123;</span><br><span class="line">              	<span class="comment">// 从交易池删除已经处理的交易</span></span><br><span class="line">                dropHandledTransactions(*p_block);</span><br><span class="line">                <span class="keyword">auto</span> dropTxs_time_cost = utcTime() - record_time;</span><br><span class="line">                record_time = utcTime();</span><br><span class="line">              	<span class="comment">// 同步模块进行同步</span></span><br><span class="line">                m_blockSync-&gt;noteSealingBlockNumber(m_reqCache-&gt;prepareCache().height);</span><br><span class="line">                <span class="keyword">auto</span> noteSealing_time_cost = utcTime() - record_time;</span><br><span class="line">                <span class="comment">/// log 共识成功，省略</span></span><br><span class="line">              	<span class="comment">// 删除cache</span></span><br><span class="line">                m_reqCache-&gt;delCache(m_reqCache-&gt;prepareCache().block_hash);</span><br><span class="line">                m_reqCache-&gt;removeInvalidFutureCache(m_highestBlock);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">/// log共识失败</span></span><br><span class="line">                <span class="comment">/// 同步模块进行同步，继续进行sealing</span></span><br><span class="line">                m_blockSync-&gt;noteSealingBlockNumber(m_blockChain-&gt;number());</span><br><span class="line">                m_txPool-&gt;handleBadBlock(*p_block);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// log 该块已经存在，共识错误</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5><span id="checkandchangeview">checkAndChangeView</span></h5>
+<p><code>checkAndChangeView</code>在共识过程中出现leader timeout <code>checkTimeout</code>或主动进行view change <code>handleViewChangeMsg</code>时进行调用。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> PBFTEngine::checkAndChangeView()</span><br><span class="line">&#123;</span><br><span class="line">    IDXTYPE count = m_reqCache-&gt;getViewChangeSize(m_toView);</span><br><span class="line">  	<span class="comment">// 判断是否收到2/3的viewChangeReq</span></span><br><span class="line">    <span class="keyword">if</span> (count &gt;= minValidNodes() - <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/// reach to consensue dure to fast view change</span></span><br><span class="line">        <span class="keyword">if</span> (m_timeManager.m_lastSignTime == <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            m_fastViewChange = <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">auto</span> orgChangeCycle = m_timeManager.m_changeCycle;</span><br><span class="line"></span><br><span class="line">      	<span class="comment">/// 更快的节点有可能已经到了下一轮</span></span><br><span class="line">        <span class="keyword">if</span> (m_toView &gt; m_view + <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            m_timeManager.m_changeCycle = <span class="number">1</span>;</span><br><span class="line">            PBFTENGINE_LOG(INFO) &lt;&lt; LOG_DESC(<span class="string">"checkAndChangeView, update m_changeCycle to 1"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">/// log 达到共识</span></span><br><span class="line">				<span class="comment">// view=toView, 清除cache</span></span><br><span class="line">        m_leaderFailed = <span class="literal">false</span>;</span><br><span class="line">        m_timeManager.m_lastConsensusTime = utcTime();</span><br><span class="line">        m_view = m_toView.load();</span><br><span class="line">        m_notifyNextLeaderSeal = <span class="literal">false</span>;</span><br><span class="line">        m_reqCache-&gt;triggerViewChange(m_view);</span><br><span class="line">        m_blockSync-&gt;noteSealingBlockNumber(m_blockChain-&gt;number());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+<textarea id="flowchart-0-code" style="display: none">st=>start: 开始
+e=>end: 结束
+revPBFT=>parallel: 获取PBFT请求类型
+op1=>operation: Prepare请求
+op2=>operation: Sign请求
+op3=>operation: Commit请求
+op4=>operation: viewchange请求
+op5=>operation: handlePrepareMsg
+op6=>operation: handleSignMsg
+op7=>operation: handleCommitMsg
+op8=>operation: handleViewChangeMsg
+op9=>operation: broadcastMsg
+cond1=>condition: 是否空块
+或timeout
+
+st->revPBFT
+revPBFT(path1,left)->op1->op5->cond1
+revPBFT(path2,bottom)->op2->op6->cond1
+revPBFT(path3,right)->op3->op7->cond1
+cond1(yes)->op4->op8->op9->e
+cond1(no)->op9->e</textarea><textarea id="flowchart-0-options" style="display: none">{"theme":"simple","scale":1,"line-width":2,"line-length":50,"text-margin":10,"font-size":12}</textarea><script>  var code = document.getElementById("flowchart-0-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-0-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-0", options);</script>
+<textarea id="flowchart-1-code" style="display: none">st=>start: 开始
+e=>end: 结束
+cond1=>condition: Prepare
+请求是否有效
+op1=>operation: addRawPrepare
+缓存Prepare请求
+cond2=>condition: Prepare内
+区块是空块?
+op2=>operation: view change
+op3=>operation: execBlock
+执行Prepare内区块
+op4=>operation: generateSignPacket
+产生签名请求
+op5=>operation: addPrepareCache
+缓存执行后区块
+op6=>operation: broadcacstSignReq
+广播签名请求
+op7=>operation: 继续获取请求
+op8=>operation: checkAndCommit
+查看SignReq是否达到2/3
+
+st->cond1
+cond1(yes)->op1
+cond1(no)->op7->e
+op1->cond2
+cond2(no)->op2->e
+cond2(yes)->op3->op4->op5->op6->op8->e</textarea><textarea id="flowchart-1-options" style="display: none">{"theme":"simple","scale":1,"line-width":2,"line-length":50,"text-margin":10,"font-size":12}</textarea><script>  var code = document.getElementById("flowchart-1-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-1-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-1", options);</script>
+<textarea id="flowchart-2-code" style="display: none">st=>start: 开始
+e=>end: 结束
+cond1=>condition: isSignReqValid
+签名请求是否有效
+op1=>operation: addSignReq缓存
+收到的签名请求
+cond2=>condition: checkSignEnough签名
+请求是否达到2*f+1?
+op2=>operation: updateLocalPrepare
+备份Prepare请求
+op3=>operation: broadcastCommitReq
+广播Commit请求, 表明节点已达到可提交区块状态
+op7=>operation: 继续获取请求
+
+st->cond1
+cond1(yes)->op1
+cond1(no)->op7->e
+op1->cond2
+cond2(no)->op7->e
+cond2(yes)->op2->op3->e</textarea><textarea id="flowchart-2-options" style="display: none">{"theme":"simple","scale":1,"line-width":2,"line-length":50,"text-margin":10,"font-size":12}</textarea><script>  var code = document.getElementById("flowchart-2-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-2-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-2", options);</script>
+<textarea id="flowchart-3-code" style="display: none">st=>start: 开始
+e=>end: 结束
+cond1=>condition: isCommitReqValid 
+Commit请求是否有效?
+op1=>operation: addCommitReq 
+缓存Commit请求
+cond2=>condition: checkCommitEnough 
+Commit请求是否达到2*f+1?
+op2=>operation: CommitBlock
+将缓存的执行后区块提交到DB
+op7=>operation: 继续获取请求
+
+st->cond1
+cond1(yes)->op1
+cond1(no)->op7->e
+op1->cond2
+cond2(no)->op7->e
+cond2(yes)->op2->e</textarea><textarea id="flowchart-3-options" style="display: none">{"theme":"simple","scale":1,"line-width":2,"line-length":50,"text-margin":10,"font-size":12}</textarea><script>  var code = document.getElementById("flowchart-3-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-3-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-3", options);</script>
+<textarea id="flowchart-4-code" style="display: none">st=>start: 开始
+e=>end: 结束
+cond1=>condition: isViewChangeReqValid 
+ViewChange请求是否有效?
+op1=>operation: addViewChangeReq 
+缓存ViewChange请求
+cond2=>condition: 请求的view是否
+跟上了当前网络
+cond3=>condition: checkAndChange
+是否达到了2/3
+op2=>operation: catchupView
+追赶当前网络view
+op3=>operation: view=toView
+清除缓存
+op7=>operation: 继续获取请求
+
+st->cond1
+cond1(yes)->op1
+cond1(no)->e
+op1->cond2
+cond2(yes)->cond3
+cond2(no)->op2->e
+cond3(yes)->op3->e
+cond3(no)->e</textarea><textarea id="flowchart-4-options" style="display: none">{"theme":"simple","scale":1,"line-width":2,"line-length":50,"text-margin":10,"font-size":12}</textarea><script>  var code = document.getElementById("flowchart-4-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-4-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-4", options);</script>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Buy me coffee☕️.</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/index/wechatpay.jpg" alt="Kyon Kwok 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/index/alipay.jpg" alt="Kyon Kwok 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Kyon Kwok
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://kyonray.com/2019/12/02/FISCO-BCOS-source-code-reading-libconsensus/" title="FISCO-BCOS 源代码研读(一) —— 共识算法模块">https://kyonray.com/2019/12/02/FISCO-BCOS-source-code-reading-libconsensus/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/29/research-in-HotStuff/" rel="next" title="HotStuff:BFT Consensus in the Lens of Blockchain">
+                <i class="fa fa-chevron-left"></i> HotStuff:BFT Consensus in the Lens of Blockchain
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://img.inmywordz.com/uploads/20170527171017_34.png" alt="Kyon Kwok">
+            
+              <p class="site-author-name" itemprop="name">Kyon Kwok</p>
+              <p class="site-description motion-element" itemprop="description">博学之，慎思之，明辨之，笃行之。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kyonRay" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/yoyokyon" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:rui.kwok@outlook.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/kyon_guo" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i></a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.instagram.com/kyonguo" target="_blank" title="Instagram">
+                      
+                        <i class="fa fa-fw fa-instagram"></i></a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">一、版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">2.</span> <span class="nav-text">二、共识模块框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text">三、依赖模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">4.</span> <span class="nav-text">四、共识算法模块文件结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">4.1.</span> <span class="nav-text">ConsensusInterface</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">4.2.</span> <span class="nav-text">Common</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">4.3.</span> <span class="nav-text">ConsensusEngineBase</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.3.1.</span> <span class="nav-text">1. 构造函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.3.2.</span> <span class="nav-text">2. 继承重写函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.3.3.</span> <span class="nav-text">3. 其他成员函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.3.4.</span> <span class="nav-text">4. protect属性成员</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">4.4.</span> <span class="nav-text">Sealer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.4.1.</span> <span class="nav-text">1. 构造函数/析构函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.4.2.</span> <span class="nav-text">2. 成员函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.4.3.</span> <span class="nav-text">3. protect属性成员</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">5.</span> <span class="nav-text">五、BCOS中PBFT模块是如何使用这些接口的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">5.1.</span> <span class="nav-text">Common</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">5.2.</span> <span class="nav-text">PBFTMsgCache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">5.3.</span> <span class="nav-text">PBFTReqCache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">5.4.</span> <span class="nav-text">TimeManager</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">5.5.</span> <span class="nav-text">PBFTSealer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">5.5.1.</span> <span class="nav-text">1. 构造函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">5.5.2.</span> <span class="nav-text">2. 重写继承成员函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">5.5.3.</span> <span class="nav-text">3. 其他重要成员函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">5.6.</span> <span class="nav-text">PBFTEngine</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">5.6.1.</span> <span class="nav-text">1. 构造函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">5.6.2.</span> <span class="nav-text">2. 其他重要函数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">5.6.2.1.</span> <span class="nav-text">持续监听消息队列</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">5.6.2.2.</span> <span class="nav-text">handleMsg判断请求类型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">5.6.2.3.</span> <span class="nav-text">处理Prepare请求</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">5.6.2.4.</span> <span class="nav-text">处理Sign请求</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">5.6.2.5.</span> <span class="nav-text">处理Commit请求</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">5.6.2.6.</span> <span class="nav-text">处理ViewChange请求</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">5.6.2.7.</span> <span class="nav-text">checkAndCommit</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">5.6.2.8.</span> <span class="nav-text">checkAndSave</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">5.6.2.9.</span> <span class="nav-text">checkAndChangeView</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+<span class="post-meta-divider">|</span>
+  <span class="with-love">
+    <i class="fa fa-bitcoin"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kyon Kwok</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">48.5k</span>
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_uv">Total visitor: <span id="busuanzi_value_site_uv"></span></span>
+</div>
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: 'Rc8TVyTv0GxKNDMlLF6hm0VL-gzGzoHsz',
+        appKey: 'fCmBbPUmqLfv5wIDri6kutnJ',
+        placeholder: '欢迎吐槽留言~ 可留下邮箱方便交流',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("Rc8TVyTv0GxKNDMlLF6hm0VL-gzGzoHsz", "fCmBbPUmqLfv5wIDri6kutnJ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
