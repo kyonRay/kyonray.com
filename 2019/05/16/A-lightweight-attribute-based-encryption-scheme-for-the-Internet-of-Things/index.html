@@ -441,9 +441,9 @@
       
 
       
-        <h2 id="论文阅读a-lightweight-attribute-based-encryption-scheme-for-the-internet-of-things">论文阅读：A lightweight attribute-based encryption scheme for the Internet of Things</h2>
+        <h2><span id="论文阅读a-lightweight-attribute-based-encryption-scheme-for-the-internet-of-things">论文阅读：A lightweight attribute-based encryption scheme for the Internet of Things</span></h2>
 <p>文如其名, 比较lightweight, 才9页(笑. 由北京科技大学的博士与中科院博士联手出品.</p>
-<h3 id="abstract">ABSTRACT</h3>
+<h3><span id="abstract">ABSTRACT</span></h3>
 <blockquote>
 <p>In this paper, a lightweight no-pairing ABE scheme based on elliptic curve cryptography (ECC) is proposed to address the security and privacy issues in IoT. The security of the proposed scheme is based on the ECDH assumption instead of bilinear Diffie–Hellman assumption, and is proved in the attribute based selective-set model. By uniformly determining the criteria and defining the metrics for measuring the communication overhead and computational overhead, the cMomparison analyses with the existing ABE schemes are made in detail. The results show that the proposed scheme has improved execution efficiency and low communication costs. In addition, the limitations and the improving directions of it are also discussed in detail.</p>
 <p>We propose a no-pairing ECC-Based ABE scheme to deal with the data security and privacy issues in IoT. Since it replaces the expensive bilinear pairing operation with <strong>point scalar multiplication on elliptic curve</strong>, it can meet the lightweight requirement and is suitable for IoT.</p>
@@ -452,18 +452,18 @@
 <p>用在椭圆曲线上的点标量乘法代替代价高的双线性配对,可以减少计算开销和通信开销,更适用于IoT设备.</p>
 <p>ps:Diffie-Hellman密钥交换(<a href="https://blog.csdn.net/lee244868149/article/details/51790397" target="_blank" rel="noopener">csdn</a>和<a href="https://www.zhihu.com/question/29383090" target="_blank" rel="noopener">知乎</a>)</p>
 <a id="more"></a>
-<h3 id="预备知识">预备知识</h3>
-<h4 id="ecc基础">1.ECC基础</h4>
+<h3><span id="预备知识">预备知识</span></h3>
+<h4><span id="1ecc基础">1.ECC基础</span></h4>
 <p>ECC首先是个公钥加密的算法,生成一对公私钥,私钥用来加密,公钥进行解密与验证.</p>
 <p>私钥是一个数字(非常大),通常是随机选出来的. 通过椭圆曲线乘法生成一个公钥. 比特币是在公钥的基础上继续进行哈希函数生成比特币地址.</p>
-<h5 id="私钥">私钥</h5>
+<h5><span id="私钥">私钥</span></h5>
 <p>为了生成私钥,需要挑选一个足够安全的熵源以保证随机性.从编程的角度来看,一般是通过在一个密码学安全的随机源中 去除一长串随机字节,对其进行SHA256哈希算法进行运算,就可以产生一个256位二进制数,一般是以16进制表示.</p>
 <p>有如下随机生成的秘药,以十六进制格式表示:</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1E99423A4ED27608A15A2616A2B0E9E52CED330AC530EDCC32C8FFC6A526AEDD</span><br></pre></td></tr></table></figure>
 <p>比特币私钥空间大小是2<sup>256,用十进制表示的话,大约是10</sup>77. 目前可见宇宙被估计只含有10^80个原子.</p>
-<h5 id="公钥">公钥</h5>
+<h5><span id="公钥">公钥</span></h5>
 <p>公钥K是通过使用私钥k进行椭圆曲线乘法运算得到公钥,这个过程不可逆: K=k*G,其中G是生成点的常数点. 逆向求私钥及其困难,只能暴力破解.</p>
-<h5 id="椭圆曲线密码学解释">椭圆曲线密码学解释</h5>
+<h5><span id="椭圆曲线密码学解释">椭圆曲线密码学解释</span></h5>
 <p>比特币使用的是secp256k1标准的特殊椭圆曲线. 由下述函数定义:</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">y^2=(x^3 + 7) over (Fp)  or  y^2 mod p=(x^3 + 7) mod p</span><br></pre></td></tr></table></figure>
 <p>上述mod p(素数p取模)表明该曲线实在素数阶p的有限域内, 也写作Fp, 其中: &gt;p = 2^256 – 2^32 – 2^9 – 2^8 – 2^7 – 2^6 – 2^4 – 1, 这是⼀个⾮常⼤的素数.</p>
@@ -517,19 +517,19 @@
 <li>在硬件上更容易实现.</li>
 </ol>
 <p>本文基于这些ECC的功能,来构建在IoT上的ABE方案. <strong>ECDDH</strong> 来作复杂度假设, <strong>ECIES</strong> 对数据加密.</p>
-<h3 id="ecddh">ECDDH</h3>
+<h3><span id="ecddh">ECDDH</span></h3>
 <p><em>ECDH</em> 是一种在椭圆曲线上的Diffie-Hellman的密钥交换协议. 可以帮助具有椭圆曲线公私钥对的双方通过不安全的通道生成 <strong>共享密钥</strong>. 这个共享密钥可以直接当成密钥或者派生出新的密钥来加密接下来通讯内容. &gt;例如, Alice与Bob使用同一套ECC系统(q,a,b,G,p) &gt; &gt; Alice的密钥对是<code>(S_A , P_A=S_A*G)</code>. Bob的密钥对<code>(S_B , P_B=S_B*G)</code> &gt; &gt;那么他们的共享密码K_{A,B}就是: <code>K_{A,B}=S_A* P_B=S_B* P_A=S_A* S_B* G</code></p>
 <p><strong>ECDDH(elliptic curve decisional Diffie–Hellman problem)</strong> 是ECDH的重要变体. &gt;对于具有生成元G的q阶椭圆曲线群G_E, DHH表明, 给定c*G和d*G的条件下,c*d*G是G_E中的随机元素. &gt; (其中,c,d都是在q阶整数上随机取的.) &gt; &gt;也就是说，对于给定的三元组（c·G，d·G，c·d·G）和（c·G，d·G，Z），无法判断Z = c·d·G</p>
-<h3 id="ecies">ECIES</h3>
+<h3><span id="ecies">ECIES</span></h3>
 <p>ECIES椭圆曲线集成加密方案,包含有密钥交换和公钥加密的部分.</p>
 <p>使用ECDH生成共享密钥,数据的机密性由对称加密算法保证,密钥和数据完整性由MAC密钥的功能保证.</p>
 <p>以下是ECIES的加密与解密步骤: <img src="https://img-blog.csdn.net/20180404205856773?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0t5b25fUmF5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="加解密步骤"></p>
-<h3 id="access-structure">Access structure</h3>
+<h3><span id="access-structure">Access structure</span></h3>
 <p>访问结构用于描述访问策略,可用访问树表示,由如下定义: &gt;(Access Structure [11]). Let <span class="math inline">\(\{A_1, A_2,..., A_n\}\)</span> be a set of attributes. A collection <span class="math inline">\(\mathbb{A}\)</span> = <span class="math inline">\(2^\{A_1,A_2,...,A_n\}\)</span> is monotone, for <span class="math inline">\(\forall B,C\)</span>: if <span class="math inline">\(B\in \mathbb{A}\)</span> and <span class="math inline">\(B\subseteq C\)</span>, then <span class="math inline">\(C ∈ \mathbb{A}\)</span>. An access structure (respectively, monotone) is a collection (respectively, monotone) <span class="math inline">\(\mathbb{A}\)</span> of non-empty subsets of <span class="math inline">\(\{A_1,A_2,..,A_n\}\)</span>, i.e.,<span class="math inline">\(\mathbb{A}⊆\)</span><span class="math inline">\(2^{A_1,A_2,..,A_n}\setminus \emptyset\)</span>. The sets in A are called the authorized attributes sets, and the sets not in A are called the unauthorized attributes sets.</p>
 <p>有那么一组属性组 <span class="math inline">\(\{A_1, A_2,..., A_n\}\)</span>, 设有一二元集合 <span class="math inline">\(\mathbb{A}\)</span> = <span class="math inline">\(2^\{A_1,A_2,...,A_n\}\)</span>, 如果对与任意的B与C,有B属于A,且B是C的子集,得到 C也属于A.那么二元集合A是单调的.</p>
 <p>所以访问结构是属性集合 <span class="math inline">\(\{A_1, A_2,..., A_n\}\)</span> 的非空子集 <span class="math inline">\(\mathbb{A}\)</span> ,集合 <span class="math inline">\(\mathbb{A}\)</span> 称为授权集.</p>
 <p><strong>访问树</strong> 的具体定义与原理 在这篇<a href="https://zhuanlan.zhihu.com/p/21664741" target="_blank" rel="noopener">文章</a>有详细提及, 在这不详细说.</p>
-<h2 id="算法实现细节">算法实现细节</h2>
+<h2><span id="算法实现细节">算法实现细节</span></h2>
 <p>该算法是用KP-ABE的结构, 涵括了AA(attribute authority). 由四个算法步骤组成:</p>
 <ol type="1">
 <li>Setup: 在中心节点生成public key parameters,PK和master key,MK. master key作为私钥在中心节点所用, public key parameters向外公开.</li>
@@ -537,7 +537,7 @@
 <li>key-Generation:由中心节点执行,将访问结构R和中心节点MK输入,根据R输出解密钥匙D.</li>
 <li>Decrypt: 由接收者执行,输入发送者发送的密文CM,中心节点给的解密钥匙D,中心节点的PK,当R(r)=1时, 可以得出解密后的消息M.</li>
 </ol>
-<h3 id="本文的给出的kp-abe算法">本文的给出的KP-ABE算法</h3>
+<h3><span id="本文的给出的kp-abe算法">本文的给出的KP-ABE算法</span></h3>
 <p>本文所给出的轻量级的ABE是基于ECC的,假定ECC的参数是(q,a,b,G,p).</p>
 <p>对于属性集w, 密钥是由基于拉格朗日插值法的secret sharing构建的. 且该方法有一个ECC-based的密钥生成中心. （拉格朗日插值法学习<a href="https://www.zhihu.com/question/58333118/answer/262507694" target="_blank" rel="noopener">链接</a>）</p>
 <ol type="1">
@@ -570,26 +570,26 @@
 <li><p>如果<span class="math inline">\(HMAC(M&#39;,K&#39;_y)=MAC_M\)</span>,那么就表示消息M已经被正确解密. 所以说所有的正确性,完整性都由<span class="math inline">\(MAC_M\)</span>验证.</p></li>
 </ul>
 <hr>
-<h2 id="算法表现与分析">算法表现与分析</h2>
+<h2><span id="算法表现与分析">算法表现与分析</span></h2>
 <p>本文为了评估所提出的ABE方案的轻量级的特点,在 <em>通信开销</em> 和 KP-ABE和CP-ABE的 <em>加算开销</em> 上分析. 并给出该算法的限制.</p>
-<h3 id="通信开销指标">通信开销指标</h3>
+<h3><span id="通信开销指标">通信开销指标</span></h3>
 <p>通信开销取决于所传输的消息的长度. 传输的消息包括了 <strong>密文cipher-text</strong> ,<strong>公钥</strong> 和 <strong>私钥</strong>.</p>
 <p>现有大多数ABE方案都是基于双线性配对的RSA-based方案. 有两个群<span class="math inline">\(G_1,G_2\)</span>, <span class="math inline">\(G_1\)</span>是一个大素数阶的双线性群, 双线性映射可以表示为 <span class="math inline">\(G_1 \times G_1 \rightarrow G_2\)</span>. 且<span class="math inline">\(G_1,G_2\)</span> 的基本运算都是模指数运算. 在相同安全级别上,RSA的密钥对比ECC的密钥对长得多.RSA的密钥对长度在 <span class="math inline">\(G_1\)</span> 是ECC的3.2倍,<span class="math inline">\(G_2\)</span> 是6.4倍.</p>
 <p>在ABE方案中,密文需要包含属性集, 密文的长度与属性集成线性增长.</p>
 <p>密文 <span class="math inline">\(CM=(w,C,MAC_M,C_i,i\in w)\)</span> ,<span class="math inline">\(C_i\)</span>是椭圆曲线的一点,且长度为<span class="math inline">\(2l\)</span>,由于先前的假设,消息M和MAC的长度都为安全级别<span class="math inline">\(l\)</span>,所以<span class="math inline">\(C\)</span>和<span class="math inline">\(MAC_M\)</span>也是<span class="math inline">\(l\)</span>位长. 所以给出的方案的密文长度是 <span class="math inline">\((l+l+k*2l)=(2k+2)l\)</span>.</p>
 <p>另外,公钥是 <span class="math inline">\(\{PK,P_i,i\in U\}\)</span>,每一个元素都是椭圆曲线上的一点,所以公钥长度为 <span class="math inline">\((2l+n*2l)=(2n+2)l\)</span>. 私钥是 <span class="math inline">\(\{D_u=q_u(0)/s_i,\ i=attr(u)\mbox{ and }i\in w\}\)</span>, 长度是<span class="math inline">\(k\cdot l\)</span>.</p>
-<h3 id="计算开销指标">计算开销指标</h3>
+<h3><span id="计算开销指标">计算开销指标</span></h3>
 <p>本文对比了现有的CP-ABE和KP-ABE. 计算开销一般是由双线性映射(公钥的加密解密操作)的成本衡量的.本方案中没涉及,所以不计算.本文的加密算法包括了(1+k)点标量乘法,且解密的递归过程不超过(2k-1)点标量乘法,所以总的最多有3k个点标量乘法.</p>
 <p>与其他的方案的比较如下图:</p>
 <p><img src="https://img-blog.csdn.net/2018040419231284?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0t5b25fUmF5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70"></p>
 <p>可以看出在 <strong>公私钥长度</strong> 都远比其他方案要短, <strong>密文长度</strong> 在属性大于10个时大于常数级的方案. <strong>计算开销</strong> 也明显小于一般方案. 所以说在 <strong>轻量级</strong> 的属性加密方案上,该文的方案是很优秀的.</p>
-<h3 id="提出的abe方案的限制">提出的ABE方案的限制</h3>
+<h3><span id="提出的abe方案的限制">提出的ABE方案的限制</span></h3>
 <ol type="1">
 <li><p>撤销属性灵活性较差: 使用的是单调访问结构和秘密共享机制,都是在"AND"和"OR"门上进行的,不支持"NOT"门, 难以表达复杂的访问策略,属性撤销也很麻烦.通常操作都是重新加密来实现属性撤销. 本文并没有讨论属性撤销属性.</p></li>
 <li><p>可扩展性差: 通信开销和计算开销都与加密属性数量成线性关系.</p></li>
 <li><p>通用性较差: 本方案是单一权限上的应用,不适用于多权限结构.</p></li>
 </ol>
-<h2 id="参考文章">参考文章</h2>
+<h2><span id="参考文章">参考文章</span></h2>
 <blockquote>
 <ol type="1">
 <li>Yao X, Tian Y, Tian Y. A lightweight attribute-based encryption scheme for the Internet of Things[J]. Future Generation Computer Systems, 2015, 49(C):104-112.</li>
@@ -786,7 +786,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -875,7 +875,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#论文阅读a-lightweight-attribute-based-encryption-scheme-for-the-internet-of-things"><span class="nav-number">1.</span> <span class="nav-text">论文阅读：A lightweight attribute-based encryption scheme for the Internet of Things</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#abstract"><span class="nav-number">1.1.</span> <span class="nav-text">ABSTRACT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#预备知识"><span class="nav-number">1.2.</span> <span class="nav-text">预备知识</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ecc基础"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.ECC基础</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#私钥"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">私钥</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#公钥"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">公钥</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#椭圆曲线密码学解释"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">椭圆曲线密码学解释</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ecddh"><span class="nav-number">1.3.</span> <span class="nav-text">ECDDH</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ecies"><span class="nav-number">1.4.</span> <span class="nav-text">ECIES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#access-structure"><span class="nav-number">1.5.</span> <span class="nav-text">Access structure</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法实现细节"><span class="nav-number">2.</span> <span class="nav-text">算法实现细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#本文的给出的kp-abe算法"><span class="nav-number">2.1.</span> <span class="nav-text">本文的给出的KP-ABE算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法表现与分析"><span class="nav-number">3.</span> <span class="nav-text">算法表现与分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通信开销指标"><span class="nav-number">3.1.</span> <span class="nav-text">通信开销指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#计算开销指标"><span class="nav-number">3.2.</span> <span class="nav-text">计算开销指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提出的abe方案的限制"><span class="nav-number">3.3.</span> <span class="nav-text">提出的ABE方案的限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">4.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">论文阅读：A lightweight attribute-based encryption scheme for the Internet of Things</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">1.1.</span> <span class="nav-text">ABSTRACT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">1.2.</span> <span class="nav-text">预备知识</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.ECC基础</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">私钥</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">公钥</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">椭圆曲线密码学解释</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">1.3.</span> <span class="nav-text">ECDDH</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">1.4.</span> <span class="nav-text">ECIES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">1.5.</span> <span class="nav-text">Access structure</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">2.</span> <span class="nav-text">算法实现细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">2.1.</span> <span class="nav-text">本文的给出的KP-ABE算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text">算法表现与分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.1.</span> <span class="nav-text">通信开销指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.2.</span> <span class="nav-text">计算开销指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.3.</span> <span class="nav-text">提出的ABE方案的限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">4.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
             
 
           </div>
@@ -910,7 +910,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">41.9k</span>
+    <span title="Site words total count">48.5k</span>
   
 </div>
 

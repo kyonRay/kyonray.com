@@ -439,7 +439,7 @@
       
 
       
-        <h2 id="一简述">一、简述</h2>
+        <h2><span id="一-简述">一、简述</span></h2>
 <p>匿名凭证的作用是允许用户证明当前identity符合某个属性，且不暴露出其他属性。本文描述的方法通过使用零知识证明的方式保证属性在披露的过程中不被其他人知道，且可实现凭证一次性使用，第二次用于展示给Verifier的时候会被感知。</p>
 <p>由于其原稿难懂，有多个符号错误，计算错误，符号未命名的问题，所以本人进行翻译、纠正。</p>
 <a id="more"></a>
@@ -461,7 +461,7 @@
 <li><p>不可链接性(unlinkable)，即不可能使用同样的凭证与多个匿名的presentation关联。技术上用knowledge proof证明他拥有凭证。</p></li>
 <li><p>可拓展性(delegatable)，Prover A可以将具有特定属性X的证书C(credential)委托给Prover B，同时Verifier在当B提供属性Y的时候不获取A的身份。技术上代表可以进一步创建证书链。</p></li>
 </ul>
-<h2 id="二protocol-overview">二、Protocol Overview</h2>
+<h2><span id="二-protocol-overview">二、Protocol Overview</span></h2>
 <p>最简单的凭证生命周期：一个凭证，单个issuer，单个持有人，单个验证者</p>
 <ol type="1">
 <li>Issuer制定凭证模板<span class="math inline">\(\mathcal S\)</span>：签凭证使用的密码学类型、<span class="math inline">\(l\)</span> 个凭证属性、隐藏属性 <span class="math inline">\(A_h \subset \{1,2,…,l\}\)</span> 、凭证公钥 <span class="math inline">\(P_k\)</span> 、非撤销凭证属性数<span class="math inline">\(l_r\)</span> 非撤销公钥<span class="math inline">\(P_r\)</span> ，并将凭证公布到区块链上，定义其语义；</li>
@@ -478,14 +478,14 @@
 <p><img src="./Issuer与Prover交互.svg"></p>
 <p>Prover与Verifier交互：</p>
 <p><img src="./Prover与Verifier交互.svg"></p>
-<h2 id="三具体方案步骤">三、具体方案步骤</h2>
+<h2><span id="三-具体方案步骤">三、具体方案步骤</span></h2>
 <p>接下来以整个方案的流程逐步详细介绍：</p>
-<h3 id="schema准备">1. Schema准备</h3>
-<h4 id="issuer定义凭证属性">1.1 Issuer定义凭证属性</h4>
+<h3><span id="1-schema准备">1. Schema准备</span></h3>
+<h4><span id="11-issuer定义凭证属性">1.1 Issuer定义凭证属性</span></h4>
 <p><strong>（1.1.1）</strong>Issuer定义一个有 <span class="math inline">\(l\)</span> 个属性 <span class="math inline">\(\{m_1,…,m_l\}\)</span> 的Schema <span class="math inline">\(\mathcal{S}\)</span> ，并设置隐藏属性集合 <span class="math inline">\(A_h \subset \{1,2,…,l\}\)</span> 。</p>
 <p>在Sovrin中，<span class="math inline">\(m_1\)</span> 保留为链接向Holder的链接， <span class="math inline">\(m_2\)</span> 保留为枚举器， <span class="math inline">\(m_3\)</span> 保留为策略地址<span class="math inline">\(I\)</span> ，并且<span class="math inline">\(\{1,3\}\subset A_h, and\ 2 \notin A_h\)</span>；</p>
 <p>Issuer定义非撤销凭证内含 <span class="math inline">\(m_1,m_2\)</span> 两个属性；</p>
-<h4 id="issuer定义凭证密码方法">1.2 Issuer定义凭证密码方法</h4>
+<h4><span id="12-issuer定义凭证密码方法">1.2 Issuer定义凭证密码方法</span></h4>
 <ul>
 <li><strong>（1.2.1）</strong>Issuer使用CL签名算法，生成一组<strong>Primary Credentia</strong>l公私钥对：
 <ul>
@@ -495,7 +495,7 @@
 <li>计算得公钥 <span class="math inline">\(P_k = (n,S,Z\leftarrow S^{x_Z},\{R_i\leftarrow S^{x_{R_i}}\}_{1\leqslant i \leqslant l})\)</span> ，私钥 <span class="math inline">\(s_k=(p&#39;,q&#39;)\)</span></li>
 </ul></li>
 </ul>
-<h4 id="issuer提供凭证密钥正确性">1.3 Issuer提供凭证密钥正确性</h4>
+<h4><span id="13-issuer提供凭证密钥正确性">1.3 Issuer提供凭证密钥正确性</span></h4>
 <ul>
 <li><p><strong>（1.3.1）</strong> Issuer生成一堆随机数 <span class="math inline">\(\widetilde{x_Z}，\widetilde{x_{R_1}},…,\widetilde{x_{R_l}}\ \in[2;p&#39;q&#39;-1]\)</span></p></li>
 <li><p>Issuer计算：</p></li>
@@ -510,7 +510,7 @@ c\leftarrow H_1(Z||\widetilde Z||\{R_i,\widetilde{R_i}\}_{1\le i\le l})\\
 <ul>
 <li>Issuer最终将证明 <span class="math inline">\(\mathcal P_I=(c,\widehat{x_Z},\{\widehat{x_{R_i}}\}_{1\le i\le l})\)</span> 发送出去。</li>
 </ul>
-<h4 id="issuer定义non-revocation凭证">1.4 Issuer定义Non-revocation凭证</h4>
+<h4><span id="14-issuer定义non-revocation凭证">1.4 Issuer定义Non-revocation凭证</span></h4>
 <ul>
 <li><p><strong>（1.4.1）</strong>Issuer使用CKS聚合器与签名方法以追踪Primary Credential的撤销状态，生成一组<strong>Non-revocation Credential</strong>的密钥对：</p>
 <ul>
@@ -540,15 +540,15 @@ c\leftarrow H_1(Z||\widetilde Z||\{R_i,\widetilde{R_i}\}_{1\le i\le l})\\
 <li><p>之后Issuer把 <span class="math inline">\((P_a,V)\)</span> 公布到区块链上供其他人进行累积、验证， 聚合器的DID设置为 <span class="math inline">\(ID_a=z\)</span> 。</p></li>
 </ul></li>
 </ul>
-<h3 id="credential发行">2. Credential发行</h3>
-<h4 id="holder获取凭证模板进行验证模板是issuer发的">2.1 Holder获取凭证模板，进行验证模板是Issuer发的</h4>
+<h3><span id="2-credential发行">2. Credential发行</span></h3>
+<h4><span id="21-holder获取凭证模板进行验证模板是issuer发的">2.1 Holder获取凭证模板，进行验证模板是Issuer发的</span></h4>
 <p>Holder拿到模板以及Issuer的公钥、证明 <span class="math inline">\((c,\widehat{x_Z},\{\widehat{x_{R_i}}\}_{1\le i\le l})\)</span> ，进行进一步计算： <span class="math display">\[
 \widehat Z\leftarrow Z^{-c}S^{\widehat{x_Z}}\ (mod\ n)\\
 \{\widehat{R_i}\leftarrow R_i^{-c}S^{\widehat{x_{R_i}}}\ (mod\ n)\}_{1\le i\le l}
 \]</span> 验证： <span class="math display">\[
 c=H_1(Z||\hat Z||\{R_i,\widehat{R_i}\}_{1\le i\le l})
 \]</span></p>
-<h4 id="holder进行凭证设定">2.2 Holder进行凭证设定</h4>
+<h4><span id="22-holder进行凭证设定">2.2 Holder进行凭证设定</span></h4>
 <ul>
 <li><p>Holder从区块链中获取了凭证的模板 <span class="math inline">\(\mathcal S\)</span> ，并设置属性 <span class="math inline">\(\{m_i\}_{i\in A_h}\)</span> ，其余未设置的属性皆为0；</p></li>
 <li><p>Holder建立与Issuer的连接，从Issuer那获取随机数 <span class="math inline">\(n_0\)</span> ，Holder的DID为 <span class="math inline">\(\mathcal{H}\)</span> ；</p></li>
@@ -600,7 +600,7 @@ c=H_1(Z||\hat Z||\{R_i,\widehat{R_i}\}_{1\le i\le l})
 <li><p>将 <span class="math inline">\(U_R\)</span> 发送给Issuer</p></li>
 </ul></li>
 </ul>
-<h4 id="issuer收到凭证模板确认后颁发">2.3 Issuer收到凭证模板，确认后颁发</h4>
+<h4><span id="23-issuer收到凭证模板确认后颁发">2.3 Issuer收到凭证模板，确认后颁发</span></h4>
 <ul>
 <li><p><strong>（2.3.1）</strong>Issuer验证Holder发来的Primary Credential模板数据是否正确：</p>
 <ul>
@@ -662,7 +662,7 @@ wit_i\leftarrow \{\sigma_i,u_i,g_i,w,V\}
 <li><p>将更新的 <span class="math inline">\(V,acc_V\)</span> 放到区块链中；</p></li>
 </ul></li>
 </ul>
-<h4 id="holder收到两个凭证进行存储">2.4 Holder收到两个凭证，进行存储</h4>
+<h4><span id="24-holder收到两个凭证进行存储">2.4 Holder收到两个凭证，进行存储</span></h4>
 <ul>
 <li><p><strong>（2.4.1）</strong>Holder存储凭证</p></li>
 <li><p>计算 <span class="math inline">\(v\leftarrow v&#39;+v&#39;&#39;\)</span>；</p></li>
@@ -687,15 +687,15 @@ e(pk\cdot g_i,\sigma_i)=e(g,g&#39;)\\
 e(\sigma,y\cdot \widehat h^{c})=e(h_0\cdot h_1^{m_2}h_2^sg_i,\widehat h)
 \]</span></p></li>
 </ul>
-<h3 id="凭证撤销">3. 凭证撤销</h3>
+<h3><span id="3-凭证撤销">3. 凭证撤销</span></h3>
 <p><strong>（3.1）</strong>Issuer在数据库找到要被撤销的凭证，并找出他的索引号 <span class="math inline">\(i\)</span> ，以及聚合器 <span class="math inline">\(A\)</span>，有效凭证集合 <span class="math inline">\(V\)</span></p>
 <ul>
 <li>从 <span class="math inline">\(V\)</span> 中剔除 <span class="math inline">\(i\)</span> ： <span class="math inline">\(V \leftarrow V -\{i\}\)</span> ；</li>
 <li>从聚合器中剔除：<span class="math inline">\(acc_V\leftarrow acc_V/g&#39;_{L+1-i}\)</span> ；</li>
 <li>公布出新的 <span class="math inline">\(\{V,acc_V\}\)</span> ；</li>
 </ul>
-<h3 id="holder展示凭证">4. Holder展示凭证</h3>
-<h4 id="verifier向holder发出proof-request">4.1 Verifier向Holder发出Proof Request</h4>
+<h3><span id="4-holder展示凭证">4. Holder展示凭证</span></h3>
+<h4><span id="41-verifier向holder发出proof-request">4.1 Verifier向Holder发出Proof Request</span></h4>
 <ul>
 <li>Verifier向Holder发出 <span class="math inline">\(d\)</span> 个凭证模板集合 <span class="math inline">\(\{\mathcal S_1,\mathcal S_2,...\mathcal S_d\}\)</span> 的证明请求（Proof Request）；</li>
 <li>Holder 需要对应的给出 <span class="math inline">\(d\)</span> 个凭证证明对 <span class="math inline">\((C_p,C_{NR})\)</span> 回应；</li>
@@ -703,7 +703,7 @@ e(\sigma,y\cdot \widehat h^{c})=e(h_0\cdot h_1^{m_2}h_2^sg_i,\widehat h)
 <li><span class="math inline">\(x_4=X-x_1-x_2\)</span> ，映射 <span class="math inline">\(\phi:A_h\ to\ \{1,2,...,x_4\}\)</span>，<span class="math inline">\(A_v\)</span> 表示 <span class="math inline">\(x_1\)</span> 披露的属性索引集合；</li>
 <li>Verifier给Holder发80-bit随机数 <span class="math inline">\(n_2\)</span> ，用于之后与Holder交互；</li>
 </ul>
-<h4 id="holder提供证明">4.2 Holder提供证明</h4>
+<h4><span id="42-holder提供证明">4.2 Holder提供证明</span></h4>
 <ul>
 <li><p><strong>（4.2.1）</strong>Holder准备对应凭证对 <span class="math inline">\((C_p,C_{NR})\)</span> 去验证；</p>
 <ul>
@@ -848,9 +848,9 @@ a\leftarrow \begin{cases} -1 &amp;\text{if } * \equiv\ \leq\ or\ &lt;\\ 1 &amp;\
   \]</span></p></li>
 </ul></li>
 </ul>
-<h5 id="holder计算哈希向verifier提出挑战">4.2.1 Holder计算哈希，向Verifier提出挑战</h5>
+<h5><span id="421-holder计算哈希向verifier提出挑战">4.2.1 Holder计算哈希，向Verifier提出挑战</span></h5>
 <p>计算：<span class="math inline">\(c_H\leftarrow H(\mathcal T,\mathcal C,n_2)\)</span> ，并将其发给Verifier；</p>
-<h5 id="最终披露">4.2.2 最终披露</h5>
+<h5><span id="422-最终披露">4.2.2 最终披露</span></h5>
 <p>Holder进行最终的披露:</p>
 <ul>
 <li><strong>（4.2.2.1）</strong>对于Non-Revcation Credential：对参数 <span class="math inline">\(\rho, o,c,o&#39;,m,m&#39;,t,t&#39;,m_2,s,r,r&#39;,r&#39;&#39;,r&#39;&#39;&#39;\)</span> 都进行盲化处理，处理方法类似于下面的公式： <span class="math display">\[
@@ -876,11 +876,11 @@ a\leftarrow \begin{cases} -1 &amp;\text{if } * \equiv\ \leq\ or\ &lt;\\ 1 &amp;\
 \tag{4.35}\widehat\alpha\leftarrow \widetilde\alpha +c_H(r_\Delta-u_1r_1-u_2r_2-u_3r_3-u_4r_4);
 \]</span> 最终得出 <span class="math inline">\(Pr_p=(\{\widehat{u_i}\},\{\widehat{r_i}\},\widehat{r_\Delta},\widehat{\alpha},\widehat{m_j})\)</span> 是断言 <span class="math inline">\(p\)</span> 的子证明；</p></li>
 </ul>
-<h5 id="holder发送信息给verifier">4.2.3 Holder发送信息给Verifier</h5>
+<h5><span id="423-holder发送信息给verifier">4.2.3 Holder发送信息给Verifier</span></h5>
 <p>Holder发送 <span class="math inline">\((c_H,\mathcal X,\{Pr_c\},\{Pr_p\},\mathcal C)\)</span> 给verifier。</p>
-<h4 id="verifier验证">4.3 Verifier验证</h4>
+<h4><span id="43-verifier验证">4.3 Verifier验证</span></h4>
 <p>对于凭证对 <span class="math inline">\((C_p,C_{NR})\)</span> ，Verifier收到证明相关参数 <span class="math inline">\((c_H,\mathcal X,\{Pr_c\},\{Pr_p\},\mathcal C)\)</span></p>
-<h5 id="非撤销检查">4.3.1 非撤销检查</h5>
+<h5><span id="431-非撤销检查">4.3.1 非撤销检查</span></h5>
 <p>Verifier计算以下公式，并将结果放入集合 <span class="math inline">\(\widehat T\)</span> ：</p>
 <p><span class="math display">\[
 \tag{4.36} \widehat{T_1}\leftarrow E^{c_H}\cdot h^{\widehat{\rho}}\widetilde h^{\widehat o};\   \widehat{T_2} \leftarrow E^{\widehat c}h^{-\widehat m}\widetilde h^{-\widehat t}
@@ -901,7 +901,7 @@ a\leftarrow \begin{cases} -1 &amp;\text{if } * \equiv\ \leq\ or\ &lt;\\ 1 &amp;\
 \tag{4.40}
   \widehat{T_8}\leftarrow \Big(\cfrac{e(\mathcal G,u)}{e(g,\mathcal U)} \Big)^{c_H}\cdot e(\widetilde h,u)^{\widehat r}\cdot e(1/g,\widehat h)^{\widehat{r&#39;&#39;&#39;}};
 \]</span></p>
-<h5 id="验证正确性">4.3.2 验证正确性</h5>
+<h5><span id="432-验证正确性">4.3.2 验证正确性</span></h5>
 <p>Verifier获取Issuer的公钥 <span class="math inline">\(pk_I\leftarrow (n,S,Z,{R_i}_{1\leq i\leq l})\)</span> 、Primary凭证的证明 <span class="math inline">\(Pr_C=(\widehat e,\widehat v,\{\widehat{m_j}\}_{j\in \mathcal A_{\overline r}},A&#39;)\)</span> ，并使用已披露属性 <span class="math inline">\(\{m_j\}_{j\in \mathcal A_r}\)</span> ，定义空集合 <span class="math inline">\(\widehat{\mathcal T}\)</span> ；</p>
 <ul>
 <li><p><strong>（4.3.2.1）</strong>对于每个凭证 <span class="math inline">\(C_p\)</span> 都使用其对应的子证明 <span class="math inline">\(Pr_C\)</span> 进行计算，并将其结果放入集合 <span class="math inline">\(\widehat{\mathcal T}\)</span> ： <span class="math display">\[
@@ -939,13 +939,13 @@ a\leftarrow \begin{cases} -1 &amp;\text{if } * \equiv\ \leq\ or\ &lt;\\ 1 &amp;\
 \]</span> 最终将 <span class="math inline">\(\widehat{T_1},\widehat{T_2},\widehat{T_3},\widehat{T_4},\widehat{T_{\Delta}},\widehat Q\)</span> 加入到集合 <span class="math inline">\(\widehat{\mathcal T}\)</span> ；</li>
 </ul></li>
 </ul>
-<h5 id="最终的哈希比较">4.3.3 最终的哈希比较</h5>
+<h5><span id="433-最终的哈希比较">4.3.3 最终的哈希比较</span></h5>
 <p>Verifier计算 <span class="math inline">\(\widehat{c_H}\leftarrow H(\widehat{\mathcal T},\mathcal C,n_2)\)</span> ；如果 <span class="math inline">\(c_H=\widehat{c_H}\)</span> 则验证成功，否则失败；</p>
-<h3 id="证明">5. 证明</h3>
+<h3><span id="5-证明">5. 证明</span></h3>
 <p>欲证明 <span class="math inline">\(c_H=\widehat{c_H}\)</span> 成立，即证明 <span class="math inline">\(H(\mathcal T,\mathcal C,n_2)=H(\widehat{\mathcal T},\mathcal C,n_2)\)</span> 成立，即证明 <span class="math inline">\(\mathcal T=\widehat{\mathcal T}\)</span> ；</p>
 <p>在 <span class="math inline">\(\mathcal T\)</span> 中，集合为： <span class="math inline">\(\{T,\{\overline {T_i}\}_{1\le i\le 4},\overline{T_{\Delta}},Q \}\)</span> ；</p>
 <p>在 <span class="math inline">\(\widehat{\mathcal T}\)</span> 中，集合为： <span class="math inline">\(\{\widehat T,\{\widehat{T_i}\}_{1\le i\le 4},\widehat{T_\Delta},\widehat Q\}\)</span> ；</p>
-<h4 id="证明-twidehat-t">5.1 证明 <span class="math inline">\(T=\widehat T\)</span></h4>
+<h4><span id="51-证明-twidehat-t">5.1 证明 <span class="math inline">\(T=\widehat T\)</span></span></h4>
 <p><span class="math inline">\(\{\widehat{T_i}= T_i^{-c_H}Z^{\widehat{u_i}}S^{\widehat{r_i}}\ (mod\ n)\}_{1 \le i\le 4};\)</span></p>
 <p>Prover计算:</p>
 <p><span class="math inline">\(\overline{T_1}= Z^{\widetilde{u_1}}S^{\widetilde{r_1}}\ (mod\ n)\}\)</span></p>
@@ -1011,7 +1011,7 @@ Z^{-c_H}(A&#39;)^{c_He}(S^{c_Hv&#39;})\\
 \Bigg(\prod_{j\in \mathcal A}R_j^{-c_H{m_j}}\Bigg)\cdot \Bigg(\prod_{j\in \mathcal A}R_j^{c_H{m_j}}\Bigg) =1
 \]</span></p>
 <p>证毕。</p>
-<h4 id="证明-overlinet_deltawidehatt_delta">5.2 证明 <span class="math inline">\(\overline{T_\Delta}=\widehat{T_\Delta}\)</span></h4>
+<h4><span id="52-证明-overlinet_deltawidehatt_delta">5.2 证明 <span class="math inline">\(\overline{T_\Delta}=\widehat{T_\Delta}\)</span></span></h4>
 <p><span class="math display">\[
 \overline{T_\Delta}\leftarrow Z^{\widetilde{m_j}}S^{a\widetilde{r_\Delta}}\ (mod\ n);\\
 \widehat{T_\Delta}\leftarrow (T_{\Delta}^aZ^{\Delta&#39;})^{-c_H}Z^{\widehat{m_j}}S^{a\widehat{r_\Delta}}\ (mod\ n);
@@ -1170,8 +1170,8 @@ m_j-a\Delta-\Delta&#39;=20-1-19=0
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/10/29/research-in-HotStuff/" rel="prev" title="HotStuﬀ:BFT Consensus in the Lens of Blockchain">
-                HotStuﬀ:BFT Consensus in the Lens of Blockchain <i class="fa fa-chevron-right"></i>
+              <a href="/2019/10/29/research-in-HotStuff/" rel="prev" title="HotStuff:BFT Consensus in the Lens of Blockchain">
+                HotStuff:BFT Consensus in the Lens of Blockchain <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -1254,7 +1254,7 @@ m_j-a\Delta-\Delta&#39;=20-1-19=0
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1343,7 +1343,7 @@ m_j-a\Delta-\Delta&#39;=20-1-19=0
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一简述"><span class="nav-number">1.</span> <span class="nav-text">一、简述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二protocol-overview"><span class="nav-number">2.</span> <span class="nav-text">二、Protocol Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三具体方案步骤"><span class="nav-number">3.</span> <span class="nav-text">三、具体方案步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#schema准备"><span class="nav-number">3.1.</span> <span class="nav-text">1. Schema准备</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#issuer定义凭证属性"><span class="nav-number">3.1.1.</span> <span class="nav-text">1.1 Issuer定义凭证属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#issuer定义凭证密码方法"><span class="nav-number">3.1.2.</span> <span class="nav-text">1.2 Issuer定义凭证密码方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#issuer提供凭证密钥正确性"><span class="nav-number">3.1.3.</span> <span class="nav-text">1.3 Issuer提供凭证密钥正确性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#issuer定义non-revocation凭证"><span class="nav-number">3.1.4.</span> <span class="nav-text">1.4 Issuer定义Non-revocation凭证</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#credential发行"><span class="nav-number">3.2.</span> <span class="nav-text">2. Credential发行</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#holder获取凭证模板进行验证模板是issuer发的"><span class="nav-number">3.2.1.</span> <span class="nav-text">2.1 Holder获取凭证模板，进行验证模板是Issuer发的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#holder进行凭证设定"><span class="nav-number">3.2.2.</span> <span class="nav-text">2.2 Holder进行凭证设定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#issuer收到凭证模板确认后颁发"><span class="nav-number">3.2.3.</span> <span class="nav-text">2.3 Issuer收到凭证模板，确认后颁发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#holder收到两个凭证进行存储"><span class="nav-number">3.2.4.</span> <span class="nav-text">2.4 Holder收到两个凭证，进行存储</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#凭证撤销"><span class="nav-number">3.3.</span> <span class="nav-text">3. 凭证撤销</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#holder展示凭证"><span class="nav-number">3.4.</span> <span class="nav-text">4. Holder展示凭证</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#verifier向holder发出proof-request"><span class="nav-number">3.4.1.</span> <span class="nav-text">4.1 Verifier向Holder发出Proof Request</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#holder提供证明"><span class="nav-number">3.4.2.</span> <span class="nav-text">4.2 Holder提供证明</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#holder计算哈希向verifier提出挑战"><span class="nav-number">3.4.2.1.</span> <span class="nav-text">4.2.1 Holder计算哈希，向Verifier提出挑战</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#最终披露"><span class="nav-number">3.4.2.2.</span> <span class="nav-text">4.2.2 最终披露</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#holder发送信息给verifier"><span class="nav-number">3.4.2.3.</span> <span class="nav-text">4.2.3 Holder发送信息给Verifier</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#verifier验证"><span class="nav-number">3.4.3.</span> <span class="nav-text">4.3 Verifier验证</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#非撤销检查"><span class="nav-number">3.4.3.1.</span> <span class="nav-text">4.3.1 非撤销检查</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#验证正确性"><span class="nav-number">3.4.3.2.</span> <span class="nav-text">4.3.2 验证正确性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#最终的哈希比较"><span class="nav-number">3.4.3.3.</span> <span class="nav-text">4.3.3 最终的哈希比较</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#证明"><span class="nav-number">3.5.</span> <span class="nav-text">5. 证明</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#证明-twidehat-t"><span class="nav-number">3.5.1.</span> <span class="nav-text">5.1 证明 \(T=\widehat T\)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#证明-overlinet_deltawidehatt_delta"><span class="nav-number">3.5.2.</span> <span class="nav-text">5.2 证明 \(\overline{T_\Delta}=\widehat{T_\Delta}\)</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">一、简述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">2.</span> <span class="nav-text">二、Protocol Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text">三、具体方案步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.1.</span> <span class="nav-text">1. Schema准备</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.1.1.</span> <span class="nav-text">1.1 Issuer定义凭证属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.1.2.</span> <span class="nav-text">1.2 Issuer定义凭证密码方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.1.3.</span> <span class="nav-text">1.3 Issuer提供凭证密钥正确性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.1.4.</span> <span class="nav-text">1.4 Issuer定义Non-revocation凭证</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.2.</span> <span class="nav-text">2. Credential发行</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.2.1.</span> <span class="nav-text">2.1 Holder获取凭证模板，进行验证模板是Issuer发的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.2.2.</span> <span class="nav-text">2.2 Holder进行凭证设定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.2.3.</span> <span class="nav-text">2.3 Issuer收到凭证模板，确认后颁发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.2.4.</span> <span class="nav-text">2.4 Holder收到两个凭证，进行存储</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.3.</span> <span class="nav-text">3. 凭证撤销</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.4.</span> <span class="nav-text">4. Holder展示凭证</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.4.1.</span> <span class="nav-text">4.1 Verifier向Holder发出Proof Request</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.4.2.</span> <span class="nav-text">4.2 Holder提供证明</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">3.4.2.1.</span> <span class="nav-text">4.2.1 Holder计算哈希，向Verifier提出挑战</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">3.4.2.2.</span> <span class="nav-text">4.2.2 最终披露</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">3.4.2.3.</span> <span class="nav-text">4.2.3 Holder发送信息给Verifier</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.4.3.</span> <span class="nav-text">4.3 Verifier验证</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">3.4.3.1.</span> <span class="nav-text">4.3.1 非撤销检查</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">3.4.3.2.</span> <span class="nav-text">4.3.2 验证正确性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">3.4.3.3.</span> <span class="nav-text">4.3.3 最终的哈希比较</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.5.</span> <span class="nav-text">5. 证明</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.5.1.</span> <span class="nav-text">5.1 证明 \(T=\widehat T\)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.5.2.</span> <span class="nav-text">5.2 证明 \(\overline{T_\Delta}=\widehat{T_\Delta}\)</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
@@ -1378,7 +1378,7 @@ m_j-a\Delta-\Delta&#39;=20-1-19=0
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">41.9k</span>
+    <span title="Site words total count">48.5k</span>
   
 </div>
 

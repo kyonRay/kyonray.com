@@ -82,7 +82,7 @@
 <meta name="description" content="Facebook 的Libra基于HotStuff进行改进，HotStuff可以将网络消息复杂度降到线性级，可在较多节点上进行部署（大于100），吞吐量相对于传统PBFT提升可观，并在数学上证明了安全性。 1. 传统BFT 共识 传统BFT共识存在以下缺陷：  需要提前知道所有参与者信息，较难扩容； 平方级别的消息传递复杂度； 增加大量节点会导致网络拥塞； Leader节点会承受整个网络的负载，负">
 <meta name="keywords" content="blockchain,HotStuff,Consensus">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HotStuﬀ:BFT Consensus in the Lens of Blockchain">
+<meta property="og:title" content="HotStuff:BFT Consensus in the Lens of Blockchain">
 <meta property="og:url" content="https://kyonray.com/2019/10/29/research-in-HotStuff/index.html">
 <meta property="og:site_name" content="Kyon&#39;s Blog">
 <meta property="og:description" content="Facebook 的Libra基于HotStuff进行改进，HotStuff可以将网络消息复杂度降到线性级，可在较多节点上进行部署（大于100），吞吐量相对于传统PBFT提升可观，并在数学上证明了安全性。 1. 传统BFT 共识 传统BFT共识存在以下缺陷：  需要提前知道所有参与者信息，较难扩容； 平方级别的消息传递复杂度； 增加大量节点会导致网络拥塞； Leader节点会承受整个网络的负载，负">
@@ -90,9 +90,9 @@
 <meta property="og:image" content="https://kyonray.com/2019/10/29/research-in-HotStuff/HotStuff.png">
 <meta property="og:image" content="https://kyonray.com/2019/10/29/research-in-HotStuff/chainHotStuff.png">
 <meta property="og:image" content="https://kyonray.com/2019/10/29/research-in-HotStuff/chainHotStuff2.png">
-<meta property="og:updated_time" content="2019-10-29T03:08:17.747Z">
+<meta property="og:updated_time" content="2019-10-29T03:46:33.631Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HotStuﬀ:BFT Consensus in the Lens of Blockchain">
+<meta name="twitter:title" content="HotStuff:BFT Consensus in the Lens of Blockchain">
 <meta name="twitter:description" content="Facebook 的Libra基于HotStuff进行改进，HotStuff可以将网络消息复杂度降到线性级，可在较多节点上进行部署（大于100），吞吐量相对于传统PBFT提升可观，并在数学上证明了安全性。 1. 传统BFT 共识 传统BFT共识存在以下缺陷：  需要提前知道所有参与者信息，较难扩容； 平方级别的消息传递复杂度； 增加大量节点会导致网络拥塞； Leader节点会承受整个网络的负载，负">
 <meta name="twitter:image" content="https://kyonray.com/2019/10/29/research-in-HotStuff/HotStuff.png">
 
@@ -130,7 +130,7 @@
 
 
 
-  <title>HotStuﬀ:BFT Consensus in the Lens of Blockchain | Kyon's Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>HotStuff:BFT Consensus in the Lens of Blockchain | Kyon's Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -316,7 +316,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">HotStuﬀ:BFT Consensus in the Lens of Blockchain</h1>
+          <h1 class="post-title" itemprop="name headline">HotStuff:BFT Consensus in the Lens of Blockchain</h1>
         
 
         <div class="post-meta">
@@ -378,7 +378,7 @@
 
           
           
-             <span id="/2019/10/29/research-in-HotStuff/" class="leancloud_visitors" data-flag-title="HotStuﬀ:BFT Consensus in the Lens of Blockchain">
+             <span id="/2019/10/29/research-in-HotStuff/" class="leancloud_visitors" data-flag-title="HotStuff:BFT Consensus in the Lens of Blockchain">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -441,7 +441,7 @@
 
       
         <p>Facebook 的Libra基于HotStuff进行改进，HotStuff可以将网络消息复杂度降到线性级，可在较多节点上进行部署（大于100），吞吐量相对于传统PBFT提升可观，并在数学上证明了安全性。</p>
-<h2 id="传统bft-共识">1. 传统BFT 共识</h2>
+<h2><span id="1-传统bft-共识">1. 传统BFT 共识</span></h2>
 <p>传统BFT共识存在以下缺陷：</p>
 <ol type="1">
 <li>需要提前知道所有参与者信息，较难扩容；</li>
@@ -456,7 +456,7 @@
 <li>容错率相对于PoX类型高很多。</li>
 </ol>
 <a id="more"></a>
-<h2 id="与传统bft共识的对比">2. 与传统BFT共识的对比</h2>
+<h2><span id="2-与传统bft共识的对比">2. 与传统BFT共识的对比</span></h2>
 <p>HotStuff基于一个新的框架，这个框架相比于传统BFT有着很大的不同：</p>
 <ol type="1">
 <li>采用树/链结构，投票只会投给当前认为主链上扩展的新部分；</li>
@@ -464,14 +464,14 @@
 <li>view change算法没有特殊情况；</li>
 <li>工程友好。</li>
 </ol>
-<h2 id="摘要与介绍">3. 摘要与介绍</h2>
+<h2><span id="3-摘要与介绍">3. 摘要与介绍</span></h2>
 <blockquote>
 <p>We present HotStuff, a leader-based Byzantine fault-tolerant replication protocol for the partially synchronous model. Once network communication becomes synchronous, HotStuff enables a correct leader to drive the protocol to consensus at the pace of actual (vs. maximum) network delay—a property called responsiveness—and with communication complexity that is linear in the number of replicas. <u>To our knowledge, HotStuff is the first partially synchronous BFT replication protocol exhibiting these combined properties.</u> Its simplicity enables it to be further pipelined and simplified into a practical, concise protocol for building large-scale replication services.</p>
 </blockquote>
 <p>在摘要中主要说明了HotStuff的两个特别属性：responsiveness、linearity，在网络最大时延时间内完成共识，即<strong>低延迟</strong>，消息复杂度与节点的数量关系是线性的，即 <strong>O(n)</strong>。这两种特性在其他部分同步BFT共识协议中是第一次集成在一起，并且在实验部分成功部署了100个节点，TPS和交易延迟与BFT-SMaRt[5]相近，且在leader节点宕机的情况下，能保持<strong>线性级别的 view change</strong>。</p>
-<h2 id="主要hotstuff模型">4. 主要HotStuff模型</h2>
-<h3 id="阶段">4.1阶段</h3>
-<h4 id="prepare-phase">4.1.1 Prepare phase</h4>
+<h2><span id="4-主要hotstuff模型">4. 主要HotStuff模型</span></h2>
+<h3><span id="41阶段">4.1阶段</span></h3>
+<h4><span id="411-prepare-phase">4.1.1 Prepare phase</span></h4>
 <ul>
 <li>新的leader收集n-f个 <strong>NEW-VIEW</strong> 消息，里面包括了最高的 prepareQC；</li>
 <li>leader根据prepareQC寻找一个highest preceding view 分支，并标记为highQC，因为highQC是获得commit最高的块，它可以断定没有更高的view到达确认状态（safe）；</li>
@@ -479,27 +479,27 @@
 <li>之后leader便将新的proposal放到 <strong>PREPARE</strong> 消息发给其他所有，proposal里包含了highQC的安全性证明；</li>
 <li>replica节点收到了来自leader的 <strong>PREPARE</strong> 消息后，节点使用 <strong>SAFENODE</strong> 方法检测是否接受，如果接受那么replica节点就会发出 <strong>PREPARE vote</strong> 消息，并签名，发给leader。</li>
 </ul>
-<h4 id="safenode-predicate">4.1.2 SAFENODE predicate</h4>
+<h4><span id="412-safenode-predicate">4.1.2 SAFENODE predicate</span></h4>
 <p>该方法的作用是验证highQC的可靠性：</p>
 <ul>
 <li>safety rule：新的proposal m从现有本地的<code>lockedQC</code>树节点延伸；</li>
 <li>liveness rule：如果proposal m的验证结果 m.justify，即当前node所在的view，对于现在的<code>lockedQC</code>有更高的 viewNumber；</li>
 <li>如果以上两条有一条为真，那么就检测正确；</li>
 </ul>
-<h4 id="pre-commit-phase">4.1.3 PRE-COMMIT phase</h4>
+<h4><span id="413-pre-commit-phase">4.1.3 PRE-COMMIT phase</span></h4>
 <ul>
 <li>当leader收到proposal的 n-f 个 <strong>PREPARE vote</strong> ，将他们聚合（聚合签名）成一个 <strong>prepareQC</strong>；</li>
 <li>leader将 <strong>prepareQC</strong> 放入 <strong>PRE-COMMIT</strong> 消息中，广播出去；</li>
 <li>replica节点收到消息，对消息l进行哈希并签名，放到 <strong>PRE-COMMIT vote</strong> 发给leader；</li>
 </ul>
-<h4 id="commit-phase">4.1.4 COMMIT phase</h4>
+<h4><span id="414-commit-phase">4.1.4 COMMIT phase</span></h4>
 <ul>
 <li>当leader收到了proposal的 n-f 个 <strong>PRE-COMMIT vote</strong> ，再对这些vote进行聚合成一个 <strong>precommitQC</strong>；</li>
 <li>leader将 <strong>precommitQC</strong> 装进 <strong>COMMIT</strong> 消息中，进行广播；</li>
 <li>replica节点收到消息，投出 <strong>COMMIT vote</strong> 给leader；</li>
 <li>replica节点从lockedQC变更为<strong>precommitQC</strong>（为了安全/正确性需要）；</li>
 </ul>
-<h4 id="decide-phase">4.1.5 DECIDE phase</h4>
+<h4><span id="415-decide-phase">4.1.5 DECIDE phase</span></h4>
 <ul>
 <li>leader收到了 n-f 个 <strong>COMMIT vote</strong> ，聚合成一个 <strong>commitQC</strong>，放进 <strong>DECIDE message</strong>；</li>
 <li>发送 <strong>DECIDE message</strong> 给所有其他replica节点；</li>
@@ -507,19 +507,19 @@
 <li>将执行结果返回给client；</li>
 <li>replica节点增加 <strong>viewNumber</strong> ，结束这次view；</li>
 </ul>
-<h4 id="nextview-interrupt">4.1.6 NEXTVIEW interrupt</h4>
+<h4><span id="416-nextview-interrupt">4.1.6 NEXTVIEW interrupt</span></h4>
 <ul>
 <li>在所有的阶段，replica都会等待对应viewNumber的消息，使用 <strong>NEXTVIEW(viewNumber)</strong> 工具判断，如果超时就进行下一个View；</li>
 <li>如果 <strong>NEXTVIEW(viewNumber)</strong> 中断了等待，那么replica就会增加当前viewNumber，开始下一个view；</li>
 </ul>
-<h4 id="基本流程图">4.1.7 基本流程图</h4>
+<h4><span id="417-基本流程图">4.1.7 基本流程图</span></h4>
 <p><img src="./HotStuff.png"></p>
-<h3 id="数据结构">4.2 数据结构</h3>
-<h4 id="messages">4.2.1 Messages</h4>
+<h3><span id="42-数据结构">4.2 数据结构</span></h3>
+<h4><span id="421-messages">4.2.1 Messages</span></h4>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> Type&#123;</span><br><span class="line">  New_VIEW,</span><br><span class="line">  PREPARE,</span><br><span class="line">  PRE_COMMIT,</span><br><span class="line">  COMMIT,</span><br><span class="line">  DECIDE</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Messages</span>&#123;</span></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    Type  type;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> curView;</span><br><span class="line">  Node node;</span><br><span class="line">    <span class="keyword">uint64_t</span>  justyfy; <span class="comment">// optional</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">char</span> partialSig[<span class="number">256</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="quorum-certificates">4.2.2 Quorum certificates</h4>
+<h4><span id="422-quorum-certificates">4.2.2 Quorum certificates</span></h4>
 <p>翻译为法定证书，一个QC，一个三元组 <code>&lt;type,viewNumber,node&gt;</code>，之后的签名聚合基于这个三元组进行聚合。</p>
-<h4 id="tree-and-branches">4.2.3 Tree and branches</h4>
+<h4><span id="423-tree-and-branches">4.2.3 Tree and branches</span></h4>
 <p>叙述分支冲突、节点冲突的情况。</p>
 <p>一个节点（node）包含了：</p>
 <ul>
@@ -528,7 +528,7 @@
 </ul>
 <p>replica节点当且仅当节点可以领导(led by)本地分支时才发送消息；当有落后时，可以从其他节点中拉取；</p>
 <p>如果两个分支都不是另一个的扩展，则这两个分支是冲突的（conflict）；当两个节点所领导的分支发生冲突，则这两个节点是冲突的。</p>
-<h4 id="bookkeeping-variables">4.2.4 Bookkeeping variables</h4>
+<h4><span id="424-bookkeeping-variables">4.2.4 Bookkeeping variables</span></h4>
 <p>主要是记录当前协议的状态的变量：</p>
 <ul>
 <li>viewNumber：记录当前view，初始化为1，并由NEXTVIEW自增；</li>
@@ -536,39 +536,39 @@
 <li>prepareQC：记录当前replica节点投PRE-COMMIT票最高QC，初始化为空；</li>
 <li>replica节点维护一个最高节点（node），该节点所在的分支是有效的。</li>
 </ul>
-<h3 id="协议细节">4.3 协议细节</h3>
-<h4 id="工具模块">4.3.1 工具模块</h4>
+<h3><span id="43-协议细节">4.3 协议细节</span></h3>
+<h4><span id="431-工具模块">4.3.1 工具模块</span></h4>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">// 构造一个msg</span><br><span class="line">function Msg(_type,node,qc)</span><br><span class="line">    m._type := _type</span><br><span class="line">    m.viewNumber := curView</span><br><span class="line">    m.node := node</span><br><span class="line">    m.justify := qc</span><br><span class="line">    return m</span><br><span class="line"></span><br><span class="line">// r节点对其签名投票</span><br><span class="line">function voteMsg(_type, node, qc)</span><br><span class="line">    m := Msg(_type, node, qc)</span><br><span class="line">    m.partialSig := tsign_r (⟨m._type, m.viewNumber, m.node⟩)</span><br><span class="line">    return m</span><br><span class="line"></span><br><span class="line">// 生成叶子结点</span><br><span class="line">procedure createLeaf(parent, cmd)</span><br><span class="line">    b.parent ← parent</span><br><span class="line">    b.cmd ← cmd</span><br><span class="line">    return b</span><br><span class="line"></span><br><span class="line">// 生成一个完整的QC</span><br><span class="line">function QC(V )</span><br><span class="line">    qc._type ← m._type : m ∈ V</span><br><span class="line">    qc.viewNumber ← m.viewNumber : m ∈ V</span><br><span class="line">    qc.node ← m.node : m ∈ V</span><br><span class="line">    // 签名聚合</span><br><span class="line">    qc.sig ← tcombine(⟨qc._type, qc.viewNumber, qc.node⟩, &#123;m.partialSig | m ∈ V &#125;)</span><br><span class="line">    return qc</span><br><span class="line"></span><br><span class="line">function matchingMsg(m, t, v)</span><br><span class="line">    return (m._type = t) ∧ (m.viewNumber = v)</span><br><span class="line">function matchingQC(qc, t, v)</span><br><span class="line">    return (qc._type = t) ∧ (qc.viewNumber = v)</span><br><span class="line"></span><br><span class="line">function safeNode(node, qc)</span><br><span class="line">    return (node extends from lockedQC.node) ∨ // safety rule </span><br><span class="line">    (qc.viewNumber &gt; lockedQC .viewNumber) // liveness rule</span><br></pre></td></tr></table></figure>
-<h4 id="basic-hotstuff">4.3.2 Basic HotStuff</h4>
+<h4><span id="432-basic-hotstuff">4.3.2 Basic HotStuff</span></h4>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">for curView ← 1, 2, 3, . . . do</span><br><span class="line">▷ prepare phase</span><br><span class="line">as a leader // r = leader(curView)</span><br><span class="line">// we assume special new-view messages from view 0</span><br><span class="line">    wait for (n − f ) new-view messages:</span><br><span class="line">        M ← &#123;m | matchingMsg(m, new-view, curView −1)&#125;</span><br><span class="line">    highQC ← (max&#123;m.justify.viewNumber&#125; m∈M).justify</span><br><span class="line">    curProposal ← createLeaf(highQC.node, client’s command)</span><br><span class="line">    broadcast Msg(prepare, curProposal, highQC)</span><br><span class="line">as a replica</span><br><span class="line">    wait for message m from leader(curView)</span><br><span class="line">        m : matchingMsg(m, prepare, curView)</span><br><span class="line">    if m.node extends from m.justify.node ∧ safeNode(m.node, m.justify) then</span><br><span class="line">    send voteMsg(prepare, m.node, ⊥) to leader(curView)</span><br><span class="line"></span><br><span class="line">▷ pre-commit phase</span><br><span class="line">as a leader</span><br><span class="line">    wait for (n − f ) votes:</span><br><span class="line">        V ← &#123;v | matchingMsg(v, prepare, curView)&#125;</span><br><span class="line">    prepareQC ← QC(V )</span><br><span class="line">    broadcast Msg(pre-commit, ⊥, prepareQC)</span><br><span class="line">as a replica</span><br><span class="line">    wait for message m from leader(curView)</span><br><span class="line">        m : matchingQC(m.justify, prepare, curView)</span><br><span class="line">    prepareQC ← m.justify</span><br><span class="line">    send to leader(curView)</span><br><span class="line">        voteMsg(pre-commit, m.justify.node, ⊥)</span><br><span class="line"></span><br><span class="line">▷ commit phase</span><br><span class="line">as a leader</span><br><span class="line">    wait for (n − f ) votes:</span><br><span class="line">        V ← &#123;v | matchingMsg(v, pre-commit, curView)&#125;</span><br><span class="line">    precommitQC ← QC(V )</span><br><span class="line">    broadcast Msg(commit, ⊥, precommitQC)</span><br><span class="line">as a replica</span><br><span class="line">    wait for message m from leader(curView)</span><br><span class="line">        m : matchingQC(m.justify, pre-commit, curView)</span><br><span class="line">    lockedQC ← m.justify</span><br><span class="line">    send to leader(curView)</span><br><span class="line">        voteMsg(commit, m.justify.node, ⊥)</span><br><span class="line"></span><br><span class="line">▷ decide phase</span><br><span class="line">as a leader</span><br><span class="line">    wait for (n − f ) votes:</span><br><span class="line">        V ← &#123;v | matchingMsg(v, commit, curView)&#125;</span><br><span class="line">    commitQC ← QC(V )</span><br><span class="line">    broadcast Msg(decide, ⊥, commitQC)</span><br><span class="line">as a replica</span><br><span class="line">    wait for message m from leader(curView)</span><br><span class="line">        m : matchingQC(m.justify, commit, curView)</span><br><span class="line">    execute new commands through m.justify.node,</span><br><span class="line">    respond to clients</span><br><span class="line"></span><br><span class="line">▷ Finally</span><br><span class="line">    nextView interrupt:</span><br><span class="line">        goto this line if nextView(curView) is called during “wait for” in any phase</span><br><span class="line">        send Msg(new-view, ⊥, prepareQC) to leader(curView + 1)</span><br></pre></td></tr></table></figure>
-<h3 id="safety-liveness-and-complexity">4.4 Safety, liveness and complexity</h3>
-<h4 id="安全性引理">4.4.1 安全性引理</h4>
+<h3><span id="44-safety-liveness-and-complexity">4.4 Safety, liveness and complexity</span></h3>
+<h4><span id="441-安全性引理">4.4.1 安全性引理</span></h4>
 <p>安全性假设：定义一个quorum certificate <span class="math inline">\(qc\)</span> 当且仅当以下共识为真时是有效的：</p>
 <p><span class="math inline">\(tverify(&lt;qc.type,qc.viewNumber,qc.node&gt;,qc.sig)\)</span></p>
 <ul>
 <li>对于任意有效的 <span class="math inline">\(qc_1,qc_2\)</span> ，有 <span class="math inline">\(qc_1.type=qc_2.type\)</span> 且 $qc_1.node $ 和 $ qc_2.node$ 冲突，那么有 <span class="math inline">\(qc_1.viewNumber\ne qc_2.viewNumber\)</span> ；</li>
 <li>定理：如果有两个冲突的节点 <span class="math inline">\(w,a\)</span> 那么这两个节点不可能同时被commit，即使这两个节点都来自于正确的replica；</li>
 </ul>
-<h4 id="活跃性引理">4.4.2 活跃性引理</h4>
+<h4><span id="442-活跃性引理">4.4.2 活跃性引理</span></h4>
 <p>主要是定义两个函数 LEADER、NEXTVIEW。</p>
 <ul>
 <li>If a correct replica is locked such that <span class="math inline">\(lockedQC = precommitQC\)</span> , then at least <span class="math inline">\(f + 1\)</span> correct replicas voted for some <span class="math inline">\(prepareQC\)</span> matching <span class="math inline">\(lockedQC\)</span>.</li>
 <li>定理：在GST之后，在一段时间内所有replica节点都在一段时间 <span class="math inline">\(T_f\)</span> 内保持在同一个view中，且leader对于当前view是有效的，那么就能达成共识。</li>
 </ul>
-<h4 id="复杂度">4.4.3 复杂度</h4>
+<h4><span id="443-复杂度">4.4.3 复杂度</span></h4>
 <p>在每个阶段，都是由leader进行广播，所有replica节点接受消息，并签上签名返回给leader，leader进行阈值签名聚合，所以消息复杂度都是 <span class="math inline">\(O(n)\)</span> 。</p>
-<h2 id="链式hotstuff">5. 链式HotStuff</h2>
+<h2><span id="5-链式hotstuff">5. 链式HotStuff</span></h2>
 <p>在基本HotStuff中，Leader主节点需要三个阶段来确认一个请求提交。这些阶段都非常相似，除了收集其它副本节点的投票外，大部分没有做多少实际工作。</p>
-<h3 id="基本流程">5.1 基本流程</h3>
+<h3><span id="51-基本流程">5.1 基本流程</span></h3>
 <p>链式HotStuff （Chained HotStuff）提升基本HotStuff的效用并同时并大大简化其流程。方法是在每个<strong>Prepare</strong>阶段，都<strong>主动地转换视图</strong>。具体说来，在链式HotStuff中，对<strong>Prepare</strong>阶段的投票，由下一个在prepareQC的视图的Leader来收集。同样，依此类推，<strong>Pre-Commit</strong>和<strong>Commit</strong>阶段的投票也由与之相应的下一个视图的leader来收集。这样，新Leader在视图v+1的<strong>Prepare</strong>提议阶段，同时作为视图v的<strong>Pre-Commit</strong>阶段。而新的Leader在视图v+2的<strong>Prepare</strong>提议阶段，同时可以作为视图v+1的<strong>Pre-Commit</strong>阶段，以及视图v的<strong>Commit</strong>阶段。因为所有阶段的数据结构都一样，因此可以用流水线的方式来提升共识的效率。下图展示了链式HotStuff的基于Basic HotStuff的流水线形式。</p>
 <p><img src="./chainHotStuff.png"></p>
 <p>视图 <span class="math inline">\(v_1\)</span>, <span class="math inline">\(v_2\)</span>, <span class="math inline">\(v_3\)</span>作为在<span class="math inline">\(v_1\)</span>提交的命令<code>cmd1</code>的<strong>Prepare</strong>，<strong>Pre-Commit</strong>和<strong>Commit</strong>阶段。<code>cmd1</code>命令在<span class="math inline">\(v_4\)</span>里确认。视图<span class="math inline">\(v_2\)</span>,<span class="math inline">\(v_3\)</span>,<span class="math inline">\(v_4\)</span>作为在<span class="math inline">\(v_2\)</span>提交的<code>cmd2</code>的三个基础HotStuff的阶段，<code>cmd2</code>在<span class="math inline">\(v_5\)</span>里得到确认，依此类推。</p>
 <p>因此链式HotStuff中，只有两类型的消息，一种是<strong>New-View</strong>，一种是<strong>Generic phase</strong>的<strong>Generic</strong>消息。<code>genericQC</code>实现所有不同阶段的功能。</p>
 <p>链式HotStuff中，如果下图，节点 $ b’$ 中的QC直接对应父图节点 <span class="math inline">\(b\)</span> ，这样形成了<code>One-Chain</code>； 如果在<code>One-Chain</code>的基础上，下一个图节点 <span class="math inline">\(b&#39;&#39;\)</span> 中的QC直接对应 <span class="math inline">\(b’\)</span> ，这样就形成了<code>Two-Chain</code>，在这个基础上，下一个图节点 <span class="math inline">\(b^*\)</span> 中的QC直接对应 <span class="math inline">\(b’’\)</span> , 这样就形成了<code>Three-Chain</code>。显示视图<span class="math inline">\(v_4\)</span>，<span class="math inline">\(v_5\)</span>，<span class="math inline">\(v_6\)</span> 形成了一个<code>Three-Chain</code>。</p>
 <p><img src="./chainHotStuff2.png"></p>
-<h3 id="链式hotstuff伪代码">5.2 链式HotStuff伪代码</h3>
+<h3><span id="52-链式hotstuff伪代码">5.2 链式HotStuff伪代码</span></h3>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">procedure createLeaf(parent, cmd, qc)</span><br><span class="line">    b.parent ← branch extending with blanks from parent to height curView;</span><br><span class="line">    b.cmd ← cmd;</span><br><span class="line">    b.justify ← qc;</span><br><span class="line">    return b</span><br><span class="line"></span><br><span class="line">for curView ← 1, 2, 3, . . . do</span><br><span class="line"></span><br><span class="line">▷ generic phase</span><br><span class="line">as a leader // r = leader(curView)</span><br><span class="line">    wait for (n − f ) NEW-VIEW messages:</span><br><span class="line">        M ← &#123;m | matchingMsg(m, NEW-VIEW, curView −1)&#125;</span><br><span class="line">    // M包含了上个leader的NEW-VIEW消息，等待上一个leader</span><br><span class="line"></span><br><span class="line">    genericQC ← (max &#123;m.justify.viewNumber&#125; m∈M).justify</span><br><span class="line">    curProposal ← createLeaf(genericQC.node, client’s command, genericQC)</span><br><span class="line">    // prepare 阶段 (leader-half)</span><br><span class="line">    broadcast Msg(generic, curProposal, ⊥)</span><br><span class="line"></span><br><span class="line">as a replica</span><br><span class="line">    wait for message m from leader(curView)</span><br><span class="line">        m : matchingMsg(m, generic, curView)</span><br><span class="line">    b∗ ← m.node;</span><br><span class="line">    b′′ ← b∗.justify.node;</span><br><span class="line">    b′ ← b′′.justify.node;</span><br><span class="line">    b ← b′.justify.node</span><br><span class="line">    if safeNode(b∗ , b∗.justify) then</span><br><span class="line">        send voteMsg(generic, b∗ , ⊥) to leader(curView)</span><br><span class="line"></span><br><span class="line">    // 开始b∗的父节点 pre-commit 阶段</span><br><span class="line">    if b∗.parent = b′′ then</span><br><span class="line">    genericQC ← b∗.justify</span><br><span class="line"></span><br><span class="line">    // 开始b∗的祖父节点的 commit 阶段</span><br><span class="line">    if (b∗.parent = b′′) ∧ (b′′.parent = b′ ) then</span><br><span class="line">    lockedQC ← b′′.justify</span><br><span class="line"></span><br><span class="line">    // 开始b∗的祖祖父节点 decide 阶段</span><br><span class="line">    if (b∗.parent = b′′) ∧ (b′′.parent = b′) ∧ (b′.parent = b) then</span><br><span class="line">        execute new commands through b, respond to clients</span><br><span class="line">        // 表明当前cmd已经被确认，可以执行</span><br><span class="line"></span><br><span class="line">as a leader // pre-commit 阶段 (leader-half)</span><br><span class="line">    wait for (n − f) votes:</span><br><span class="line">        V ← &#123;v | matchingMsg(v, generic, curView)&#125;</span><br><span class="line">    genericQC ← QC(V)</span><br><span class="line">    // for liveness, the message here counts as (n − f ) at Line 5</span><br><span class="line"></span><br><span class="line">as the next leader</span><br><span class="line">    wait for message m from leader(curView)</span><br><span class="line">        m : matchingMsg(m, NEW-VIEW, curView)</span><br><span class="line"></span><br><span class="line">▷ Finally</span><br><span class="line">    nextView interrupt:</span><br><span class="line">    goto this line if nextView(curView) is called during “wait for” in any phase</span><br><span class="line">    send Msg(NEW-VIEW, ⊥, genericQC) to leader(curView + 1)</span><br></pre></td></tr></table></figure>
-<h2 id="参考文献">参考文献</h2>
+<h2><span id="参考文献">参考文献</span></h2>
 <p>[1]. Maofan Yin, Dahlia Malkhi, Michael K. Reiter, Guy Golan Gueta, and Ittai Abraham. 2018. HotStuff: BFT Consensus in the Lens of Blockchain. CoRR abs/1803.05069 (2018). arXiv:1803.05069</p>
 <p>[2]. Maofan Yin, Dahlia Malkhi, Michael K. Reiter, Guy Golan Gueta, and Ittai Abraham. 2019. HotStuff: BFT Consensus with Linearity and Responsiveness. In 2019 ACM Symposium on Principles of Distributed Computing (PODC ’19), July 29-August 2, 2019, Toronto, ON, Canada. ACM, New York, NY, USA, 10 pages. https://doi.org/10.1145/3293611.3331591</p>
 <p>[3]. <a href="https://www.8btc.com/article/432718" target="_blank" rel="noopener">Facebook Libra 采用的 HotStuff 算法，究竟是怎样一种尤物</a></p>
@@ -624,7 +624,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://kyonray.com/2019/10/29/research-in-HotStuff/" title="HotStuﬀ:BFT Consensus in the Lens of Blockchain">https://kyonray.com/2019/10/29/research-in-HotStuff/</a>
+    <a href="https://kyonray.com/2019/10/29/research-in-HotStuff/" title="HotStuff:BFT Consensus in the Lens of Blockchain">https://kyonray.com/2019/10/29/research-in-HotStuff/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -680,6 +680,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/02/FISCO-BCOS-source-code-reading-libconsensus/" rel="prev" title="FISCO-BCOS 源代码研读(一) —— 共识算法模块">
+                FISCO-BCOS 源代码研读(一) —— 共识算法模块 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -761,7 +765,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -850,7 +854,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#传统bft-共识"><span class="nav-number">1.</span> <span class="nav-text">1. 传统BFT 共识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#与传统bft共识的对比"><span class="nav-number">2.</span> <span class="nav-text">2. 与传统BFT共识的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#摘要与介绍"><span class="nav-number">3.</span> <span class="nav-text">3. 摘要与介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主要hotstuff模型"><span class="nav-number">4.</span> <span class="nav-text">4. 主要HotStuff模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#阶段"><span class="nav-number">4.1.</span> <span class="nav-text">4.1阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#prepare-phase"><span class="nav-number">4.1.1.</span> <span class="nav-text">4.1.1 Prepare phase</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#safenode-predicate"><span class="nav-number">4.1.2.</span> <span class="nav-text">4.1.2 SAFENODE predicate</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pre-commit-phase"><span class="nav-number">4.1.3.</span> <span class="nav-text">4.1.3 PRE-COMMIT phase</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#commit-phase"><span class="nav-number">4.1.4.</span> <span class="nav-text">4.1.4 COMMIT phase</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#decide-phase"><span class="nav-number">4.1.5.</span> <span class="nav-text">4.1.5 DECIDE phase</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nextview-interrupt"><span class="nav-number">4.1.6.</span> <span class="nav-text">4.1.6 NEXTVIEW interrupt</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基本流程图"><span class="nav-number">4.1.7.</span> <span class="nav-text">4.1.7 基本流程图</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据结构"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#messages"><span class="nav-number">4.2.1.</span> <span class="nav-text">4.2.1 Messages</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#quorum-certificates"><span class="nav-number">4.2.2.</span> <span class="nav-text">4.2.2 Quorum certificates</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tree-and-branches"><span class="nav-number">4.2.3.</span> <span class="nav-text">4.2.3 Tree and branches</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bookkeeping-variables"><span class="nav-number">4.2.4.</span> <span class="nav-text">4.2.4 Bookkeeping variables</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#协议细节"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 协议细节</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#工具模块"><span class="nav-number">4.3.1.</span> <span class="nav-text">4.3.1 工具模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#basic-hotstuff"><span class="nav-number">4.3.2.</span> <span class="nav-text">4.3.2 Basic HotStuff</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#safety-liveness-and-complexity"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 Safety, liveness and complexity</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安全性引理"><span class="nav-number">4.4.1.</span> <span class="nav-text">4.4.1 安全性引理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#活跃性引理"><span class="nav-number">4.4.2.</span> <span class="nav-text">4.4.2 活跃性引理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#复杂度"><span class="nav-number">4.4.3.</span> <span class="nav-text">4.4.3 复杂度</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#链式hotstuff"><span class="nav-number">5.</span> <span class="nav-text">5. 链式HotStuff</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本流程"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 基本流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#链式hotstuff伪代码"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 链式HotStuff伪代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">1. 传统BFT 共识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">2.</span> <span class="nav-text">2. 与传统BFT共识的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text">3. 摘要与介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">4.</span> <span class="nav-text">4. 主要HotStuff模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">4.1.</span> <span class="nav-text">4.1阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.1.1.</span> <span class="nav-text">4.1.1 Prepare phase</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.1.2.</span> <span class="nav-text">4.1.2 SAFENODE predicate</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.1.3.</span> <span class="nav-text">4.1.3 PRE-COMMIT phase</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.1.4.</span> <span class="nav-text">4.1.4 COMMIT phase</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.1.5.</span> <span class="nav-text">4.1.5 DECIDE phase</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.1.6.</span> <span class="nav-text">4.1.6 NEXTVIEW interrupt</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.1.7.</span> <span class="nav-text">4.1.7 基本流程图</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.2.1.</span> <span class="nav-text">4.2.1 Messages</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.2.2.</span> <span class="nav-text">4.2.2 Quorum certificates</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.2.3.</span> <span class="nav-text">4.2.3 Tree and branches</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.2.4.</span> <span class="nav-text">4.2.4 Bookkeeping variables</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 协议细节</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.3.1.</span> <span class="nav-text">4.3.1 工具模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.3.2.</span> <span class="nav-text">4.3.2 Basic HotStuff</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 Safety, liveness and complexity</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.4.1.</span> <span class="nav-text">4.4.1 安全性引理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.4.2.</span> <span class="nav-text">4.4.2 活跃性引理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.4.3.</span> <span class="nav-text">4.4.3 复杂度</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">5.</span> <span class="nav-text">5. 链式HotStuff</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 基本流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 链式HotStuff伪代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
             
 
           </div>
@@ -885,7 +889,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">41.9k</span>
+    <span title="Site words total count">48.5k</span>
   
 </div>
 
