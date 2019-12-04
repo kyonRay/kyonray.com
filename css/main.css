@@ -1996,7 +1996,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #1a85ff;
+  background: #3bff16;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -3313,4 +3313,25 @@ pre .javascript .function {
   .pagination {
     margin: 8px 0 0;
   }
+}
+@media screen and (min-width: 1200px) {
+  body {
+    background-image: url("/images/background.jpg");
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center 0;
+  }
+  #footer a {
+    color: #eee;
+  }
+}
+.post-block {
+  background: rgba(255,255,255,0.9);
 }

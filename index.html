@@ -14,6 +14,13 @@
 
 
 
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
 
 
 
@@ -438,12 +445,14 @@
 
       
         
-          <h2 id="一、版本"><a href="#一、版本" class="headerlink" title="一、版本"></a>一、版本</h2><ul>
+          <h2 id="一版本">一、版本</h2>
+<ul>
 <li>fisco-bcos：2.1.0</li>
 <li>commit：cb68124d4fbf3df563a57dfff5f0c6eedc1419cc</li>
 <li>branch：master</li>
 </ul>
-<h2 id="二、共识模块框架"><a href="#二、共识模块框架" class="headerlink" title="二、共识模块框架"></a>二、共识模块框架</h2><p>FISCO BCOS实现了一套可扩展的共识框架，可插件化扩展不同的共识算法，目前支持 <strong>PBFT(Practical Byzantine Fault Tolerance)</strong> 和 <strong>Raft(Replication and Fault Tolerant)</strong> 共识算法，共识模块框架如下图：</p>
+<h2 id="二共识模块框架">二、共识模块框架</h2>
+<p>FISCO BCOS实现了一套可扩展的共识框架，可插件化扩展不同的共识算法，目前支持 <strong>PBFT(Practical Byzantine Fault Tolerance)</strong> 和 <strong>Raft(Replication and Fault Tolerant)</strong> 共识算法，共识模块框架如下图：</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/12/02/FISCO-BCOS-source-code-reading-libconsensus/#more" rel="contents">
@@ -603,7 +612,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3.1k
+                  3.2k
                 </span>
               
 
@@ -642,15 +651,16 @@
       
         
           <p>Facebook 的Libra基于HotStuff进行改进，HotStuff可以将网络消息复杂度降到线性级，可在较多节点上进行部署（大于100），吞吐量相对于传统PBFT提升可观，并在数学上证明了安全性。</p>
-<h2 id="1-传统BFT-共识"><a href="#1-传统BFT-共识" class="headerlink" title="1. 传统BFT 共识"></a>1. 传统BFT 共识</h2><p>传统BFT共识存在以下缺陷：</p>
-<ol>
+<h2 id="传统bft-共识">1. 传统BFT 共识</h2>
+<p>传统BFT共识存在以下缺陷：</p>
+<ol type="1">
 <li>需要提前知道所有参与者信息，较难扩容；</li>
 <li>平方级别的消息传递复杂度；</li>
 <li>增加大量节点会导致网络拥塞；</li>
 <li>Leader节点会承受整个网络的负载，负载不均衡。</li>
 </ol>
 <p>同样，相对于PoX等的共识，有着重要的优势：</p>
-<ol>
+<ol type="1">
 <li>BFT协议速度只和与网络发送的短消息的速度有关，没有额外的能源消耗或等待时间；</li>
 <li>交易延迟非常小，延迟与网络延迟同数量级；</li>
 <li>容错率相对于PoX类型高很多。</li>
@@ -814,7 +824,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  6.1k
+                  6.4k
                 </span>
               
 
@@ -830,7 +840,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  31
+                  33
                 </span>
               
             </div>
@@ -852,7 +862,8 @@
 
       
         
-          <h2 id="一、简述"><a href="#一、简述" class="headerlink" title="一、简述"></a>一、简述</h2><p>匿名凭证的作用是允许用户证明当前identity符合某个属性，且不暴露出其他属性。本文描述的方法通过使用零知识证明的方式保证属性在披露的过程中不被其他人知道，且可实现凭证一次性使用，第二次用于展示给Verifier的时候会被感知。</p>
+          <h2 id="一简述">一、简述</h2>
+<p>匿名凭证的作用是允许用户证明当前identity符合某个属性，且不暴露出其他属性。本文描述的方法通过使用零知识证明的方式保证属性在披露的过程中不被其他人知道，且可实现凭证一次性使用，第二次用于展示给Verifier的时候会被感知。</p>
 <p>由于其原稿难懂，有多个符号错误，计算错误，符号未命名的问题，所以本人进行翻译、纠正。</p>
           <!--noindex-->
           <div class="post-button text-center">
@@ -1052,7 +1063,8 @@
       
         
           <p>原作时间：2018年3月31日</p>
-<h2 id="密码学中的离散数学知识学习"><a href="#密码学中的离散数学知识学习" class="headerlink" title="密码学中的离散数学知识学习"></a>密码学中的离散数学知识学习</h2><p>密码学中的近世代数实在是让人头疼,在实际阅读文章中很吃力,于是决心下点苦工补一补代数的知识。(本科有学习过离散数学，终于还是吃了数学的亏。谁要是再说学数学没用我就*@$%!)</p>
+<h2 id="密码学中的离散数学知识学习">密码学中的离散数学知识学习</h2>
+<p>密码学中的近世代数实在是让人头疼,在实际阅读文章中很吃力,于是决心下点苦工补一补代数的知识。(本科有学习过离散数学，终于还是吃了数学的亏。谁要是再说学数学没用我就*@$%!)</p>
 <p>首先是学习这篇<a href="https://blog.csdn.net/qmickecs/article/details/77281602" target="_blank" rel="noopener">文章</a>里的知识点,和之前学习过的离散数学无异，但是这篇文章好就好在了深度展开了许多知识点，并用较为简洁的例子讲解。但是呢，有点不足的是，因为代数系统他是一环扣一环的，有很强的迭代,往往会让人拎不清谁是谁。本文引用这篇文章就想能更加拎清楚概念。</p>
           <!--noindex-->
           <div class="post-button text-center">
@@ -1213,7 +1225,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  12.6k
+                  12.7k
                 </span>
               
 
@@ -1251,8 +1263,10 @@
 
       
         
-          <h2 id="一、简述"><a href="#一、简述" class="headerlink" title="一、简述"></a>一、简述</h2><p>本文从物联网（IoT）技术的基础知识开始，主要介绍了物联网的基本定义、主要通信协议，并对现在物联网技术所面临的挑战进行了详细分析。在第三章，研究区块链与物联网结合的契合点，分析区块链是如何解决物联网现在面临的挑战，并提供一些物联网部署在区块链的方法。在第四章，从区块链在物联网中身份标识治理的角度切入，通过对比现有中心化身份管理方法，研究基于区块链的实体身份标识可以如何解决物联网相关的痛点，并给出现有案例（学术上、工业上）。</p>
-<h2 id="二、认识IoT"><a href="#二、认识IoT" class="headerlink" title="二、认识IoT"></a>二、认识IoT</h2><p>物联网是一个计算设备、电子器械、物体、动物或人相互关联的系统，具有唯一标识符（UID）和通过网络传输数据、交互的能力，而无需人与人或人与计算机的互动，终极梦想是万物互联的世界。</p>
+          <h2 id="一简述">一、简述</h2>
+<p>本文从物联网（IoT）技术的基础知识开始，主要介绍了物联网的基本定义、主要通信协议，并对现在物联网技术所面临的挑战进行了详细分析。在第三章，研究区块链与物联网结合的契合点，分析区块链是如何解决物联网现在面临的挑战，并提供一些物联网部署在区块链的方法。在第四章，从区块链在物联网中身份标识治理的角度切入，通过对比现有中心化身份管理方法，研究基于区块链的实体身份标识可以如何解决物联网相关的痛点，并给出现有案例（学术上、工业上）。</p>
+<h2 id="二认识iot">二、认识IoT</h2>
+<p>物联网是一个计算设备、电子器械、物体、动物或人相互关联的系统，具有唯一标识符（UID）和通过网络传输数据、交互的能力，而无需人与人或人与计算机的互动，终极梦想是万物互联的世界。</p>
 <p>如下图所示是一个物联网系统的样例，物联网生态系统由支持Web的智能设备组成，这些设备使用嵌入式处理器，传感器和通信硬件来收集、发送和处理从环境中获取的数据。 物联网设备通过连接到物联网网关或其他边缘设备来共享它们收集的传感器数据，其中数据被发送到云以进行本地分析或分析。 尽管人们可以与设备进行交互，但设备可以完成大部分工作而无需人工干预。</p>
           <!--noindex-->
           <div class="post-button text-center">
@@ -1413,7 +1427,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  5.4k
+                  5.5k
                 </span>
               
 
@@ -1611,7 +1625,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  484
+                  491
                 </span>
               
 
@@ -1649,7 +1663,8 @@
 
       
         
-          <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>在物质世界，我们使用物理凭证来证明我们的身份（identity）我们可以有驾照来证明我们的驾驶许可、可以有学位证书来证明我们的学历、可以有技能证书来证明我们的能力；但是在互联网上，却没有等同的解决方案来向互联网端的验证者证明自己的能力、资质、拥有权。</p>
+          <h2 id="问题描述">问题描述</h2>
+<p>在物质世界，我们使用物理凭证来证明我们的身份（identity）我们可以有驾照来证明我们的驾驶许可、可以有学位证书来证明我们的学历、可以有技能证书来证明我们的能力；但是在互联网上，却没有等同的解决方案来向互联网端的验证者证明自己的能力、资质、拥有权。</p>
 <p>这些问题的本质是因为，在整个互联网中没有凭证以及凭证发行验证的标准。The World Wide Web Consortium(W3C)在2017年4月对凭证进行了标准化。但如何对凭证发行方的电子签名的验证进行标准化，还存在着疑问。现有解决方案是采用PKI证书密钥体系，但是这种方案需要多次证书交互，每次进行验证都需要与证书颁发中心进行交互验证证书，且存在中心作恶的风险。</p>
           <!--noindex-->
           <div class="post-button text-center">
@@ -1848,7 +1863,8 @@
 
       
         
-          <h2 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h2><p>Facebook这次发起的新区块链虚拟货币在技术层面上并未看到有大的革新，与现有的虚拟货币区别不大。从现在的白皮书以及技术文档上所指，最大的特点是<strong>币的价值和真实资产储备相挂钩</strong>，相对于比特币，波动性较小，价值更平稳，这更像是一种有政府背书的数字货币。</p>
+          <h2 id="简述">简述</h2>
+<p>Facebook这次发起的新区块链虚拟货币在技术层面上并未看到有大的革新，与现有的虚拟货币区别不大。从现在的白皮书以及技术文档上所指，最大的特点是<strong>币的价值和真实资产储备相挂钩</strong>，相对于比特币，波动性较小，价值更平稳，这更像是一种有政府背书的数字货币。</p>
 <p>Libra使用了新的编程语言来编写智能合约，设计了基于拜占庭容错的共识算法LibraBFT，如何能承受住全球这么打的用户量，如何，这些问题在技术论文上也没有披露太多信息。</p>
           <!--noindex-->
           <div class="post-button text-center">
@@ -2048,14 +2064,16 @@
       
         
           <p>这是一个使用 Python3 + flask 写的简单平台，主要目的是体验区块链的场景。</p>
-<p>项目库：<a href="https://github.com/dvf/blockchain" target="_blank" rel="noopener">https://github.com/dvf/blockchain</a></p>
-<h2 id="一、实验目标"><a href="#一、实验目标" class="headerlink" title="一、实验目标"></a>一、实验目标</h2><ol>
+<p>项目库：https://github.com/dvf/blockchain</p>
+<h2 id="一实验目标">一、实验目标</h2>
+<ol type="1">
 <li>熟悉区块数据结构，了解哈希算法；</li>
 <li>简单了解哈希碰撞(挖矿)的流程，并对发起新交易流程有所了解；</li>
 <li>熟悉区块链的不可篡改性、顺序性，以及区块链分叉时的场景。</li>
 </ol>
-<h2 id="二、实验基础"><a href="#二、实验基础" class="headerlink" title="二、实验基础"></a>二、实验基础</h2><p>本实验涉及到以下必要知识点：</p>
-<ol>
+<h2 id="二实验基础">二、实验基础</h2>
+<p>本实验涉及到以下必要知识点：</p>
+<ol type="1">
 <li>掌握Python语言知识点，熟悉Python程序构建方法，了解flask web框架；</li>
 <li>熟练使用 *nix系统，熟悉命令行操作（Windows也可）；</li>
 <li>掌握HTTP协议，熟悉状态返回值的含义；</li>
@@ -2258,7 +2276,8 @@
 
       
         
-          <h2 id="关于博客"><a href="#关于博客" class="headerlink" title="关于博客"></a>关于博客</h2><p>学习技术总是无底洞，越往深处挖掘，越有挑战也越有乐趣。之前就很想要有个属于自己域名，自己的博客，可以在自己的博客里分享自己学到的、感受的，这也是在这世上孤独的自己的一种乐趣。如今将想法做成现实，希望能多多commit :)</p>
+          <h2 id="关于博客">关于博客</h2>
+<p>学习技术总是无底洞，越往深处挖掘，越有挑战也越有乐趣。之前就很想要有个属于自己域名，自己的博客，可以在自己的博客里分享自己学到的、感受的，这也是在这世上孤独的自己的一种乐趣。如今将想法做成现实，希望能多多commit :)</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/05/20/how-i-build-this-website/#more" rel="contents">
@@ -2299,13 +2318,216 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kyonray.com/2019/05/16/A-lightweight-attribute-based-encryption-scheme-for-the-Internet-of-Things/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kyon Kwok">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="http://img.inmywordz.com/uploads/20170527171017_34.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kyon's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/16/A-lightweight-attribute-based-encryption-scheme-for-the-Internet-of-Things/" itemprop="url">A lightweight attribute-based encryption scheme for the Internet of Things</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-16T17:13:56+08:00">
+                2019-05-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/密码学/" itemprop="url" rel="index">
+                    <span itemprop="name">密码学</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/05/16/A-lightweight-attribute-based-encryption-scheme-for-the-Internet-of-Things/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/05/16/A-lightweight-attribute-based-encryption-scheme-for-the-Internet-of-Things/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/05/16/A-lightweight-attribute-based-encryption-scheme-for-the-Internet-of-Things/" class="leancloud_visitors" data-flag-title="A lightweight attribute-based encryption scheme for the Internet of Things">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4.4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  18
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="论文阅读a-lightweight-attribute-based-encryption-scheme-for-the-internet-of-things">论文阅读：A lightweight attribute-based encryption scheme for the Internet of Things</h2>
+<p>文如其名, 比较lightweight, 才9页(笑. 由北京科技大学的博士与中科院博士联手出品.</p>
+<h3 id="abstract">ABSTRACT</h3>
+<blockquote>
+<p>In this paper, a lightweight no-pairing ABE scheme based on elliptic curve cryptography (ECC) is proposed to address the security and privacy issues in IoT. The security of the proposed scheme is based on the ECDH assumption instead of bilinear Diffie–Hellman assumption, and is proved in the attribute based selective-set model. By uniformly determining the criteria and defining the metrics for measuring the communication overhead and computational overhead, the cMomparison analyses with the existing ABE schemes are made in detail. The results show that the proposed scheme has improved execution efficiency and low communication costs. In addition, the limitations and the improving directions of it are also discussed in detail.</p>
+<p>We propose a no-pairing ECC-Based ABE scheme to deal with the data security and privacy issues in IoT. Since it replaces the expensive bilinear pairing operation with <strong>point scalar multiplication on elliptic curve</strong>, it can meet the lightweight requirement and is suitable for IoT.</p>
+</blockquote>
+<p>本文提出了个适用于IoT的ABE解决方案, 因为双线性配对型的ABE很复杂,代价很高,所以采用基于ECC的方法. 同时, 在安全方面采用基于ECDH假设来取代二线Diffie-Hellman假设.</p>
+<p>用在椭圆曲线上的点标量乘法代替代价高的双线性配对,可以减少计算开销和通信开销,更适用于IoT设备.</p>
+<p>ps:Diffie-Hellman密钥交换(<a href="https://blog.csdn.net/lee244868149/article/details/51790397" target="_blank" rel="noopener">csdn</a>和<a href="https://www.zhihu.com/question/29383090" target="_blank" rel="noopener">知乎</a>)</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/05/16/A-lightweight-attribute-based-encryption-scheme-for-the-Internet-of-Things/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
-
 
 
           </div>
@@ -2459,7 +2681,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">48k</span>
+    <span title="Site words total count">48.5k</span>
   
 </div>
 
@@ -2520,8 +2742,6 @@
   
 
 
-  
-
 
 
 
@@ -2560,11 +2780,6 @@
   
   
     <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
   
 
 
