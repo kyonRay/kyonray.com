@@ -14,6 +14,13 @@
 
 
 
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
 
 
 
@@ -419,7 +426,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  5.4k
+                  5.5k
                 </span>
               
 
@@ -458,32 +465,56 @@
       
         <p>Hyperledger Indy提供了一种基于区块链或其他分布式账本的分布式数字身份（DID）方案，这种方案中包含了各种工具、库和可重用工具，以便于这些数字身份可在多个管理域、应用程序以及其他任何数据孤岛上互通。</p>
 <a id="more"></a>
-<h2><span id="一-indy架构综述">一、Indy架构综述</span></h2><p>从横向看，Indy主要分为项目分布、生态系统架构、数据模型(DID、DID Document、Verified Credentials)；从纵向看，Indy主要分为业务层(Business Layer)、应用层(Applications Layer)和技术层(Technology Layer)。</p>
+<h2><span id="一-indy架构综述">一、Indy架构综述</span></h2>
+<p>从横向看，Indy主要分为项目分布、生态系统架构、数据模型(DID、DID Document、Verified Credentials)；从纵向看，Indy主要分为业务层(Business Layer)、应用层(Applications Layer)和技术层(Technology Layer)。</p>
 <p>总体架构如下图所示：</p>
-<p><img src="./HBB-Indy-Sovrin_ARM_v0.27.png" alt="HBB-Indy-Sovrin ARM v0.27"></p>
-<h3><span id="1-业务层">1. 业务层</span></h3><p><img src="./image-20190704181446731.png" alt="image-20190704181446731"></p>
+<figure>
+<img src="./HBB-Indy-Sovrin_ARM_v0.27.png" alt><figcaption>HBB-Indy-Sovrin ARM v0.27</figcaption>
+</figure>
+<h3><span id="1-业务层">1. 业务层</span></h3>
+<figure>
+<img src="./image-20190704181446731.png" alt><figcaption>image-20190704181446731</figcaption>
+</figure>
 <p>业务层主要使用以下几个应用层提供的功能服务：凭证发行（Issue）、凭证存储（Local Store）、数据请求（Request）、凭证披露（Present）、凭证验证（Verify）、凭证撤销（Revocate）用户注册登录等。</p>
-<h3><span id="2-应用层">2. 应用层</span></h3><p>应用层主要功能：提供DID服务、提供凭证服务、提供特定业务服务。</p>
-<p><img src="./image-20190704181354240.png" alt="image-20190704181354240"></p>
+<h3><span id="2-应用层">2. 应用层</span></h3>
+<p>应用层主要功能：提供DID服务、提供凭证服务、提供特定业务服务。</p>
+<figure>
+<img src="./image-20190704181354240.png" alt><figcaption>image-20190704181354240</figcaption>
+</figure>
 <p>应用层由Indy底下 <a href="https://github.com/hyperledger/indy-agent" target="_blank" rel="noopener">Indy-Agent</a> 和 <a href="https://github.com/hyperledger/indy-sdk" target="_blank" rel="noopener">Indy-SDK</a> 两个项目支撑。Indy-SDK项目提供钱包功能组件（Wallet Component）支撑数据存储与开发，使用技术层Agent API提供的服务；Indy-Agent项目提供代理功能组件（Agent Component）支撑业务开发。</p>
-<h3><span id="3-技术层">3. 技术层</span></h3><p><img src="./image-20190704181540967.png" alt="image-20190704181540967"></p>
+<h3><span id="3-技术层">3. 技术层</span></h3>
+<figure>
+<img src="./image-20190704181540967.png" alt><figcaption>image-20190704181540967</figcaption>
+</figure>
 <p>技术层也可再分为<strong>Cloud Agent</strong>层和<strong>Ledger</strong>层。</p>
 <p><strong>Cloud Agent</strong>层由Indy-Agent项目、Indy-SDK项目和 <a href="https://github.com/decentralized-identity/universal-resolver" target="_blank" rel="noopener">DIF Universal-Resolver</a> 项目作支撑，主要功能是提供对Edge Agent的服务，直接与Ledger层进行交互，将请求结果返回到应用层。Indy-SDK项目调用Ledger层的API，实现直接与区块链进行交互；Indy-Agent项目调用Indy-SDK的钱包API，提供代理功能组件，并提供凭证注册组件（Credential Registry Node Component）实现凭证的注册；DIF Universal-Resolver项目提供DID的解析器组件，直接与Ledger层交互，解析出DID。</p>
 <p><strong>Ledger</strong>层由 <a href="https://github.com/hyperledger/indy-node" target="_blank" rel="noopener">Indy-Node</a> 和 <a href="https://github.com/hyperledger/indy-plenum" target="_blank" rel="noopener">Indy-Plenum</a> 两个项目实现，主要功能是实现Indy区块链的功能。Indy-Plenum</p>
 <p>项目主要实现的是Plenum BFT共识协议，是Fabric for Identity的定制版，是整个Indy项目的核心部分；Indy-Node是在Indy-Plenum区块链之上的服务器，直接与区块链层进行交互，实现节点功能。</p>
-<h3><span id="4-数据模型">4. 数据模型</span></h3><p>DID、DID Document都是按照W3C所定的<a href="https://w3c-ccg.github.io/did-spec/" target="_blank" rel="noopener">数据标准</a>建立的，主要关系如下图所示：</p>
-<p><img src="./image-20190704171205582.png" alt="image-20190704171205582"></p>
-<h2><span id="二-hyperledger-indy工作流">二、Hyperledger Indy工作流</span></h2><p>以一个Alice从Faber大学毕业找工作的场景简单介绍Hyperledger Indy的工作流。（<a href="https://medium.com/@kctheservant/exploring-hyperledger-indy-through-indy-dev-example-10075d2547ae" target="_blank" rel="noopener">链接</a>）</p>
+<h3><span id="4-数据模型">4. 数据模型</span></h3>
+<p>DID、DID Document都是按照W3C所定的<a href="https://w3c-ccg.github.io/did-spec/" target="_blank" rel="noopener">数据标准</a>建立的，主要关系如下图所示：</p>
+<figure>
+<img src="./image-20190704171205582.png" alt><figcaption>image-20190704171205582</figcaption>
+</figure>
+<h2><span id="二-hyperledger-indy工作流">二、Hyperledger Indy工作流</span></h2>
+<p>以一个Alice从Faber大学毕业找工作的场景简单介绍Hyperledger Indy的工作流。（<a href="https://medium.com/@kctheservant/exploring-hyperledger-indy-through-indy-dev-example-10075d2547ae" target="_blank" rel="noopener">链接</a>）</p>
 <p><strong>Step 1:</strong> 政府生成凭证模板(Schema)</p>
-<p><img src="./Step1.png" alt="img"></p>
+<figure>
+<img src="./Step1.png" alt><figcaption>img</figcaption>
+</figure>
 <p>政府颁发Transcript Schema和Job-Certificate Schema，并将其记录到分布式账本中。每个人都可以访问这些模板。</p>
 <p><strong>Step 2：</strong> Faber大学和Acme公司生成他们自己的凭证定义(Credential definition)</p>
 <p>Faber大学和Acme公司根据政府发布的模板创建自己的凭证的定义，并将定义上传到链上。</p>
-<p><img src="./step2_1.png" alt="img"></p>
-<p><img src="./step2_2.png" alt="img"></p>
+<figure>
+<img src="./step2_1.png" alt><figcaption>img</figcaption>
+</figure>
+<figure>
+<img src="./step2_2.png" alt><figcaption>img</figcaption>
+</figure>
 <p>Alice从Faber大学获得成绩单(凭证)，然后再申请工作时想Acme公司提供证书作为教育资格证明。</p>
 <p><strong>Step 3：</strong> Alice从Faber大学获得成绩单凭证</p>
-<p><img src="./step3.png" alt="img"></p>
+<figure>
+<img src="./step3.png" alt><figcaption>img</figcaption>
+</figure>
 <p>具体子步骤如下：</p>
 <ul>
 <li>Alice与Faber大学建立连接；</li>
@@ -493,7 +524,9 @@
 <li>Alice收到Credential，保存到自己的钱包（wallet）。</li>
 </ul>
 <p><strong>Step 4：</strong> Acme公司请求Alice的教育证明</p>
-<p><img src="./step4.png" alt="img"></p>
+<figure>
+<img src="./step4.png" alt><figcaption>img</figcaption>
+</figure>
 <p>具体子步骤如下：</p>
 <ul>
 <li>Acme公司与Alice建立连接；</li>
@@ -504,7 +537,9 @@
 </ul>
 <p>之后Alice获得了Acme的工作凭证（job-certificate），并将该凭证发送给Thrift银行以证明聘期，便可申请贷款。（Alice使用Faber大学给的教育凭证完成了KYC过程）</p>
 <p><strong>Step5：</strong> Alice获得了Acme公司给的工作证明</p>
-<p><img src="./step5.png" alt="img"></p>
+<figure>
+<img src="./step5.png" alt><figcaption>img</figcaption>
+</figure>
 <p>具体子步骤如下：</p>
 <ul>
 <li>Acme公司发送Credential Offer给Alice；</li>
@@ -513,7 +548,9 @@
 <li>Alice收到Credential并保存到钱包（wallet）里。</li>
 </ul>
 <p><strong>Step 6 ：</strong> Thrift银行请求Alice的聘期证明，以及Alice 的KYC</p>
-<p><img src="./step6.png" alt="img"></p>
+<figure>
+<img src="./step6.png" alt><figcaption>img</figcaption>
+</figure>
 <p>具体子步骤如下：</p>
 <ul>
 <li>Thrift银行与Alice建立连接；</li>
@@ -522,37 +559,39 @@
 <li>Thrift银行收到了证明，并确认其有效性；</li>
 <li>Thrift银行确认了Alice的proof。</li>
 </ul>
-<h2><span id="三-关键技术点">三、关键技术点</span></h2><p>Indy整个项目的文件分布如下：</p>
+<h2><span id="三-关键技术点">三、关键技术点</span></h2>
+<p>Indy整个项目的文件分布如下：</p>
 <ul>
 <li><p>分布式账本</p>
 <ul>
 <li><a href="https://github.com/hyperledger/indy-node" target="_blank" rel="noopener"><strong>Indy-Node</strong></a>：实现在基于Plenum BFT的分布式账本功能与节点功能，；</li>
 <li><a href="https://github.com/hyperledger/indy-plenum" target="_blank" rel="noopener"><strong>Indy-Plenum</strong></a>：实现基于Plenum BFT共识机制，定义wallet基类；</li>
-</ul>
-</li>
+</ul></li>
 <li><p>客户端工具</p>
 <ul>
 <li><a href="https://github.com/hyperledger/indy-sdk" target="_blank" rel="noopener"><strong>Indy-SDK</strong></a>：由两个主要组件构成：libindy(底层)，libVCX(实现层)；</li>
-<li><a href="https://github.com/hyperledger/indy-agent" target="_blank" rel="noopener"><strong>Indy-Agent</strong></a>：项目实现Agent Client，有以下几种功能方向的App：<ul>
+<li><a href="https://github.com/hyperledger/indy-agent" target="_blank" rel="noopener"><strong>Indy-Agent</strong></a>：项目实现Agent Client，有以下几种功能方向的App：
+<ul>
 <li>Edge Agent App；</li>
 <li>Edge Agent Web App；</li>
 <li>Edge Agent Lightweight App；</li>
 <li>Cloud Agent Node；</li>
 <li>Ledger Node；</li>
 <li>Credential Registry Agent Mode；</li>
-</ul>
-</li>
-</ul>
-</li>
+</ul></li>
+</ul></li>
 <li><p>通用组件：</p>
 <p><a href="https://github.com/hyperledger/indy-crypto" target="_blank" rel="noopener"><strong>Indy-Crypto</strong></a>：承用了Hyperledger URSA，作为Indy的密码学代码库；</p>
-<p><a href="https://github.com/hyperledger/indy-hipe" target="_blank" rel="noopener"><strong>Indy-HIPE(Hyperledger Indy Project Enhancements)</strong></a>：实现了Indy的功能增强组件。</p>
-</li>
+<p><a href="https://github.com/hyperledger/indy-hipe" target="_blank" rel="noopener"><strong>Indy-HIPE(Hyperledger Indy Project Enhancements)</strong></a>：实现了Indy的功能增强组件。</p></li>
 </ul>
 <p>接下来将按照项目文件的主体部分进行逐层解析。</p>
-<h3><span id="1-indy-plenum">1. Indy-Plenum</span></h3><p><img src="./Indy-Plenum.png" alt="Indy-Plenum.png"></p>
+<h3><span id="1-indy-plenum">1. Indy-Plenum</span></h3>
+<figure>
+<img src="./Indy-Plenum.png" alt><figcaption>Indy-Plenum.png</figcaption>
+</figure>
 <p>从内容上看，Plenum项目主要实现了基于RBFT改进的共识机制以及共识操作方法，定义了四种链分别存储整个Indy的配置、事务等信息，定义了DID的wallet以及DID签名验证方法。项目主要分为以下几个部分：</p>
-<h4><span id="11-plenum包">1.1 plenum包</span></h4><p>plenum包实现了基于 <a href="http://lig-membres.imag.fr/aublin/rbft/report.pdf" target="_blank" rel="noopener"><strong>RBFT</strong></a> 改进的Plenum BFT共识算法，在Commit阶段手机n-of-l个的BLS签名，在共识Order阶段，对多个BLS签名进行聚合。（<strong>注</strong>：BLS签名算法在Indy-Crypto中详细说明）</p>
+<h4><span id="11-plenum包">1.1 plenum包</span></h4>
+<p>plenum包实现了基于 <a href="http://lig-membres.imag.fr/aublin/rbft/report.pdf" target="_blank" rel="noopener"><strong>RBFT</strong></a> 改进的Plenum BFT共识算法，在Commit阶段手机n-of-l个的BLS签名，在共识Order阶段，对多个BLS签名进行聚合。（<strong>注</strong>：BLS签名算法在Indy-Crypto中详细说明）</p>
 <p>Plenum共识改进部分大致在以下三点体现：</p>
 <ul>
 <li>RBFT每个请求都会发起三段commit，Plenum是一堆请求才发起三段commit；</li>
@@ -572,19 +611,24 @@
 <ul>
 <li>Encrypt/Decrypt：均使用 <a href="https://download.libsodium.org/doc/" target="_blank" rel="noopener">libsodium</a>密码库的python封装进行加解密；</li>
 <li>sign/verify：签名和签名验证方法都是基于<a href="https://download.libsodium.org/doc/" target="_blank" rel="noopener">libsodium</a>的sign方法进行的，使用signKey签名，使用veryKey+DID进行验证；</li>
-<li><strong>DID Create</strong>：<ul>
+<li><strong>DID Create</strong>：
+<ul>
 <li>指定或产生Seed，32byte；</li>
 <li>根据Ed25519算法产生公私钥对 MSK,MPK；</li>
 <li>再将产生的私钥作为种子Seed，使用Ed25519，生成新的公钥VerkeyRaw，新的签名私钥signKey；</li>
 <li>将verKeyRaw的前16字节进行base58解码，成为DID，后16字节为verKey。</li>
 <li>当signKey、verKey丢失时，将可以使用MSK再次重新生成。</li>
-</ul>
-</li>
+</ul></li>
 <li><strong>Wallet storage</strong>：使用 <a href="https://github.com/jsonpickle/jsonpickle" target="_blank" rel="noopener">jsonpickle</a> 进行JSON序列化和反序列化，保存在本地。</li>
 </ul>
-<h4><span id="12-ledger包">1.2 ledger包</span></h4><p>ledger包定义了整个区块链结构、创世块、Merkle tree结构以及实现了Merkle tree快速验证方法。</p>
-<h4><span id="13-crypto包">1.3 crypto包</span></h4><p>crypto包是对Indy-Crypto项目部分功能的封装，主要实现了BLS多重签名。（<strong>注：</strong>BLS多重签名将在Indy-Crypto项目中详细说明）</p>
-<h4><span id="14-存储组件">1.4 存储组件</span></h4><p><img src="./storages.png" alt="img"></p>
+<h4><span id="12-ledger包">1.2 ledger包</span></h4>
+<p>ledger包定义了整个区块链结构、创世块、Merkle tree结构以及实现了Merkle tree快速验证方法。</p>
+<h4><span id="13-crypto包">1.3 crypto包</span></h4>
+<p>crypto包是对Indy-Crypto项目部分功能的封装，主要实现了BLS多重签名。（<strong>注：</strong>BLS多重签名将在Indy-Crypto项目中详细说明）</p>
+<h4><span id="14-存储组件">1.4 存储组件</span></h4>
+<figure>
+<img src="./storages.png" alt><figcaption>img</figcaption>
+</figure>
 <p>在Ledger组件中默认使用RocksDB和LevelDB进行KV存储，且使用<a href="https://blog.ethereum.org/2015/11/15/merkling-in-ethereum/" target="_blank" rel="noopener"><strong>Merkle Patricia Trie</strong></a> 存储账本状态。每个节点均维护四个账本：</p>
 <ul>
 <li>Audit Ledger：主要负责与其他三个Ledger同步，为失败节点恢复数据，并对账本正确性进行审计；</li>
@@ -592,39 +636,52 @@
 <li>Domain Ledger：为主要账本，记录交易；</li>
 <li>Config Ledger：是Pool节点的配置账本。</li>
 </ul>
-<h4><span id="15-底层性能">1.5 底层性能</span></h4><p>目前暂未有数据文件表明Plenum的性能指标，还需进一步实际测试。</p>
+<h4><span id="15-底层性能">1.5 底层性能</span></h4>
+<p>目前暂未有数据文件表明Plenum的性能指标，还需进一步实际测试。</p>
 <p>TODO: 测试Plenum性能指标。</p>
-<h3><span id="2-indy-node">2. Indy-Node</span></h3><p><img src="./Indy-Node.png" alt="Indy-Node.png"></p>
+<h3><span id="2-indy-node">2. Indy-Node</span></h3>
+<figure>
+<img src="./Indy-Node.png" alt><figcaption>Indy-Node.png</figcaption>
+</figure>
 <p>Indy-Node项目主要实现了基于Plenum BFT共识协议的分布式账本，以及节点的功能。主要包括：处理读写请求、定义交易类型以及交易分类存储。</p>
 <p>接下来将按照项目文件的主体部分进行逐层解析。</p>
-<h4><span id="21-indy-node">2.1 indy-node</span></h4><p>Indy-node包主要实现基于Plenum BFT共识协议的分布式账本、对交易读写请求的处理以及提供了对特定交易的支持，各类交易都会记录到不同种类的Ledger中：</p>
+<h4><span id="21-indy-node">2.1 indy-node</span></h4>
+<p>Indy-node包主要实现基于Plenum BFT共识协议的分布式账本、对交易读写请求的处理以及提供了对特定交易的支持，各类交易都会记录到不同种类的Ledger中：</p>
 <ul>
-<li>存储到Domain Ledger的交易：<ul>
+<li>存储到Domain Ledger的交易：
+<ul>
 <li><strong>NYM</strong>：NYM交易主要实现创建新DID、对已存在的DID用户进行角色变更（<strong>注：</strong>角色变更涉及到权限管理，可查看<code>交易权限管理</code>部分的详情）<strong>DID Document</strong>就是对NYM交易进行溯源，即可得到一份完整的DID Document；</li>
 <li>ATTRIB：主要实现对已有NYM添加一个属性；</li>
 <li>SCHEMA：增加一个声明模板，模板主要包含：<code>属性名</code>、<code>模板名</code>、<code>模板版本号</code>；</li>
 <li>CLAIM_DEF：对一个声明进行定义，由<code>Issuer</code>创建并公开，若要对一个声明进行升级，需要用新的Issuer DID进行新的声明，主要包含：<code>声明公钥</code>、<code>声明撤销公钥</code>、<code>签名类型（只支持CL签名算法）</code>；</li>
-</ul>
-</li>
-<li>存储到Pool Ledger的交易：<ul>
+</ul></li>
+<li>存储到Pool Ledger的交易：
+<ul>
 <li>NODE：在池中添加一个节点，或更新一个池中的节点；</li>
-</ul>
-</li>
-<li>存储到Config Ledger的交易：<ul>
+</ul></li>
+<li>存储到Config Ledger的交易：
+<ul>
 <li>POOL_UPGRADE：由Trustee发起，升级Pool中的配置，也可更新池中特定的节点设置；</li>
 <li>NODE_UPGRADE：记录节点升级后的节点状态，由升级的节点发出；</li>
 <li>POOL_CONFIG：更改池中的配置。</li>
+</ul></li>
 </ul>
-</li>
-</ul>
-<h4><span id="22-indy-common">2.2 indy-common</span></h4><p>indy-common包主要定义了角色权限，以及一些对Indy-Plenum项目方法的封装。</p>
-<h4><span id="23-dev-setupevironment">2.3 dev-setup/evironment</span></h4><p>dev-setup包和evironment包提供了节点部署方案，可以在本机部署（目前只支持Ubuntu、macOS），也可以部署在容器Docker上，可以部署在云端。</p>
-<h4><span id="24-交易权限管理">2.4 交易权限管理</span></h4><p>Indy中节点可分为<code>common user</code>，<code>trust anchor</code>，<code>steward</code>，<code>trustee</code> 四类，每种特殊交易都有特定的角色权限才可以进行。具体可看<a href="https://hyperledger-indy.readthedocs.io/projects/node/en/latest/auth_rules.html" target="_blank" rel="noopener">链接</a>。</p>
-<h3><span id="3-indy-sdk">3. Indy-SDK</span></h3><p><img src="./Indy-SDK.png" alt="Indy-SDK.png"></p>
+<h4><span id="22-indy-common">2.2 indy-common</span></h4>
+<p>indy-common包主要定义了角色权限，以及一些对Indy-Plenum项目方法的封装。</p>
+<h4><span id="23-dev-setupevironment">2.3 dev-setup/evironment</span></h4>
+<p>dev-setup包和evironment包提供了节点部署方案，可以在本机部署（目前只支持Ubuntu、macOS），也可以部署在容器Docker上，可以部署在云端。</p>
+<h4><span id="24-交易权限管理">2.4 交易权限管理</span></h4>
+<p>Indy中节点可分为<code>common user</code>，<code>trust anchor</code>，<code>steward</code>，<code>trustee</code> 四类，每种特殊交易都有特定的角色权限才可以进行。具体可看<a href="https://hyperledger-indy.readthedocs.io/projects/node/en/latest/auth_rules.html" target="_blank" rel="noopener">链接</a>。</p>
+<h3><span id="3-indy-sdk">3. Indy-SDK</span></h3>
+<figure>
+<img src="./Indy-SDK.png" alt><figcaption>Indy-SDK.png</figcaption>
+</figure>
 <p>Indy-SDK作为Plenum分布式账本的SDK，主要是实现了代理端软件Agent可以与分布式账本、DID钱包以及DID doc进行互通，实现凭证Credential，为不同编程语言封装了主要功能。</p>
-<h4><span id="31-libindy">3.1 libindy</span></h4><p>如上图所示，libindy包主要面向应用提供了基础的区块构建方法，实现了对钱包Wallet、凭证Credential以及DID的操作，且提供不同编程语言调用的封装。并基于SDK提供了命令行工具CLI。</p>
-<h5><span id="credential">Credential</span></h5><p>Indy Credential工作流图如下图所示：<br><img src="./工作流图.svg" alt="工作流图"></p>
-<ol>
+<h4><span id="31-libindy">3.1 libindy</span></h4>
+<p>如上图所示，libindy包主要面向应用提供了基础的区块构建方法，实现了对钱包Wallet、凭证Credential以及DID的操作，且提供不同编程语言调用的封装。并基于SDK提供了命令行工具CLI。</p>
+<h5><span id="credential">Credential</span></h5>
+<p>Indy Credential工作流图如下图所示： <img src="./工作流图.svg" alt="工作流图"></p>
+<ol type="1">
 <li><strong>Issuer生成凭证模板(Create Credential Schema)</strong>: Issuer创建某个凭证Schema，并将Schema交易发送给Ledger；</li>
 <li><strong>Issuer生成凭证定义(Create Credential Definition)</strong>: Issuer想Ledger发送获取某个凭证Schema请求，得到Schema后创建凭证定义，存储公私钥对和正确性证明在本地，将该种凭证定义发送给Ledger；</li>
 <li><strong>Issuer生成凭证撤销表(Create Revocation Registry)</strong>: Issuer生成凭证撤销表，并将撤销表入口、撤销表定义发送到Ledger；</li>
@@ -636,50 +693,76 @@
 <li><strong>Issuer撤销凭证(Revoke Credential)</strong>： Issuer获取密钥和撤销注册表，并向Ledger同步撤销注册表的入口。</li>
 </ol>
 <p>(<strong>注</strong>：Credential相关密码学部分将会在Indy-Crypto部分详细说明)</p>
-<h5><span id="command-line-interface">Command Line Interface</span></h5><p>CLI组件设计如下图所示：</p>
-<p><img src="./cli-components.svg" alt="cli-components"></p>
-<h5><span id="wallet">Wallet</span></h5><p>Wallet组件设计如下图所示：</p>
-<p><img src="./wallet-components.svg" alt="Wallet Components"></p>
+<h5><span id="command-line-interface">Command Line Interface</span></h5>
+<p>CLI组件设计如下图所示：</p>
+<figure>
+<img src="./cli-components.svg" alt><figcaption>cli-components</figcaption>
+</figure>
+<h5><span id="wallet">Wallet</span></h5>
+<p>Wallet组件设计如下图所示：</p>
+<figure>
+<img src="./wallet-components.svg" alt><figcaption>Wallet Components</figcaption>
+</figure>
 <p>在Secrets API，允许调用密钥生成、DID生成等需要访问加密实体的方法；在Non-secrets API只允许访问存取wallet中特定的DID数据。Wallet API提供方法将钱包记录在本地SQL数据库中存取。</p>
-<h5><span id="decentrailized-key-management">Decentrailized Key Management</span></h5><p>相关文档并不多，只介绍了当密钥丢失时的措施：</p>
+<h5><span id="decentrailized-key-management">Decentrailized Key Management</span></h5>
+<p>相关文档并不多，只介绍了当密钥丢失时的措施：</p>
 <ul>
 <li>离线物理恢复密钥；</li>
 <li>需要trustee级别的用户进行恢复；</li>
 <li>考虑到安全性，恢复往往需要与密钥轮换和撤销相结合。</li>
 </ul>
 <p>此外，在官方文档中提到了使用Shamir Secret Sharing Scheme是通过分布式密钥碎片存储，在密钥丢失时，只需要将碎片重新整合起来即可恢复。（<strong>注</strong>：Shamir Secret Sharing Scheme会在Indy-Crypto中简单介绍）</p>
-<h4><span id="32-libvcx">3.2 libvcx</span></h4><p>libvcx包实现了一种Agent-2-Agent的通信协议，用于credentials的交换。主要还是使用JSON进行通信，通信时使用SSL证书进行加密通信。（<strong>注</strong>：Credential的选择性披露将在Indy-Crypto中详细说明）</p>
-<h3><span id="4-indy-agent">4. Indy-Agent</span></h3><p>Indy-Agent项目是一个基于Indy-SDK实现的代理客户端的合集，目前已有多种语言的客户端实现。</p>
-<h3><span id="5-indy-crypto">5. Indy-Crypto</span></h3><p>Indy-Crypto项目是Hyperledger URSA密码库的一部分，主要在Indy项目使用的密码学方法有： <code>BLS多签算法</code> ， <code>CL群签名算法</code>  。其中，Indy使用BLS多签算法，减少Plenum共识算法的轮训，减少签名长度；Indy使用CL群签名算法对Credential进行选择性披露，实现零知识证明。</p>
-<h4><span id="51-bls-multi-sign">5.1 </span></h4><h5><span id="1-准备阶段">1). 准备阶段</span></h5><p>有两个哈希方程 $H_0: \{ 0, 1 \} ^<em> \rightarrow \Bbb{G}_2$  ，  $H_1: \{ 0, 1 \}^</em> \rightarrow \Bbb{Z}_q$</p>
-<p>$ H_0$是将元素哈希到 $\Bbb{G}_2$ 群，$H_1$是将元素哈希到q阶整数群。</p>
-<h5><span id="2-参数生成">2). 参数生成</span></h5><p>$Pg(k): par \leftarrow (q, \Bbb{G}_1,\Bbb{G}_2, \Bbb{G}_t,e,g_1,g_2) \leftarrow G(k)$</p>
-<p>生成一个双线性配对群，其中q是阶数，$ \Bbb{G}_1, \Bbb{G}_2$ 是q阶群，$e : \Bbb{G}_t \leftarrow \Bbb{G}_1 × \Bbb{G}_2$ 是一种映射关系，$g_1,g_2$ 分别是 $ \Bbb{G}_1, \Bbb{G}_2$ 的生成子。</p>
-<h5><span id="3-密钥生成">3). 密钥生成</span></h5><p>$Kg(par) : sk \xleftarrow{random} \Bbb{Z}_q ; pk \leftarrow g_2^{sk}$</p>
-<p>在整数群众随机抽取得出私钥 $sk$ ，公钥  $pk$ 由私钥计算得出。</p>
-<h5><span id="4-公钥聚合">4). 公钥聚合</span></h5><p>$KAg({pk_1,…,pk_n}) : apk \leftarrow \prod_{i=1}^n{pk_i^{H_1(pk_i, \{ pk_1,…,pk_n \} )}}$</p>
-<p>将所有的用户公钥都聚合起来，最终形成一个聚合公钥 $apk$ 。</p>
-<h5><span id="5-签名">5). 签名</span></h5><p>$Sign(par, \{ pk_1,…,pk_n \} ,sk,m) : s_i \leftarrow H_0(m)^{a_i \cdot sk_i} , where\ a_i \leftarrow H_1(pk_i, \{ pk_1,…,pk_n \} )$</p>
-<p>每个用户 $i$ 对消息 $m$ 用私钥签名，得出签名 $s_i$ </p>
-<p>$\sigma \leftarrow \prod_{j=1}^n s_j$</p>
-<p>再将签名发给一个节点，节点进行聚合计算，生成聚合签名 $\sigma$ </p>
-<h5><span id="6-验证">6). 验证</span></h5><p>$Vf(par,apk,m, \sigma ) : \ e( \sigma , g_2^{-1}) \cdot e(H_0(m),apk) = 1_{ \Bbb{G}_t}$</p>
+<h4><span id="32-libvcx">3.2 libvcx</span></h4>
+<p>libvcx包实现了一种Agent-2-Agent的通信协议，用于credentials的交换。主要还是使用JSON进行通信，通信时使用SSL证书进行加密通信。（<strong>注</strong>：Credential的选择性披露将在Indy-Crypto中详细说明）</p>
+<h3><span id="4-indy-agent">4. Indy-Agent</span></h3>
+<p>Indy-Agent项目是一个基于Indy-SDK实现的代理客户端的合集，目前已有多种语言的客户端实现。</p>
+<h3><span id="5-indy-crypto">5. Indy-Crypto</span></h3>
+<p>Indy-Crypto项目是Hyperledger URSA密码库的一部分，主要在Indy项目使用的密码学方法有： <code>BLS多签算法</code> ， <code>CL群签名算法</code> 。其中，Indy使用BLS多签算法，减少Plenum共识算法的轮训，减少签名长度；Indy使用CL群签名算法对Credential进行选择性披露，实现零知识证明。</p>
+<h4><span id="51-bls-multi-sign">5.1 </span></h4>
+<h5><span id="1-准备阶段">1). 准备阶段</span></h5>
+<p>有两个哈希方程 <span class="math inline">\(H_0: \{ 0, 1 \} ^* \rightarrow \Bbb{G}_2\)</span> ， <span class="math inline">\(H_1: \{ 0, 1 \}^* \rightarrow \Bbb{Z}_q\)</span></p>
+<p>$ H_0$是将元素哈希到 <span class="math inline">\(\Bbb{G}_2\)</span> 群，<span class="math inline">\(H_1\)</span>是将元素哈希到q阶整数群。</p>
+<h5><span id="2-参数生成">2). 参数生成</span></h5>
+<p><span class="math inline">\(Pg(k): par \leftarrow (q, \Bbb{G}_1,\Bbb{G}_2, \Bbb{G}_t,e,g_1,g_2) \leftarrow G(k)\)</span></p>
+<p>生成一个双线性配对群，其中q是阶数，$ _1, _2$ 是q阶群，<span class="math inline">\(e : \Bbb{G}_t \leftarrow \Bbb{G}_1 × \Bbb{G}_2\)</span> 是一种映射关系，<span class="math inline">\(g_1,g_2\)</span> 分别是 $ _1, _2$ 的生成子。</p>
+<h5><span id="3-密钥生成">3). 密钥生成</span></h5>
+<p><span class="math inline">\(Kg(par) : sk \xleftarrow{random} \Bbb{Z}_q ; pk \leftarrow g_2^{sk}\)</span></p>
+<p>在整数群众随机抽取得出私钥 <span class="math inline">\(sk\)</span> ，公钥 <span class="math inline">\(pk\)</span> 由私钥计算得出。</p>
+<h5><span id="4-公钥聚合">4). 公钥聚合</span></h5>
+<p><span class="math inline">\(KAg({pk_1,…,pk_n}) : apk \leftarrow \prod_{i=1}^n{pk_i^{H_1(pk_i, \{ pk_1,…,pk_n \} )}}\)</span></p>
+<p>将所有的用户公钥都聚合起来，最终形成一个聚合公钥 <span class="math inline">\(apk\)</span> 。</p>
+<h5><span id="5-签名">5). 签名</span></h5>
+<p><span class="math inline">\(Sign(par, \{ pk_1,…,pk_n \} ,sk,m) : s_i \leftarrow H_0(m)^{a_i \cdot sk_i} , where\ a_i \leftarrow H_1(pk_i, \{ pk_1,…,pk_n \} )\)</span></p>
+<p>每个用户 <span class="math inline">\(i\)</span> 对消息 <span class="math inline">\(m\)</span> 用私钥签名，得出签名 <span class="math inline">\(s_i\)</span></p>
+<p><span class="math inline">\(\sigma \leftarrow \prod_{j=1}^n s_j\)</span></p>
+<p>再将签名发给一个节点，节点进行聚合计算，生成聚合签名 <span class="math inline">\(\sigma\)</span></p>
+<h5><span id="6-验证">6). 验证</span></h5>
+<p><span class="math inline">\(Vf(par,apk,m, \sigma ) : \ e( \sigma , g_2^{-1}) \cdot e(H_0(m),apk) = 1_{ \Bbb{G}_t}\)</span></p>
 <p>将聚合公钥和聚合签名输入，进行两次双线性配对，若上面的式子成立，则说明验证成功；否则失败。</p>
-<h4><span id="52-camenisch-lysyanskaya-sign">5.2 </span></h4><h5><span id="1-准备阶段">1). 准备阶段</span></h5><p>有一个哈希方程 $Hash: \{ 0, 1 \} ^* \rightarrow \Bbb{Z}_q$</p>
-<p>$Hash$ 函数是将元素哈希到q阶整数群。</p>
-<h5><span id="2-参数生成">2). 参数生成</span></h5><p>$Pg(k): par \leftarrow (q,\Bbb{G}, \Bbb{G}_t,e,g) \leftarrow G(k)$</p>
-<p>生成一个双线性配对群，其中q是阶数，$ \Bbb{G}$ 是q阶群，$e : \Bbb{G}_t \leftarrow \Bbb{G} × \Bbb{G}$ 是一种映射关系，$g$ 是 $\Bbb{G}$ 的生成子。</p>
-<h5><span id="3-密钥生成">3). 密钥生成</span></h5><p>$Kg(par) : sk_1,sk_2 \xleftarrow{random} \Bbb{Z}_q ; pk_1 \leftarrow g^{sk_1}; \ pk_2 \leftarrow g^{sk_2}$</p>
-<p>在整数群众随机抽取得出子私钥 $sk_1,sk_2$ ，子公钥  $pk_1,pk_2$ 由私钥计算得出。</p>
-<p>最终输出私钥： $SK=(sk_1,sk_2)$ ， 公钥： $PK=(par,pk_1,pk_2)$ 。</p>
-<h5><span id="4-签名">4). 签名</span></h5><p>输入 $message$ ，生成消息 $M \leftarrow Hash(message)$ ，在群 $ \Bbb{G} $ 随机选取随机数 $A \in \Bbb{G}$ , 计算 $B \leftarrow A^{sk_2}, \ C \leftarrow A^{sk_1}B^{sk_1 \cdot M}$ ，最终输出对消息 $M$ 的签名：$ \sigma \leftarrow (A,B,C)$ 。</p>
-<h5><span id="5-验证">5). 验证</span></h5><p>输入对消息 $M$ 的签名 $ \sigma \leftarrow (A,B,C)$ ，使用公钥 $PK$ 验证，若</p>
-<p>$e(A,pk_2)=e(B,g)$  且  $e(C,g)=e(A,pk_1) \cdot e(B,pk_1)^M$ 则验证成功。</p>
-<h4><span id="53-anonymous-credentials-with-type-3-revocation">5.3 Anonymous credentials with type-3 revocation</span></h4><p>这是Indy项目中Credential（凭证）的整体方案，包括<strong>凭证颁发</strong>、<strong>凭证存储</strong>、<strong>凭证选择性披露与验证</strong>、<strong>凭证撤销</strong>。</p>
+<h4><span id="52-camenisch-lysyanskaya-sign">5.2 </span></h4>
+<h5><span id="1-准备阶段">1). 准备阶段</span></h5>
+<p>有一个哈希方程 <span class="math inline">\(Hash: \{ 0, 1 \} ^* \rightarrow \Bbb{Z}_q\)</span></p>
+<p><span class="math inline">\(Hash\)</span> 函数是将元素哈希到q阶整数群。</p>
+<h5><span id="2-参数生成">2). 参数生成</span></h5>
+<p><span class="math inline">\(Pg(k): par \leftarrow (q,\Bbb{G}, \Bbb{G}_t,e,g) \leftarrow G(k)\)</span></p>
+<p>生成一个双线性配对群，其中q是阶数，$ $ 是q阶群，<span class="math inline">\(e : \Bbb{G}_t \leftarrow \Bbb{G} × \Bbb{G}\)</span> 是一种映射关系，<span class="math inline">\(g\)</span> 是 <span class="math inline">\(\Bbb{G}\)</span> 的生成子。</p>
+<h5><span id="3-密钥生成">3). 密钥生成</span></h5>
+<p><span class="math inline">\(Kg(par) : sk_1,sk_2 \xleftarrow{random} \Bbb{Z}_q ; pk_1 \leftarrow g^{sk_1}; \ pk_2 \leftarrow g^{sk_2}\)</span></p>
+<p>在整数群众随机抽取得出子私钥 <span class="math inline">\(sk_1,sk_2\)</span> ，子公钥 <span class="math inline">\(pk_1,pk_2\)</span> 由私钥计算得出。</p>
+<p>最终输出私钥： <span class="math inline">\(SK=(sk_1,sk_2)\)</span> ， 公钥： <span class="math inline">\(PK=(par,pk_1,pk_2)\)</span> 。</p>
+<h5><span id="4-签名">4). 签名</span></h5>
+<p>输入 <span class="math inline">\(message\)</span> ，生成消息 <span class="math inline">\(M \leftarrow Hash(message)\)</span> ，在群 $  $ 随机选取随机数 <span class="math inline">\(A \in \Bbb{G}\)</span> , 计算 <span class="math inline">\(B \leftarrow A^{sk_2}, \ C \leftarrow A^{sk_1}B^{sk_1 \cdot M}\)</span> ，最终输出对消息 <span class="math inline">\(M\)</span> 的签名：$ (A,B,C)$ 。</p>
+<h5><span id="5-验证">5). 验证</span></h5>
+<p>输入对消息 <span class="math inline">\(M\)</span> 的签名 $ (A,B,C)$ ，使用公钥 <span class="math inline">\(PK\)</span> 验证，若</p>
+<p><span class="math inline">\(e(A,pk_2)=e(B,g)\)</span> 且 <span class="math inline">\(e(C,g)=e(A,pk_1) \cdot e(B,pk_1)^M\)</span> 则验证成功。</p>
+<h4><span id="53-anonymous-credentials-with-type-3-revocation">5.3 Anonymous credentials with type-3 revocation</span></h4>
+<p>这是Indy项目中Credential（凭证）的整体方案，包括<strong>凭证颁发</strong>、<strong>凭证存储</strong>、<strong>凭证选择性披露与验证</strong>、<strong>凭证撤销</strong>。</p>
 <p>在整个Credential的方案中有三种角色：issuer（凭证发行人）、holder（凭证持有人）、verifier（验证者）。这种方案是基于Camenisch-Lysyanskaya Sign方案改进的，可实现选择性披露、“一次性”凭证的功能。</p>
 <p>详情可看这个<a href="https://github.com/hyperledger/indy-crypto/blob/master/libindy-crypto/docs/AnonCred.pdf" target="_blank" rel="noopener">PDF文档</a> （建议由密码学功底的人看）</p>
-<h4><span id="54-shamir-secret-sharing-scheme">5.4 Shamir Secret Sharing Scheme</span></h4><p>TODO</p>
-<h2><span id="四-hyperledger-aries">四、Hyperledger Aries</span></h2><p><a href="https://github.com/hyperledger/aries" target="_blank" rel="noopener"><strong>Hyperledger Aries</strong></a> 是今年5月Hyperledger宣布开源的项目，目前该项目还处于初始阶段，Aires 的产品包括:</p>
+<h4><span id="54-shamir-secret-sharing-scheme">5.4 Shamir Secret Sharing Scheme</span></h4>
+<p>TODO</p>
+<h2><span id="四-hyperledger-aries">四、Hyperledger Aries</span></h2>
+<p><a href="https://github.com/hyperledger/aries" target="_blank" rel="noopener"><strong>Hyperledger Aries</strong></a> 是今年5月Hyperledger宣布开源的项目，目前该项目还处于初始阶段，Aires 的产品包括:</p>
 <ul>
 <li>用于创建和签名区块链事务的区块链接口层（称为解析器）</li>
 <li>安全存储（安全存储技术）用于构建区块链客户机加密信息和其他信息的加密钱包</li>
@@ -690,14 +773,17 @@
 </ul>
 <p>我个人认为这是Hyperledger Indy项目的一种扩展延伸，实现功能点几乎一样；</p>
 <p><strong>但是</strong>，Indy是专注于为身份认证而建立的特定区块链，Aries是不适用区块链的项目，项目组期望能在Aries成熟之后融入Indy项目。Hyperledger之后会将Indy项目中与区块链无关的功能迁移到Aries项目，Induy专注于区块链功能。</p>
-<h2><span id="五-落地案例">五、落地案例</span></h2><p>主要落地应用是在加拿大British Columbia省的 <a href="https://vonx.io/" target="_blank" rel="noopener">Verfiable Organizations Network(VON)</a>，该项目已开源(<a href="https://github.com/bcgov/von" target="_blank" rel="noopener">链接</a>)，目的在于帮助商人建立可信的持续的电子身份验证，从而加速申请政府机构的许可证和执照。</p>
+<h2><span id="五-落地案例">五、落地案例</span></h2>
+<p>主要落地应用是在加拿大British Columbia省的 <a href="https://vonx.io/" target="_blank" rel="noopener">Verfiable Organizations Network(VON)</a>，该项目已开源(<a href="https://github.com/bcgov/von" target="_blank" rel="noopener">链接</a>)，目的在于帮助商人建立可信的持续的电子身份验证，从而加速申请政府机构的许可证和执照。</p>
 <p>该项目已经在2019年1月推出上线，减少了新供应商或客户进行尽职调查的时间。下一步目标是扩展应用程序，鼓励更多的司法管辖区域使用。</p>
-<h2><span id="六-推广模式">六、推广模式</span></h2><p>目前Indy的推广模式相关文章/报道较少(可能也是我菜，找不到/不会找 _(:3」∠)_  )</p>
+<h2><span id="六-推广模式">六、推广模式</span></h2>
+<p>目前Indy的推广模式相关文章/报道较少(可能也是我菜，找不到/不会找 _(:3」∠)_ )</p>
 <ul>
 <li>以投资者的角度分析了Sovrin项目 (<a href="https://news.huoxing24.com/20181112141034187154.html" target="_blank" rel="noopener">链接</a>)</li>
 <li>采访Sovrin主创报道文章，主要讲述了Sovrin是什么，要解决什么问题，怎么解决的，展望未来(<a href="https://sovrin.org/use-case-spotlight-the-government-of-british-columbia-uses-the-sovrin-network-to-take-strides-towards-a-fully-digital-economy/" target="_blank" rel="noopener">链接</a>)</li>
 </ul>
-<h2><span id="七-qampa">七、Q&amp;A</span></h2><p>Q：Hyperledger Indy是否支持智能合约？</p>
+<h2><span id="七-qampa">七、Q&amp;A</span></h2>
+<p>Q：Hyperledger Indy是否支持智能合约？</p>
 <p>A：Indy专注于数字身份管理，Indy不是为了支持任何资产交换而开发的，而是为了解决与我们当前数字环境的问题。该项目旨在取代我们用来通过分散机制验证用户数字身份的主流机制，例如用户名 - 密码组合，这种机制更安全可靠。由于其独特的使用案例，<strong>Indy无法支持任何智能合约。</strong></p>
 <p>Q：Authentication是如何进行的？授权的粒度？</p>
 <p>Indy对DID、Credential以及节点的授权都有不同，详情可见<a href="https://hyperledger-indy.readthedocs.io/projects/node/en/latest/auth_rules.html" target="_blank" rel="noopener">链接</a>。</p>
@@ -707,8 +793,9 @@
 <p>A：详情可见<a href="https://hyperledger-indy.readthedocs.io/projects/node/en/latest/add-node.html" target="_blank" rel="noopener">链接1</a>、<a href="https://hyperledger-indy.readthedocs.io/projects/node/en/latest/start-nodes.html" target="_blank" rel="noopener">链接2</a></p>
 <p>Q：区块节点部署方式？</p>
 <p>A：目前Indy节点支持本地部署(macOS，Ubuntu)，容器部署(docker)以及云端部署，都有一键部署工具可用。</p>
-<h2><span id="参考链接文献">参考链接/文献</span></h2><blockquote>
-<ol>
+<h2><span id="参考链接文献">参考链接/文献</span></h2>
+<blockquote>
+<ol type="1">
 <li><a href="https://mwherman2000.github.io/indy-arm/" target="_blank" rel="noopener">Hyperledger Indy/Sovrin/DID Comprehensive Architecture Reference Model (INDY ARM)</a></li>
 <li><a href="https://github.com/hyperledger/indy-agent" target="_blank" rel="noopener">hyperledger/<strong>indy-agent</strong></a></li>
 <li><a href="https://github.com/hyperledger/indy-sdk" target="_blank" rel="noopener">hyperledger/<strong>indy-sdk</strong></a></li>
@@ -718,15 +805,15 @@
 <li><a href="https://w3c-ccg.github.io/did-spec/" target="_blank" rel="noopener">Decentralized Identifiers (DIDs) v0.13</a></li>
 <li><a href="https://github.com/hyperledger/indy-crypto" target="_blank" rel="noopener">hyperledger/<strong>indy-crypto</strong></a></li>
 <li><a href="https://github.com/hyperledger/indy-crypto" target="_blank" rel="noopener">hyperledger/<strong>indy-hipe</strong></a></li>
-<li><a href="http://lig-membres.imag.fr/aublin/rbft/report.pdf" target="_blank" rel="noopener">Aublin, P.-L &amp; Mokhtar, Sonia &amp; Quéma, Vivien. (2013). RBFT: Redundant byzantine fault tolerance. Proceedings - International Conference on Distributed Computing Systems. 297-306. 10.1109/ICDCS.2013.53. </a></li>
+<li><a href="http://lig-membres.imag.fr/aublin/rbft/report.pdf" target="_blank" rel="noopener">Aublin, P.-L &amp; Mokhtar, Sonia &amp; Quéma, Vivien. (2013). RBFT: Redundant byzantine fault tolerance. Proceedings - International Conference on Distributed Computing Systems. 297-306. 10.1109/ICDCS.2013.53.</a></li>
 <li><a href="https://hyperledger-indy.readthedocs.io/projects/plenum/en/latest/diagrams/index.html" target="_blank" rel="noopener">Plenum Diagrams</a></li>
 <li><a href="https://download.libsodium.org/doc/" target="_blank" rel="noopener">Libsodium document</a></li>
-<li><a href="https://github.com/jsonpickle/jsonpickle" target="_blank" rel="noopener">jsonpickle: Python library for serializing any arbitrary object graph into JSON. </a></li>
+<li><a href="https://github.com/jsonpickle/jsonpickle" target="_blank" rel="noopener">jsonpickle: Python library for serializing any arbitrary object graph into JSON.</a></li>
 <li><a href="https://blog.ethereum.org/2015/11/15/merkling-in-ethereum/" target="_blank" rel="noopener">Merkling in Ethereum</a></li>
 <li><a href="https://hyperledger-indy.readthedocs.io/projects/node/en/latest/auth_rules.html" target="_blank" rel="noopener">Current implemented rules in auth_map</a></li>
-<li><a href="https://eprint.iacr.org/2018/483" target="_blank" rel="noopener">Dan Boneh, Manu Drijvers, and Gregory Neven. Compact multi-signatures for<br>62 smaller blockchains. Cryptology ePrint Archive, 2018.</a></li>
+<li><a href="https://eprint.iacr.org/2018/483" target="_blank" rel="noopener">Dan Boneh, Manu Drijvers, and Gregory Neven. Compact multi-signatures for 62 smaller blockchains. Cryptology ePrint Archive, 2018.</a></li>
 <li><a href="https://link.springer.com/chapter/10.1007%2F3-540-36413-7_20" target="_blank" rel="noopener">Camenisch J., Lysyanskaya A. (2003) A Signature Scheme with Efficient Protocols. In: Cimato S., Persiano G., Galdi C. (eds) Security in Communication Networks. SCN 2002. Lecture Notes in Computer Science, vol 2576. Springer, Berlin, Heidelberg</a></li>
-<li><a href="https://github.com/hyperledger/aries" target="_blank" rel="noopener">Hyperledger Aries is infrastructure for blockchain-rooted, peer-to-peer interactions </a></li>
+<li><a href="https://github.com/hyperledger/aries" target="_blank" rel="noopener">Hyperledger Aries is infrastructure for blockchain-rooted, peer-to-peer interactions</a></li>
 <li><a href="https://medium.com/@kctheservant/exploring-hyperledger-indy-through-indy-dev-example-10075d2547ae" target="_blank" rel="noopener">Exploring Hyperledger Indy through indy-dev Example</a></li>
 <li><a href="https://vonx.io/" target="_blank" rel="noopener">Verifiable Organizations Network: Global digital trust for organizations</a></li>
 <li><a href="https://github.com/bcgov/von" target="_blank" rel="noopener">Verifiable Organizations Network</a></li>
@@ -734,7 +821,7 @@
 <li><a href="https://www.quora.com/Does-Hyperledger-Indy-support-any-kind-of-smart-contracts" target="_blank" rel="noopener">Does Hyperledger Indy support any kind of smart contracts?</a></li>
 <li><a href="https://hyperledger-indy.readthedocs.io/projects/node/en/latest/add-node.html" target="_blank" rel="noopener">Add Node to Existing Pool</a></li>
 <li><a href="https://hyperledger-indy.readthedocs.io/projects/node/en/latest/start-nodes.html" target="_blank" rel="noopener">Create a Network and Start Nodes</a></li>
-<li><a href="https://eprint.iacr.org/2008/539.pdf" target="_blank" rel="noopener">Camenisch, J., Kohlweiss, M., Soriente, C.: An Accumulator Based on Bilinear Maps and Efficient Revocation for Anonymous Credentials. In Jarecki, S., Tsudik, G., eds.: Public Key<br>Cryptography. Volume 5443 of Lecture Notes in Computer Science., Springer (2009) 481–500</a></li>
+<li><a href="https://eprint.iacr.org/2008/539.pdf" target="_blank" rel="noopener">Camenisch, J., Kohlweiss, M., Soriente, C.: An Accumulator Based on Bilinear Maps and Efficient Revocation for Anonymous Credentials. In Jarecki, S., Tsudik, G., eds.: Public Key Cryptography. Volume 5443 of Lecture Notes in Computer Science., Springer (2009) 481–500</a></li>
 <li><a href="https://github.com/hyperledger/indy-crypto/blob/master/libindy-crypto/docs/AnonCred.pdf" target="_blank" rel="noopener">Anonymous credentials with type-3 revocation. Dmitry Khovratovich, Michael Lodder. 9 February 2018, version 0.4</a></li>
 <li><a href="https://news.huoxing24.com/20181112141034187154.html" target="_blank" rel="noopener">TokenGazer深度研究：Sovrin，技术落地可期，但推广难度较高</a></li>
 <li><a href="https://sovrin.org/use-case-spotlight-the-government-of-british-columbia-uses-the-sovrin-network-to-take-strides-towards-a-fully-digital-economy/" target="_blank" rel="noopener">Use case spotlight: The Government of British Columbia uses the Sovrin Network to take strides towards a fully digital economy</a></li>
@@ -1054,7 +1141,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">48k</span>
+    <span title="Site words total count">48.5k</span>
   
 </div>
 
@@ -1115,9 +1202,10 @@
   
 
 
+
+
   
-
-
+  
 
 
 
@@ -1159,7 +1247,12 @@
 
   
   
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
   
 
 
